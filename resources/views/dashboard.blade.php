@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 @auth
-<x-app-layout :menuBtn="true" :cartIcon="true">
+<x-app-layout :menuBtn="true">
     <html lang="en">
 
     <head>

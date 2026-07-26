@@ -19,7 +19,7 @@
                 <template x-if="errorMessage">
                     <div class="p-3 mb-4 bg-red-100 border border-red-400 text-red-700 text-xs font-bold rounded-lg"
                         x-text="errorMessage"></div>
-                </template> //
+                </template> 
 
                 <form @submit.prevent="submitOrder()" class="space-y-4">
                     @csrf

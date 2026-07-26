@@ -17,8 +17,8 @@
                 <img src="{{ asset('logo.png') }}" alt="Logo" class="w-11 h-11 object-contain rounded-xl">
 
                 <span
-                    class="text-2xl font-black tracking-wider bg-gradient-to-r from-red-500 via-yellow-500 via-green-500 via-blue-500 to-purple-500 bg-clip-text text-transparent font-sans drop-shadow-sm hidden sm:inline-block">
-                    Market
+                    class="text-xl font-black tracking-wider bg-gradient-to-r from-red-500 via-yellow-500 via-green-500 via-blue-500 to-purple-500 bg-clip-text text-transparent font-sans drop-shadow-sm hidden sm:inline-block">
+                    Zay Maxx
                 </span>
             </div>
         @endif
@@ -40,16 +40,18 @@
     @endif
 
     <div class="flex items-center ms-6 gap-4">
-        @if(!isset($cartIcon) || !$cartIcon)
-            <a href="{{ route('cart.index') }}"
-                class="relative text-amber-500 dark:text-amber-400 hover:text-amber-600 dark:hover:text-amber-300 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 0a2 2 0 100 4 2 2 0 000-4z">
-                    </path>
-                </svg>
-            </a>
-        @endif
+        @auth
+            @if(!isset($cartIcon) || !$cartIcon)
+                <a href="{{ route('cart.index') }}"
+                    class="relative text-amber-500 dark:text-amber-400 hover:text-amber-600 dark:hover:text-amber-300 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 0a2 2 0 100 4 2 2 0 000-4z">
+                        </path>
+                    </svg>
+                </a>
+            @endif
+        @endauth
 
         @if(!isset($messageIcon) || !$messageIcon)
             <a href="#"
@@ -112,7 +114,7 @@
                             @endif
                         @endif
 
-                        @if(!isset($hideDarkMode) || !$hideDarkMode)
+                        <!-- @if(!isset($hideDarkMode) || !$hideDarkMode)
                             <div id="darkModeRow"
                                 class="flex items-center gap-2 w-full px-4 py-2 text-left text-sm leading-5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none transition ease-in-out duration-150 cursor-pointer select-none">
 
@@ -135,7 +137,7 @@
                                 
                                 <span id="darkModeText" class="tracking-wide font-medium">Night Mode</span>
                             </div>
-                        @endif
+                        @endif -->
 
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
