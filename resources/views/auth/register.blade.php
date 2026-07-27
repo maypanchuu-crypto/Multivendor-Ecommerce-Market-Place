@@ -218,7 +218,7 @@
                         <label for="password" :value="__('Password')">Password</label>
                         <div class="password-container">
                             <input type="password" id="password" name="password" placeholder="••••••••"
-                                pattern="(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}"
+                                pattern="(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&#()_-:;{}[]+=\<>./|])[A-Za-z\d@$!%*?&#()_-:;{}[]+=\<>./|]{8,}"
                                 class="password-input" required autocomplete="new-password">
                             <i class="fas fa-eye-slash toggle-icon" onclick="togglePasswordVisibility(this)"></i>
                         </div>
