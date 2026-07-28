@@ -5,41 +5,64 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\User;
+use App\Models\Wallet;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Cookie;
 
 class WalletPaymentController extends Controller
 {
-    // ဖုန်း Browser တွင် ပွင့်လာမည့် Payment Form
+    // ၁။ QR Scan ဖတ်ပြီးရင် ပွင့်လာမည့် 6-Digit Password ရိုက်သည့် Form
     public function showPaymentPage($orderId)
     {
         $order = Order::with('items')->findOrFail($orderId);
+
+        // အော်ဒါက Paid ဖြစ်ပြီးသားဆိုလျှင် ပြန်ပေးမကြည့်ပါ
+        if ($order->status === 'paid') {
+            return response('<div style="text-align:center; padding:50px;"><h2>⚠️ ဒီ Order က ငွေပေးချေမှု ပြီးစီးပြီးသား ဖြစ်ပါသည်။</h2></div>');
+        }
+
         return view('wallet.pay', compact('order'));
     }
 
-    // Password စစ်ပြီး Wallet ထဲမှ ငွေနှုတ်/ငွေခွဲပေးသည့် Logic
+    // ၂။ Password စစ်ဆေးပြီး Admin (2%) + Vendor (98%) ငွေခွဲပေးမည့် Logic
     public function processPayment(Request $request, $orderId)
     {
-        $request->validate(['wallet_password' => 'required']);
+        $request->validate([
+            'wallet_password' => 'required|digits:6',
+        ]);
 
         $order = Order::with('items')->findOrFail($orderId);
         $user = auth()->user();
-        $wallet = $user->wallet;
 
-        // ၁. Wallet Balance စစ်ဆေးခြင်း
-        if ($wallet->balance < $order->total_amount) {
-            return back()->with('error', 'Insufficient balance in your wallet!');
+        // 💡 User မှာ Wallet မရှိသေးရင် အလိုအလျောက် Create လုပ်ပေးပြီး Default Password 123456 ပေးမည်
+        $wallet = Wallet::firstOrCreate(
+            ['user_id' => $user->id],
+            [
+                'balance' => 1000000, // စမ်းသပ်ရန် Balance မူလ ပေးထားခြင်း
+                'wallet_password' => Hash::make('123456') // 💡 Default Password: 123456
+            ]
+        );
+
+        // Password မရှိသေးပါကလည်း Default 123456 သတ်မှတ်ပေးမည်
+        if (empty($wallet->wallet_password)) {
+            $wallet->update(['wallet_password' => Hash::make('123456')]);
         }
 
-        // ၂. Wallet Password (PIN) စစ်ဆေးခြင်း
+        // Password စစ်ဆေးခြင်း
         if (!Hash::check($request->wallet_password, $wallet->wallet_password)) {
-            return back()->with('error', 'Incorrect Wallet Password!');
+            return back()->with('error', 'Wallet Password (PIN) မမှန်ကန်ပါ။');
         }
 
-        // ၃. Transaction အလုပ်လုပ်ပြီး Admin (2%) နှင့် Vendor (98%) ဆီ ငွေခွဲပေးခြင်း
+        // Balance စစ်ဆေးခြင်း
+        if ($wallet->balance < $order->total_amount) {
+            return back()->with('error', 'Wallet ထဲတွင် လက်ကျန်ငွေ မလုံလောက်ပါ။');
+        }
+
+        // 💡 Transaction ဖြင့် Admin (2%) နှင့် Vendor (98%) သို့ ငွေခွဲဝေပေးခြင်း
         DB::transaction(function () use ($wallet, $order) {
 
-            // Customer Wallet ထဲမှ ငွေနှုတ်မည်
+            // Customer Wallet မှ ပိုက်ဆံ နှုတ်မည်
             $wallet->decrement('balance', $order->total_amount);
 
             $admin = User::where('role', 'admin')->first();
@@ -50,20 +73,24 @@ class WalletPaymentController extends Controller
                 $adminCommission = $itemTotal * 0.02;          // 2% Admin Commission
                 $vendorAmount = $itemTotal - $adminCommission; // 98% Vendor Share
 
-                // Admin Wallet ထဲ ငွေပေါင်းမည်
-                if ($admin && $admin->wallet) {
-                    $admin->wallet->increment('balance', $adminCommission);
+                // Admin Wallet ထဲ ငွေထည့်ပေးခြင်း
+                if ($admin) {
+                    $adminWallet = Wallet::firstOrCreate(['user_id' => $admin->id]);
+                    $adminWallet->increment('balance', $adminCommission);
                 }
 
-                // Vendor Wallet ထဲ ငွေပေါင်းမည်
-                $vendor = User::find($item->vendor_id);
-                if ($vendor && $vendor->wallet) {
-                    $vendor->wallet->increment('balance', $vendorAmount);
+                // Vendor Wallet ထဲ ငွေထည့်ပေးခြင်း
+                if ($item->vendor_id) {
+                    $vendorWallet = Wallet::firstOrCreate(['user_id' => $item->vendor_id]);
+                    $vendorWallet->increment('balance', $vendorAmount);
                 }
             }
 
             // Order Status ကို Paid ပြောင်းမည်
             $order->update(['status' => 'paid']);
+
+            // Shopping Cart Cookie ကို ရှင်းထုတ်မည်
+            Cookie::queue(Cookie::forget('shopping_cart'));
         });
 
         return view('wallet.success', compact('order'));

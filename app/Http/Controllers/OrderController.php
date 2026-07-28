@@ -20,7 +20,7 @@ class OrderController extends Controller
         }, 0);
 
         // checkout.blade.php သို့ $total ပို့ပေးမည်
-        return view('checkout.index', compact('cart', 'total'));
+        return view('checkout', compact('cart', 'total'));
     }
     public function placeOrder(Request $request)
     {

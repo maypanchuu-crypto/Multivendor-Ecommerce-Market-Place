@@ -17,7 +17,7 @@ class CartController extends Controller
             return $sum + ($item['price'] * $item['quantity']);
         }, 0);
 
-        return view('cart.index', compact('cart', 'subtotal')); // မိမိ view path အတိုင်း ညှိပါ
+        return view('cart', compact('cart', 'subtotal')); // မိမိ view path အတိုင်း ညှိပါ
     }
 
     // Add To Cart Function
@@ -50,7 +50,7 @@ class CartController extends Controller
 
         Cookie::queue('shopping_cart', json_encode($cart), 43200);
 
-        return redirect()->route('cart.index')->with('success', 'Product added to cart!');
+        return redirect()->route('cart')->with('success', 'Product added to cart!');
     }
 
     // Cart ထဲမှ အရေအတွက် ပြင်ခြင်း

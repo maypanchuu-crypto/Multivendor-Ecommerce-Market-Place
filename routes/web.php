@@ -139,14 +139,17 @@ Route::middleware('auth')->group(function () {
     // Wallet Password ပြောင်းရန် Page & Action
     Route::get('/wallet/password/edit', [WalletController::class, 'editPassword'])->name('wallet.password.edit');
     Route::put('/wallet/password/update', [WalletController::class, 'updatePassword'])->name('wallet.password.update');
+
+    Route::get('/wallet/pay/{orderId}', [WalletPaymentController::class, 'showPaymentPage'])->name('wallet.pay');
+    Route::post('/wallet/pay/{orderId}', [WalletPaymentController::class, 'processPayment'])->name('wallet.pay.process');
 });
 
-Route::get('/wallet/pay/{orderId}', function ($orderId) {
-    $order = \App\Models\Order::findOrFail($orderId);
-    $order->update(['status' => 'paid']);
+// Route::get('/wallet/pay/{orderId}', function ($orderId) {
+//     $order = \App\Models\Order::findOrFail($orderId);
+//     $order->update(['status' => 'paid']);
 
-    return "Order #{$orderId} အတွက် ငွေပေးချေမှု အောင်မြင်ပါသည်။";
-})->name('wallet.pay');
+//     return "Order #{$orderId} အတွက် ငွေပေးချေမှု အောင်မြင်ပါသည်။";
+// })->name('wallet.pay');
 
 
 
