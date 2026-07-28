@@ -77,11 +77,11 @@ class AdminFinanceController extends Controller
         if ($order->status === 'completed')
             return back();
 
-        $commissionRate = 0.05; // ၅% ကော်မရှင်
+        $commissionRate = 0.02; // ၂% ကော်မရှင်
 
         DB::transaction(function () use ($order, $commissionRate) {
             // ၁။ Order status ကို completed ပြောင်းမည်
-            $order->update(['status' => 'completed']);
+            $order->update(['status' => 'paid']);
 
             // ၂။ ပါဝင်သမျှ ပစ္စည်းတစ်ခုချင်းစီအလိုက် ကော်မရှင်ခွဲပြီး သက်ဆိုင်ရာ Vendor ဆီ ပိုက်ဆံထည့်ပေးမည်
             foreach ($order->items as $item) {
