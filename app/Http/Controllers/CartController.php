@@ -78,4 +78,10 @@ class CartController extends Controller
         }
         return response()->json(['status' => 'success']);
     }
+
+    public function clearCart()
+    {
+        Cookie::queue(Cookie::forget('shopping_cart'));
+        return response()->json(['status' => 'success']);
+    }
 }

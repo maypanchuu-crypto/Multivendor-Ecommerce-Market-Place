@@ -90,7 +90,7 @@ class WalletPaymentController extends Controller
             $order->update(['status' => 'paid']);
 
             // Shopping Cart Cookie ကို ရှင်းထုတ်မည်
-            Cookie::queue(Cookie::forget('shopping_cart'));
+            // Cookie::queue(Cookie::forget('shopping_cart'));
         });
 
         return view('wallet.success', compact('order'));

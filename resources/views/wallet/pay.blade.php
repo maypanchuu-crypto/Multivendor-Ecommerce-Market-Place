@@ -17,7 +17,7 @@
             <!-- Order Summary Info Box -->
             <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 mb-6 text-left space-y-2">
                 <div class="flex justify-between text-xs text-slate-500 font-bold">
-                    <span>Order ID:</span>
+                    <span>Total Balance:</span>
                     <span class="text-slate-800">#{{ $order->id }}</span>
                 </div>
                 <div class="flex justify-between text-xs text-slate-500 font-bold">
@@ -40,7 +40,7 @@
                 @csrf
                 <div>
                     <label class="block text-xs font-bold text-slate-600 mb-2 uppercase tracking-wider text-left">
-                        6-Digit Wallet Password *
+                       Wallet Password *
                     </label>
                     <input type="password" name="wallet_password" maxlength="6" pattern="[0-9]*" inputmode="numeric"
                         required
@@ -51,7 +51,7 @@
 
                 <button type="submit"
                     class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-3.5 rounded-2xl shadow-lg shadow-emerald-600/30 transition text-sm">
-                    Confirm & Pay
+                    Confirm
                 </button>
             </form>
 

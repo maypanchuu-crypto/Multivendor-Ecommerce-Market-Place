@@ -110,6 +110,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/add-to-cart/{id}', [CartController::class, 'addToCart'])->name('cart.add');
     Route::patch('/update-cart', [CartController::class, 'updateCart'])->name('cart.update');
     Route::delete('/remove-from-cart', [CartController::class, 'removeCart'])->name('cart.remove');
+    Route::post('/clear-cart', [CartController::class, 'clearCart'])->name('cart.clear');
 
     // Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
     // Route::post('/checkout/place-order', [CheckoutController::class, 'placeOrder'])->name('checkout.placeOrder');

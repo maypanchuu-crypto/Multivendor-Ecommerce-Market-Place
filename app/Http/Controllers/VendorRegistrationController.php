@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
+// use Illuminate\Support\Facades\Storage;
 
 class VendorRegistrationController extends Controller
 {
@@ -26,7 +26,7 @@ class VendorRegistrationController extends Controller
             'shop_name' => 'required|string|max:255|unique:users,shop_name,' . $user->id,
             'shop_phone' => 'required|digits_between:8,11',
             'shop_description' => 'required|string|min:10',
-            'payment_slip' => 'required|image|mimes:jpeg,png,jpg|max:2048', // Max 2MB
+            // 'payment_slip' => 'required|image|mimes:jpeg,png,jpg|max:2048', // Max 2MB
         ]);
 
         $inputData = [
@@ -37,18 +37,18 @@ class VendorRegistrationController extends Controller
         ];
 
         // ပုံကို Storage အောက်ထဲသို့ သိမ်းဆည်းခြင်း
-        if ($request->hasFile('payment_slip')) {
-            // ယခင်ပုံဟောင်းရှိရင် ဖျက်ပစ်မည်
-            if ($user->payment_slip) {
-                Storage::disk('public')->delete($user->payment_slip);
-            }
+        // if ($request->hasFile('payment_slip')) {
+        //     // ယခင်ပုံဟောင်းရှိရင် ဖျက်ပစ်မည်
+        //     if ($user->payment_slip) {
+        //         Storage::disk('public')->delete($user->payment_slip);
+        //     }
             
-            $path = $request->file('payment_slip')->store('slips', 'public');
-            $inputData['payment_slip'] = $path;
-        }
+        //     $path = $request->file('payment_slip')->store('slips', 'public');
+        //     $inputData['payment_slip'] = $path;
+        // }
 
         $user->update($inputData);
 
-        return redirect()->back()->with('success', 'Your request and payment slip have been submitted! Please wait for admin approval.');
+        return redirect()->back()->with('success', 'Your request has been submitted! Please wait for admin approval.');
     }
 }
