@@ -53,7 +53,7 @@ class OrderController extends Controller
         );
 
         // Order ID တစ်ခုတည်းအတွက်ပဲ QR Code URL ထုတ်ပေးမည်
-        $paymentUrl = "http://192.168.1.5:8000/wallet/pay/" . $order->id; 
+        $paymentUrl = url('/wallet/pay/' . $order->id);
         $qrCode = QrCode::size(200)->generate($paymentUrl);
 
         return response()->json([
