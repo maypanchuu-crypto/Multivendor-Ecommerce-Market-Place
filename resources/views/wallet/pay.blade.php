@@ -46,7 +46,7 @@
                         required
                         class="w-full text-center tracking-[1em] text-2xl font-black border-2 border-slate-200 focus:border-emerald-500 rounded-2xl p-3 outline-none transition bg-slate-50"
                         placeholder="••••••">
-                    <p class="text-[10px] text-slate-400 mt-1 text-left">* Default password is 123456</p>
+                    <!-- <p class="text-[10px] text-slate-400 mt-1 text-left">* Default password is 123456</p> -->
                 </div>
 
                 <button type="submit"
