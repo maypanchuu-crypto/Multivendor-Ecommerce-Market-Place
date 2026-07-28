@@ -50,7 +50,7 @@ class CartController extends Controller
 
         Cookie::queue('shopping_cart', json_encode($cart), 43200);
 
-        return redirect()->route('cart')->with('success', 'Product added to cart!');
+        return redirect()->route('cart.index')->with('success', 'Product added to cart!');
     }
 
     // Cart ထဲမှ အရေအတွက် ပြင်ခြင်း
