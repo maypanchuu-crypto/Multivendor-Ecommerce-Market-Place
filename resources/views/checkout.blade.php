@@ -163,7 +163,7 @@
                                 d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1fr 1fr 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
                                 clip-rule="evenodd"></path>
                         </svg>
-                        <span>Fast & Secure Payment Processing</span>
+                        <span>Payment Processing</span>
                     </div>
                 </div>
             </div>
@@ -184,7 +184,7 @@
                     </div>
 
                     <h2 class="font-black text-xl text-slate-800 mb-1">Scan QR Code to Pay</h2>
-                    <p class="text-xs font-semibold text-slate-400 mb-5">Please scan with your mobile app</p>
+                    <!-- <p class="text-xs font-semibold text-slate-400 mb-5">Please scan with your mobile app</p> -->
 
                     <!-- QR Image 3D Frame Wrapper -->
                     <div
@@ -308,7 +308,8 @@
                             })
                             .catch(err => console.error(err));
                     }, 2000);
-                }
+                },
+
 
                 closeModal() {
                     this.showModal = false;
