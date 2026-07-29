@@ -86,6 +86,15 @@
                         Customer Marketplace
                     </a>
 
+                    <!-- <a href="{{ route('admin.orders.index') }}"
+                        class="btn-3d flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-blue-800 text-white font-medium text-sm border border-blue-700 transform transition duration-200 hover:-translate-y-1">
+                        <svg class="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" stroke-width="2"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                        Order & Finance Overview
+                    </a> -->
+
                     <a href="{{ route('admin.vendor.requests') }}"
                         class="btn-3d flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-blue-800 text-white font-medium text-sm border border-blue-700 transform transition duration-200 hover:-translate-y-1">
                         <svg class="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" stroke-width="2"
@@ -111,7 +120,7 @@
                         <svg id="nightModeIcon" class="w-5 h-5 text-yellow-400 block dark:hidden" fill="none"
                             stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z">
+                                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z">
                             </path>
                         </svg>
                         <svg id="dayModeIcon" class="w-5 h-5 text-amber-400 hidden dark:block" fill="none"
@@ -175,14 +184,10 @@
                 @endif
 
                 <!-- Summary Cards Section -->
-                @php                    
-                    $paidOrders = $orders->filter(function ($order) {
-                        return in_array($order->status, ['paid']);
-                    });
-
-                    $totalRevenue = $paidOrders->sum('total_amount');
-                    $totalCommission = $paidOrders->flatMap->items->sum('admin_commission');
-                    $totalVendorPayout = $paidOrders->flatMap->items->sum('vendor_amount');
+                @php
+                    $totalRevenue = $orders->sum('total_amount');
+                    $totalCommission = $orders->flatMap->items->sum('admin_commission');
+                    $totalVendorPayout = $orders->flatMap->items->sum('vendor_amount');
                 @endphp
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <!-- Total Sales Card -->
@@ -190,7 +195,7 @@
                         class="card-3d p-6 rounded-2xl flex justify-between items-center transform transition duration-200 hover:-translate-y-1">
                         <div>
                             <span class="text-xs font-black text-blue-200 uppercase tracking-wider">Total Sales
-                                Amount (Paid)</span>
+                                Amount</span>
                             <div class="text-3xl font-black mt-2 text-white drop-shadow-md">
                                 {{ number_format($totalRevenue) }} <span
                                     class="text-xs font-normal text-blue-200">MMK</span>
@@ -256,10 +261,10 @@
 
                                 <div class="flex items-center gap-4">
                                     <!-- Status Badge -->
-                                    @if($order->status === 'paid')
+                                    @if($order->status === 'paid' || $order->status === 'completed')
                                         <span
                                             class="btn-3d text-[11px] font-black text-emerald-300 bg-emerald-900/80 border border-emerald-500 px-3 py-1.5 rounded-xl">
-                                            ● Paid
+                                            ● Paid / Completed
                                         </span>
                                     @else
                                         <span
@@ -272,12 +277,11 @@
                                     <div class="text-right">
                                         <div class="text-xs text-blue-200">Total Amount</div>
                                         <div class="text-lg font-black text-cyan-300">
-                                            {{ number_format($order->total_amount) }} MMK
-                                        </div>
+                                            {{ number_format($order->total_amount) }} MMK</div>
                                     </div>
 
                                     <!-- Approve Button -->
-                                    @if($order->status !== 'paid' && $order->status !== 'completed')
+                                    <!-- @if($order->status !== 'paid' && $order->status !== 'completed')
                                         <form action="{{ route('admin.orders.complete', $order->id) }}" method="POST"
                                             class="inline">
                                             @csrf
@@ -286,7 +290,7 @@
                                                 Approve & Split
                                             </button>
                                         </form>
-                                    @endif
+                                    @endif -->
                                 </div>
                             </div>
 
@@ -349,7 +353,7 @@
                     @empty
                         <div class="card-3d p-12 text-center rounded-2xl">
                             <div class="text-4xl mb-3">📦</div>
-                            <h3 class="text-lg font-bold text-white">There are no orders yet.</h3>
+                            <h3 class="text-lg font-bold text-white">There are no orders yet.။</h3>
                         </div>
                     @endforelse
                 </div>

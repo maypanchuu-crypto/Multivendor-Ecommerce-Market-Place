@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\OrderItem;
-use App\Models\Order; // 👈 1. Order Model ကို Import လုပ်ပါ
 use Carbon\Carbon;
 
 class AdminDashboardController extends Controller
@@ -23,12 +22,13 @@ class AdminDashboardController extends Controller
         $todayOrderItems = OrderItem::whereDate('created_at', Carbon::today())->get();
 
         $dailyRevenue = $todayOrderItems->sum(function ($item) {
+            // admin_commission ရှိရင် ၎င်းကိုယူမည်၊ မရှိရင် (Price * Qty) ရဲ့ 2% တွက်မည်
             return $item->admin_commission > 0
                 ? $item->admin_commission
                 : (($item->price * $item->quantity) * 0.02);
         });
 
-        // 4. Revenue Growth Data
+        // 4. Revenue Growth Data (ရက်အလိုက် Admin Commission အစစ်ဆွဲထုတ်ခြင်း)
         $orderItemsRaw = OrderItem::selectRaw('YEAR(created_at) as year, MONTH(created_at) as month, DAY(created_at) as day, SUM(CASE WHEN admin_commission > 0 THEN admin_commission ELSE (price * quantity * 0.02) END) as total_commission')
             ->whereRaw('YEAR(created_at) >= ?', [2024])
             ->groupBy('year', 'month', 'day')
@@ -41,6 +41,7 @@ class AdminDashboardController extends Controller
             $revenueData[$y] = [];
             for ($m = 1; $m <= 12; $m++) {
                 $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $m, $y);
+                // လတစ်လစီအတွက် ရက်အလိုက် Default 0 သတ်မှတ်မည်
                 $revenueData[$y][$m] = array_fill(1, $daysInMonth, 0);
             }
         }
@@ -68,16 +69,12 @@ class AdminDashboardController extends Controller
             }
         }
 
-        // 👈 2. Blade View တွင် သုံးနိုင်ရန် $orders ကို Database မှ ဆွဲထုတ်ပါ (Eager Loading သုံးထားပါသည်)
-        $orders = Order::with(['items.product', 'items.vendor'])->latest()->get();
-
         return view('admin.dashboard', compact(
             'totalStores',
             'activeUsers',
             'dailyRevenue',
             'revenueData',
-            'registrationsData',
-            'orders' // 👈 3. Compact ထဲတွင် 'orders' ကို ထည့်ပေးပါ
+            'registrationsData'
         ));
     }
 }
