@@ -106,9 +106,27 @@ class AdminFinanceController extends Controller
         return back()->with('success', 'Order approved! Commissions distributed to vendors.');
     }
 
-    public function orderIndex()
+    public function orderIndex(Request $request)
     {
-        $orders = Order::with(['items.product', 'items.vendor', 'user'])->latest()->get();
-        return view('admin.orders.index', compact('orders'));
+        $status = $request->input('status', 'all'); // default ကို 'all' ဟု သတ်မှတ်မည်
+
+        // 1. Base Query: Order များအားလုံးကို ဆွဲထုတ်မည်
+        $query = Order::with(['items.product', 'items.vendor', 'user']);
+
+        // Status Filter စစ်ခြင်း
+        if ($status === 'paid') {
+            $query->where('status', 'paid');
+        } elseif ($status === 'pending') {
+            $query->where('status', 'pending');
+        }
+
+        $orders = $query->latest()->get();
+
+        // 2. Filter Dropdown အတွက် Status တစ်ခုချင်းစီ၏ Count များ တွက်ချက်ခြင်း
+        $allCount = Order::count();
+        $pendingCount = Order::where('status', 'pending')->count();
+        $paidCount = Order::where('status', 'paid')->count();
+
+        return view('admin.orders.index', compact('orders', 'status', 'allCount', 'pendingCount', 'paidCount'));
     }
 }

@@ -231,15 +231,15 @@
                             <div
                                 class="w-full md:w-auto flex md:flex-col justify-between md:justify-center items-center md:items-end border-t md:border-t-0 pt-3 md:pt-0 border-[#104e35]/10 gap-2 shrink-0">
                                 <div>
-                                    @if(($item->order->status ?? '') === 'completed' || ($item->order->status ?? '') === 'paid')
+                                    @if((($item->order->status ?? '') === 'paid')
                                         <span
-                                            class="px-3 py-1 rounded-xl bg-[#d8f5e5] text-[#104e35] border border-[#104e35] font-black text-xs shadow-[2px_2px_0px_#104e35]">
-                                            ✓ Approved / Paid
+                                            class="btn-3d text-[11px] font-black text-emerald-300 bg-emerald-900/80 border border-emerald-500 px-3 py-1.5 rounded-xl">
+                                            ● Paid
                                         </span>
                                     @else
                                         <span
-                                            class="px-3 py-1 rounded-xl bg-[#fff3c4] text-[#b45309] border border-[#b45309] font-black text-xs shadow-[2px_2px_0px_#b45309]">
-                                            ⏳ Processing
+                                            class="btn-3d text-[11px] font-black text-emerald-300 bg-emerald-900/80 border border-emerald-500 px-3 py-1.5 rounded-xl">
+                                            ● Pending
                                         </span>
                                     @endif
                                 </div>

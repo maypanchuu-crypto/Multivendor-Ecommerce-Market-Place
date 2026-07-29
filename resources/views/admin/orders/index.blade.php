@@ -154,10 +154,20 @@
                         </p>
                     </div>
                     <div>
-                        <span
-                            class="btn-3d px-4 py-2 rounded-xl bg-blue-900 text-yellow-300 border border-blue-500 text-xs font-black">
-                            Total Orders: {{ $orders->count() }}
-                        </span>
+                        <form method="GET" action="{{ route('admin.orders.index') }}" id="adminStatusFilterForm">
+                            <select name="status" onchange="document.getElementById('adminStatusFilterForm').submit()"
+                                class="btn-3d px-4 py-2 rounded-xl bg-blue-900 text-yellow-300 border border-blue-500 text-xs font-black focus:ring-0 focus:border-blue-400 cursor-pointer outline-none">
+                                <option value="all" {{ $status === 'all' ? 'selected' : '' }} class="bg-blue-900 text-white">
+                                    Total Orders ({{ $allCount }})
+                                </option>
+                                <option value="pending" {{ $status === 'pending' ? 'selected' : '' }} class="bg-blue-900 text-white">
+                                    Pending ({{ $pendingCount }})
+                                </option>
+                                <option value="paid" {{ $status === 'paid' ? 'selected' : '' }} class="bg-blue-900 text-white">
+                                    Paid ({{ $paidCount }})
+                                </option>
+                            </select>
+                        </form>
                     </div>
                 </div>
 
