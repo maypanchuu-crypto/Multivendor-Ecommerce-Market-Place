@@ -110,10 +110,9 @@ class AdminFinanceController extends Controller
     {
         $status = $request->input('status', 'all'); // default ကို 'all' ဟု သတ်မှတ်မည်
 
-        // 1. Base Query: Order များအားလုံးကို ဆွဲထုတ်မည်
+        // 1. Dropdown Filter အတွက် Order List Query
         $query = Order::with(['items.product', 'items.vendor', 'user']);
 
-        // Status Filter စစ်ခြင်း
         if ($status === 'paid') {
             $query->where('status', 'paid');
         } elseif ($status === 'pending') {
@@ -122,11 +121,27 @@ class AdminFinanceController extends Controller
 
         $orders = $query->latest()->get();
 
-        // 2. Filter Dropdown အတွက် Status တစ်ခုချင်းစီ၏ Count များ တွက်ချက်ခြင်း
+        // 2. Dropdown Counts
         $allCount = Order::count();
         $pendingCount = Order::where('status', 'pending')->count();
         $paidCount = Order::where('status', 'paid')->count();
 
-        return view('admin.orders.index', compact('orders', 'status', 'allCount', 'pendingCount', 'paidCount'));
+        // 3. Summary Cards အတွက် တန်ဖိုးများ (Dropdown နှင့် မဆိုင်ဘဲ Paid ဖြစ်ပြီးသား စာရင်းကိုပဲ အမြဲတမ်း ပုံသေ တွက်မည်)
+        $paidOrdersForSummary = Order::with('items')->where('status', 'paid')->get();
+
+        $totalRevenue = $paidOrdersForSummary->sum('total_amount');
+        $totalCommission = $paidOrdersForSummary->flatMap->items->sum('admin_commission');
+        $totalVendorPayout = $paidOrdersForSummary->flatMap->items->sum('vendor_amount');
+
+        return view('admin.orders.index', compact(
+            'orders',
+            'status',
+            'allCount',
+            'pendingCount',
+            'paidCount',
+            'totalRevenue',
+            'totalCommission',
+            'totalVendorPayout'
+        ));
     }
 }

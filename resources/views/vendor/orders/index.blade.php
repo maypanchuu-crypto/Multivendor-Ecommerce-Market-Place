@@ -231,7 +231,7 @@
                             <div
                                 class="w-full md:w-auto flex md:flex-col justify-between md:justify-center items-center md:items-end border-t md:border-t-0 pt-3 md:pt-0 border-[#104e35]/10 gap-2 shrink-0">
                                 <div>
-                                    @if((($item->order->status ?? '') === 'paid')
+                                    @if(($item->order->status ?? '') === 'paid')
                                         <span
                                             class="btn-3d text-[11px] font-black text-emerald-300 bg-emerald-900/80 border border-emerald-500 px-3 py-1.5 rounded-xl">
                                             ● Paid
