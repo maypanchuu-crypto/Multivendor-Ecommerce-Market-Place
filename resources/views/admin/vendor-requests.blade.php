@@ -188,7 +188,7 @@
                                 <th class="p-4">Email</th>
                                 <th class="p-4">Phone</th>
                                 <th class="p-4">Description</th>
-                                <th class="p-4">Payment Slip</th>
+                                <!-- <th class="p-4">Payment Slip</th> -->
                                 <th class="p-4 text-right">Actions</th>
                             </tr>
                         </thead>
@@ -205,7 +205,7 @@
                                     <td class="p-4 text-blue-200 max-w-xs truncate" title="{{ $req->shop_description }}">
                                         {{ $req->shop_description }}
                                     </td>
-                                    <td class="p-4">
+                                    <!-- <td class="p-4">
                                         @if($req->payment_slip)
                                             <button onclick="showSlip('{{ asset('storage/' . $req->payment_slip) }}')"
                                                 class="btn-3d text-xs bg-blue-900 hover:bg-blue-800 text-cyan-300 font-bold px-3 py-1.5 rounded-xl border border-cyan-500 transition-all flex items-center gap-1.5">
@@ -222,7 +222,7 @@
                                         @else
                                             <span class="text-xs text-blue-300/60 font-semibold">No Slip</span>
                                         @endif
-                                    </td>
+                                    </td> -->
                                     <td class="p-4 text-right">
                                         <div class="flex justify-end gap-2 items-center">
                                             <form action="{{ route('admin.vendor.approve', $req->id) }}" method="POST">

@@ -65,7 +65,7 @@
                                                 <button
                                                     class="px-2.5 py-1 text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white font-black update-cart-btn minus-btn transition-colors">-</button>
                                                 <input type="number" value="{{ $details['quantity'] }}" min="1"
-                                                    max="{{ $details['stock'] ?? 99 }}"
+                                                    max="{{ $details['stock'] ?? 99 }}" oninput="if(parseInt(this.value) > {{ $details['stock'] }}) this.value = {{ $details['stock'] }}; if(parseInt(this.value) < 1) this.value = 1;"
                                                     class="w-12 text-center bg-transparent border-none text-xs font-black focus:outline-none quantity-input dark:text-white">
                                                 <button
                                                     class="px-2.5 py-1 text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white font-black update-cart-btn plus-btn transition-colors">+</button>

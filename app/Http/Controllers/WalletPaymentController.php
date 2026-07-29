@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\User;
 use App\Models\Wallet;
+use App\Models\Product;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Cookie;
@@ -83,6 +84,10 @@ class WalletPaymentController extends Controller
                 if ($item->vendor_id) {
                     $vendorWallet = Wallet::firstOrCreate(['user_id' => $item->vendor_id]);
                     $vendorWallet->increment('balance', $vendorAmount);
+                }
+
+                if ($item->product_id) {
+                    Product::where('id', $item->product_id)->decrement('stock', $item->quantity);
                 }
             }
 

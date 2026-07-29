@@ -20,7 +20,6 @@ class CartController extends Controller
         return view('cart', compact('cart', 'subtotal')); // မိမိ view path အတိုင်း ညှိပါ
     }
 
-    // Add To Cart Function
     public function addToCart(Request $request, $id)
     {
         $product = Product::findOrFail($id);
@@ -33,8 +32,36 @@ class CartController extends Controller
         // Cart Key
         $cartKey = $id . ($size ? '-' . $size : '') . ($color ? '-' . $color : '');
 
+        // Current Cart ထဲရှိနှင့်ပြီးသား အရေအတွက်ကို ရယူခြင်း
+        $currentCartQty = isset($cart[$cartKey]) ? $cart[$cartKey]['quantity'] : 0;
+        $newTotalQty = $currentCartQty + $quantity;
+
+        // 🔴 1. Cart ထဲမှာ ရောက်နေပြီးသား အရေအတွက်က Maximum Stock အထိ ဖြစ်နေပြီးသားဆိုလျှင်
+        if ($currentCartQty >= $product->stock) {
+            return redirect()->route('dashboard')->with('error', "Maximum stock capacity reached ({$product->stock} items already in cart)!");
+        }
+
+        // 🔴 2. ထပ်ပေါင်းမယ့် အရေအတွက်က Stock ထက် ကျော်လွန်သွားပါက Maximum Stock အထိပဲ သတ်မှတ်ပေးမည်
+        if ($newTotalQty > $product->stock) {
+            $cart[$cartKey] = [
+                'product_id' => $product->id,
+                'name' => $product->name,
+                'price' => $product->price,
+                'quantity' => $product->stock, // Max Stock အထိပဲ ထည့်ပေးမည်
+                'image' => $product->image,
+                'size' => $size,
+                'color' => $color,
+                'stock' => $product->stock
+            ];
+
+            Cookie::queue('shopping_cart', json_encode($cart), 43200);
+
+            return redirect()->route('dashboard')->with('warning', "Cart updated to maximum available stock ({$product->stock} items)!");
+        }
+
+        // 🟢 3. Stock မကျော်သေးပါက ပုံမှန်အတိုင်း ပေါင်းပေးမည်
         if (isset($cart[$cartKey])) {
-            $cart[$cartKey]['quantity'] += $quantity;
+            $cart[$cartKey]['quantity'] = $newTotalQty;
         } else {
             $cart[$cartKey] = [
                 'product_id' => $product->id,
@@ -42,15 +69,15 @@ class CartController extends Controller
                 'price' => $product->price,
                 'quantity' => $quantity,
                 'image' => $product->image,
-                'size' => $size,   // null ဖြစ်ရင်လည်း key ပါသွားမည်
-                'color' => $color,  // null ဖြစ်ရင်လည်း key ပါသွားမည်
+                'size' => $size,
+                'color' => $color,
                 'stock' => $product->stock
             ];
         }
 
         Cookie::queue('shopping_cart', json_encode($cart), 43200);
 
-        return redirect()->route('cart.index')->with('success', 'Product added to cart!');
+        return redirect()->route('dashboard')->with('success', 'Product added to cart!');
     }
 
     // Cart ထဲမှ အရေအတွက် ပြင်ခြင်း
