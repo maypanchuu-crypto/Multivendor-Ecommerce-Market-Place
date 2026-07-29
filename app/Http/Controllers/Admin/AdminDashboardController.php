@@ -18,8 +18,10 @@ class AdminDashboardController extends Controller
         // 2. Active Users (Admin မှလွဲ၍ Customer ရော Vendor ပါ ရေတွက်မည်)
         $activeUsers = User::whereIn('role', ['customer', 'vendor'])->count();
 
-        // 3. Daily Revenue (ဒီနေ့ရရှိသော 2% Admin Commission စုစုပေါင်း)
-        $todayOrderItems = OrderItem::whereDate('created_at', Carbon::today())->get();
+        // 3. Daily Revenue (ဒီနေ့အတွက် paid ဖြစ်ပြီးသော Order များမှရရှိသော 2% Admin Commission စုစုပေါင်း)
+        $todayOrderItems = OrderItem::whereHas('order', function ($query) {
+            $query->where('status', 'paid');
+        })->whereDate('created_at', Carbon::today())->get();
 
         $dailyRevenue = $todayOrderItems->sum(function ($item) {
             // admin_commission ရှိရင် ၎င်းကိုယူမည်၊ မရှိရင် (Price * Qty) ရဲ့ 2% တွက်မည်
@@ -28,8 +30,11 @@ class AdminDashboardController extends Controller
                 : (($item->price * $item->quantity) * 0.02);
         });
 
-        // 4. Revenue Growth Data (ရက်အလိုက် Admin Commission အစစ်ဆွဲထုတ်ခြင်း)
-        $orderItemsRaw = OrderItem::selectRaw('YEAR(created_at) as year, MONTH(created_at) as month, DAY(created_at) as day, SUM(CASE WHEN admin_commission > 0 THEN admin_commission ELSE (price * quantity * 0.02) END) as total_commission')
+        // 4. Revenue Growth Data (ရက်အလိုက် paid ဖြစ်ပြီးသော Admin Commission အစစ်ဆွဲထုတ်ခြင်း)
+        $orderItemsRaw = OrderItem::whereHas('order', function ($query) {
+            $query->where('status', 'paid');
+        })
+            ->selectRaw('YEAR(created_at) as year, MONTH(created_at) as month, DAY(created_at) as day, SUM(CASE WHEN admin_commission > 0 THEN admin_commission ELSE (price * quantity * 0.02) END) as total_commission')
             ->whereRaw('YEAR(created_at) >= ?', [2024])
             ->groupBy('year', 'month', 'day')
             ->get();
