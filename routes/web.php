@@ -137,10 +137,13 @@ Route::middleware('auth')->group(function () {
         ]);
     });
 
+    // Wallet Account View & Create Routes
+    Route::get('/wallet', [WalletController::class, 'index'])->name('wallet.index');
+    Route::post('/wallet/store', [WalletController::class, 'store'])->name('wallet.store');
     // Wallet Password ပြောင်းရန် Page & Action
     Route::get('/wallet/password/edit', [WalletController::class, 'editPassword'])->name('wallet.password.edit');
     Route::put('/wallet/password/update', [WalletController::class, 'updatePassword'])->name('wallet.password.update');
-
+    //order payment via wallet
     Route::get('/wallet/pay/{orderId}', [WalletPaymentController::class, 'showPaymentPage'])->name('wallet.pay');
     Route::post('/wallet/pay/{orderId}', [WalletPaymentController::class, 'processPayment'])->name('wallet.pay.process');
 });

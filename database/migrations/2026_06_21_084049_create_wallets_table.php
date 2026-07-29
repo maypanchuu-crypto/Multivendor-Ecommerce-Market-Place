@@ -13,7 +13,7 @@ return new class extends Migration {
         Schema::create('wallets', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->decimal('balance', 15, 2)->default(100000.00); // Default ငွေ ၁ သိန်း ထည့်ပေးထားမည်
+            $table->decimal('balance', 15, 2)->default(2000000.00); // Default ငွေ ၁ သိန်း ထည့်ပေးထားမည်
             $table->string('wallet_password')->nullable(); // Wallet PIN / Password
             $table->timestamps();
         });

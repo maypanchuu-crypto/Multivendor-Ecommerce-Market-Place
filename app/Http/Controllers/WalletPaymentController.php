@@ -40,7 +40,7 @@ class WalletPaymentController extends Controller
         $wallet = Wallet::firstOrCreate(
             ['user_id' => $user->id],
             [
-                'balance' => 1000000, // စမ်းသပ်ရန် Balance မူလ ပေးထားခြင်း
+                'balance' => 2000000.00, // စမ်းသပ်ရန် Balance မူလ ပေးထားခြင်း
                 'wallet_password' => Hash::make('123456') // 💡 Default Password: 123456
             ]
         );
