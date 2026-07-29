@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\OrderItem;
+use App\Models\Product;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\Cookie;
+use Illuminate\Support\Facades\DB;
 
 class OrderController extends Controller
 {
@@ -14,19 +16,17 @@ class OrderController extends Controller
     {
         $cart = json_decode(Cookie::get('shopping_cart', '[]'), true);
 
-        // Cart ထဲက ပစ္စည်းတွေရဲ့ စုစုပေါင်း တန်ဖိုးကို တွက်ချက်ခြင်း
         $total = array_reduce($cart, function ($sum, $item) {
             return $sum + ($item['price'] * $item['quantity']);
         }, 0);
 
-        // checkout.blade.php သို့ $total ပို့ပေးမည်
         return view('checkout', compact('cart', 'total'));
     }
+
     public function placeOrder(Request $request)
     {
         $cart = json_decode(Cookie::get('shopping_cart', '[]'), true);
 
-        // Cart ထဲမှာ ဘာမှမရှိရင် မလုပ်ခိုင်းပါ
         if (empty($cart)) {
             return response()->json([
                 'status' => 'error',
@@ -38,21 +38,56 @@ class OrderController extends Controller
             return $sum + ($item['price'] * $item['quantity']);
         }, 0);
 
-        // 💡 Pending Order ရှိ/မရှိ စစ်ပြီး ရှိရင် Update လုပ်မည်၊ မရှိရင် Create လုပ်မည်
-        $order = Order::updateOrCreate(
-            [
-                'user_id' => auth()->id(),
-                'status' => 'pending', // Pending ဖြစ်နေတဲ့ Order ကိုပဲ ရှာမည်
-            ],
-            [
-                'total_amount' => $total,
-                'customer_name'    => $request->input('customer_name', auth()->user()->name),
-                'customer_phone' => $request->phone,   // နောက်ဆုံးရိုက်ထည့်လိုက်သည့် ဖုန်းနံပါတ်
-                'shipping_address' => $request->address, // နောက်ဆုံးရိုက်ထည့်လိုက်သည့် လိပ်စာ
-            ]
-        );
+        // 💡 DB Transaction သုံးပြီး Order နှင့် OrderItems များကို အတူတူ Save မည်
+        $order = DB::transaction(function () use ($request, $cart, $total) {
 
-        // Order ID တစ်ခုတည်းအတွက်ပဲ QR Code URL ထုတ်ပေးမည်
+            // ၁။ Order Create/Update လုပ်မည်
+            $order = Order::updateOrCreate(
+                [
+                    'user_id' => auth()->id(),
+                    'status' => 'pending',
+                ],
+                [
+                    'total_amount' => $total,
+                    'customer_name' => $request->input('customer_name', auth()->user()->name),
+                    'customer_phone' => $request->phone,
+                    'shipping_address' => $request->address,
+                ]
+            );
+
+            // 💡 ၂။ ယခင်က အဟောင်းရှိခဲ့ပါက Duplicate မဖြစ်စေရန် ထိန်းသိမ်းခြင်း
+            $order->items()->delete();
+
+            // 💡 ၃။ Cart ထဲက Data များကို OrderItem ထဲသို့ Loop ပတ်၍ ထည့်သွင်းခြင်း
+            foreach ($cart as $key => $item) {
+
+                // Product ရှာ၍ vendor_id ယူရန်
+                $productId = $item['product_id'] ?? $key;
+                $product = Product::find($productId);
+
+                if ($product) {
+                    $itemTotal = $item['price'] * $item['quantity'];
+                    $adminCommission = $itemTotal * 0.02; // 2% Admin Commission
+                    $vendorAmount = $itemTotal - $adminCommission; // 98% Vendor Share
+
+                    OrderItem::create([
+                        'order_id' => $order->id,
+                        'product_id' => $product->id,
+                        'vendor_id' => $product->user_id, // Product ပိုင်ရှင် Vendor ID
+                        'quantity' => $item['quantity'],
+                        'color' => $item['color'] ?? null,
+                        'size' => $item['size'] ?? null,
+                        'price' => $item['price'],
+                        'admin_commission' => $adminCommission,
+                        'vendor_amount' => $vendorAmount,
+                    ]);
+                }
+            }
+
+            return $order;
+        });
+
+        // QR Code URL ထုတ်ပေးခြင်း
         $paymentUrl = url('/wallet/pay/' . $order->id);
         $qrCode = QrCode::size(200)->generate($paymentUrl);
 
@@ -62,21 +97,6 @@ class OrderController extends Controller
             'qr_code' => 'data:image/svg+xml;base64,' . base64_encode($qrCode)
         ]);
     }
-
-    // ၂။ ဖုန်းဖြင့် Scan ဖတ်ပြီး ငွေချေပြီးမှ Cart ကို ရှင်းထုတ်မည်
-    // public function confirmPayment($orderId)
-    // {
-    //     $order = Order::findOrFail($orderId);
-
-    //     if ($order->status !== 'paid') {
-    //         $order->update(['status' => 'paid']);
-
-    //         // 💡 ငွေပေးချေမှု အောင်မြင်မှသာ Cookie ထဲက Cart ကို ရှင်းထုတ်ပါမည်
-    //         Cookie::queue(Cookie::forget('shopping_cart'));
-    //     }
-
-    //     return "Order #{$orderId} အတွက် ငွေပေးချေမှု အောင်မြင်ပါသည်။";
-    // }
 
     public function confirmPayment($orderId)
     {
@@ -88,8 +108,6 @@ class OrderController extends Controller
 
         if ($order->status !== 'paid') {
             $order->update(['status' => 'paid']);
-
-            // 💡 ငွေပေးချေမှု အောင်မြင်ပါက Cookie ထဲက Shopping Cart ကို ရှင်းထုတ်မည်
             Cookie::queue(Cookie::forget('shopping_cart'));
         }
 
@@ -98,6 +116,6 @@ class OrderController extends Controller
             <h2 style="color: green;">🎉 ငွေပေးချေမှု အောင်မြင်ပါသည်။</h2>
             <p>Order #' . $orderId . ' အတွက် ပေးချေမှု ပြီးစီးပါပြီ။</p>
         </div>
-    ');
+        ');
     }
 }

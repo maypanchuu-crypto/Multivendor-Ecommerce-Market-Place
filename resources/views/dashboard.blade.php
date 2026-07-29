@@ -216,7 +216,6 @@
                     x-transition:leave-end="opacity-0 transform -translate-y-2"
                     class="w-full my-4 flex items-center justify-between bg-[#d1fae5] text-[#065f46] border-2 border-[#10b981] px-5 py-3 rounded-2xl shadow-sm">
                     
-                    <!-- Left Side: Icon + Message -->
                     <div class="flex items-center gap-3">
                         <div class="bg-[#10b981] text-white p-1 rounded-full flex items-center justify-center">
                             <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
@@ -227,10 +226,9 @@
                             {{ session('success') }}
                         </span>
                     </div>
-
                 </div>
-         
-            @elseif (session('warining'))
+
+            @elseif (session('warning'))
                 <div x-data="{ show: true }" 
                     x-show="show" 
                     x-init="setTimeout(() => show = false, 4000)"
@@ -240,23 +238,16 @@
                     x-transition:leave="transition ease-in duration-200"
                     x-transition:leave-start="opacity-100 transform translate-y-0"
                     x-transition:leave-end="opacity-0 transform -translate-y-2"
-                    class="w-full my-4 flex items-center justify-between bg-[#d1fae5] text-[#065f46] border-2 border-[#10b981] px-5 py-3 rounded-2xl shadow-sm">
+                    class="w-full my-4 flex items-center justify-between bg-yellow-100 text-yellow-800 border-2 border-yellow-400 px-5 py-3 rounded-2xl shadow-sm">
                     
-                    <!-- Left Side: Icon + Message -->
                     <div class="flex items-center gap-3">
-                        <div class="bg-[#10b981] text-white p-1 rounded-full flex items-center justify-center">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
-                            </svg>
-                        </div>
                         <span class="text-sm font-semibold">
                             {{ session('warning') }}
                         </span>
                     </div>
-
                 </div>
-        
-            @else (session('error'))
+
+            @elseif (session('error'))
                 <div x-data="{ show: true }" 
                     x-show="show" 
                     x-init="setTimeout(() => show = false, 4000)"
@@ -266,20 +257,13 @@
                     x-transition:leave="transition ease-in duration-200"
                     x-transition:leave-start="opacity-100 transform translate-y-0"
                     x-transition:leave-end="opacity-0 transform -translate-y-2"
-                    class="w-full my-4 flex items-center justify-between bg-[#d1fae5] text-[#065f46] border-2 border-[#10b981] px-5 py-3 rounded-2xl shadow-sm">
+                    class="w-full my-4 flex items-center justify-between bg-red-100 text-red-800 border-2 border-red-400 px-5 py-3 rounded-2xl shadow-sm">
                     
-                    <!-- Left Side: Icon + Message -->
                     <div class="flex items-center gap-3">
-                        <div class="bg-[#10b981] text-white p-1 rounded-full flex items-center justify-center">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="3" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
-                            </svg>
-                        </div>
                         <span class="text-sm font-semibold">
                             {{ session('error') }}
                         </span>
                     </div>
-
                 </div>
             @endif
               
