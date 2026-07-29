@@ -17,8 +17,25 @@ class VendorDashboardController extends Controller
 
         $allProducts = Product::where('user_id', $vendor->id)->get();
         $totalProducts = $allProducts->count();
-        $totalOrders = 0;
-        $totalEarnings = 0;
+
+        // 💡 ဒီနေ့ (၁ ရက်စာ) Paid ဖြစ်ပြီးသား Order Items များကို ယူမည်
+        $todayPaidItems = OrderItem::where('vendor_id', $vendor->id)
+            ->whereHas('order', function ($q) {
+                $q->where('status', 'paid')
+                    ->whereDate('created_at', \Carbon\Carbon::today()); // ဒီနေ့ရက်စွဲ စစ်ထုတ်ခြင်း
+            })
+            ->get();
+
+        // 💡 1. ဒီနေ့ paid ဖြစ်ပြီးသား အော်ဒါအရေအတွက် (သို့မဟုတ် Item အရေအတွက်)
+        $totalOrders = $todayPaidItems->count();
+        // မူကွဲ - Item အရေအတွက် စုစုပေါင်းယူချင်ပါက: $todayPaidItems->sum('quantity');
+
+        // 💡 2. ဒီနေ့ paid ဖြစ်ပြီးသား စုစုပေါင်း ဝင်ငွေ (98% Net Earnings)
+        $totalEarnings = $todayPaidItems->sum(function ($item) {
+            return $item->vendor_amount > 0
+                ? $item->vendor_amount
+                : (($item->price * $item->quantity) * 0.98);
+        });
 
         $query = Product::where('user_id', $vendor->id);
 
@@ -35,8 +52,6 @@ class VendorDashboardController extends Controller
         }
 
         $products = $query->latest()->get();
-
-        // $products = $query->latest()->paginate(10); 
 
         return view('vendor.dashboard', compact('vendor', 'totalProducts', 'totalOrders', 'totalEarnings', 'products', 'stock_status'));
     }
@@ -224,7 +239,7 @@ class VendorDashboardController extends Controller
     public function orderIndex(Request $request)
     {
         $vendorId = Auth::id();
-        $status = $request->input('status', 'all'); 
+        $status = $request->input('status', 'all');
 
         // 1. Base Query: မိမိ ဆိုင်၏ Order Items များကို ယူမည်
         $query = OrderItem::with('order', 'product')

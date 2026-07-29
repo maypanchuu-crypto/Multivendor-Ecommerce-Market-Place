@@ -205,7 +205,7 @@
                 <div class="btn-3d bg-white dark:bg-emerald-900 p-5 rounded-2xl flex items-center justify-between">
                     <div>
                         <span
-                            class="text-[11px] font-black text-orange-600 dark:text-orange-400 uppercase tracking-wider">Total
+                            class="text-[11px] font-black text-orange-600 dark:text-orange-400 uppercase tracking-wider">Today's
                             Earnings</span>
                         <h3 class="text-2xl font-black text-orange-500 dark:text-orange-400 mt-1">
                             {{ number_format($totalEarnings) }} MMK
@@ -244,7 +244,7 @@
                 <div class="btn-3d bg-white dark:bg-emerald-900 p-5 rounded-2xl flex items-center justify-between">
                     <div>
                         <span
-                            class="text-[11px] font-black text-orange-600 dark:text-orange-400 uppercase tracking-wider">Total
+                            class="text-[11px] font-black text-orange-600 dark:text-orange-400 uppercase tracking-wider">Today's
                             Orders</span>
                         <h3 class="text-2xl font-black text-orange-500 dark:text-orange-400 mt-1">{{ $totalOrders }}
                             Orders
