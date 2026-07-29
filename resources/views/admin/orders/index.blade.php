@@ -157,13 +157,16 @@
                         <form method="GET" action="{{ route('admin.orders.index') }}" id="adminStatusFilterForm">
                             <select name="status" onchange="document.getElementById('adminStatusFilterForm').submit()"
                                 class="btn-3d px-4 py-2 rounded-xl bg-blue-900 text-yellow-300 border border-blue-500 text-xs font-black focus:ring-0 focus:border-blue-400 cursor-pointer outline-none">
-                                <option value="all" {{ $status === 'all' ? 'selected' : '' }} class="bg-blue-900 text-white">
+                                <option value="all" {{ $status === 'all' ? 'selected' : '' }}
+                                    class="bg-blue-900 text-white">
                                     Total Orders ({{ $allCount }})
                                 </option>
-                                <option value="pending" {{ $status === 'pending' ? 'selected' : '' }} class="bg-blue-900 text-white">
+                                <option value="pending" {{ $status === 'pending' ? 'selected' : '' }}
+                                    class="bg-blue-900 text-white">
                                     Pending ({{ $pendingCount }})
                                 </option>
-                                <option value="paid" {{ $status === 'paid' ? 'selected' : '' }} class="bg-blue-900 text-white">
+                                <option value="paid" {{ $status === 'paid' ? 'selected' : '' }}
+                                    class="bg-blue-900 text-white">
                                     Paid ({{ $paidCount }})
                                 </option>
                             </select>
@@ -185,30 +188,20 @@
                 @endif
 
                 <!-- Summary Cards Section -->
-                <!-- @php                    
-                    // paid ဖြစ်နေသော အော်ဒါများကိုသာ စစ်ထုတ်ပါသည်
-                    $paidOrders = $orders->filter(function ($order) {
-                        return $order->status === 'paid';
-                    });
-
-                    // paid ဖြစ်သည့် အော်ဒါများမှသာ total_amount၊ admin_commission နှင့် vendor_amount တို့ကို ပေါင်းပါမည်
-                    $totalRevenue = $paidOrders->sum('total_amount');
-                    $totalCommission = $paidOrders->flatMap->items->sum('admin_commission');
-                    $totalVendorPayout = $paidOrders->flatMap->items->sum('vendor_amount');
-                @endphp -->
+                <!-- Summary Cards Section (အမြဲတမ်း ပုံသေ ငွေပမာဏပြမည်) -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <!-- Total Sales Card -->
                     <div
                         class="card-3d p-6 rounded-2xl flex justify-between items-center transform transition duration-200 hover:-translate-y-1">
                         <div>
-                            <span class="text-xs font-black text-blue-200 uppercase tracking-wider">Total Sales
-                                Amount (Paid)</span>
+                            <span class="text-xs font-black text-blue-200 uppercase tracking-wider">Total Sales Amount
+                                (Paid)</span>
                             <div class="text-3xl font-black mt-2 text-white drop-shadow-md">
                                 {{ number_format($totalRevenue) }} <span
                                     class="text-xs font-normal text-blue-200">MMK</span>
                             </div>
                         </div>
-                        <!-- <div class="text-2xl bg-blue-900/80 p-3 rounded-xl border border-blue-500">💳</div> -->
+                        <div class="text-2xl bg-blue-900/80 p-3 rounded-xl border border-blue-500">💳</div>
                     </div>
 
                     <!-- Admin Commission Card -->
@@ -222,7 +215,7 @@
                                     class="text-xs font-normal text-blue-200">MMK</span>
                             </div>
                         </div>
-                        <!-- <div class="text-2xl bg-blue-900/80 p-3 rounded-xl border border-blue-500">🏦</div> -->
+                        <div class="text-2xl bg-blue-900/80 p-3 rounded-xl border border-blue-500">🏦</div>
                     </div>
 
                     <!-- Vendor Amount Card -->
@@ -236,9 +229,52 @@
                                     class="text-xs font-normal text-blue-200">MMK</span>
                             </div>
                         </div>
-                        <!-- <div class="text-2xl bg-blue-900/80 p-3 rounded-xl border border-blue-500">🏪</div> -->
+                        <div class="text-2xl bg-blue-900/80 p-3 rounded-xl border border-blue-500">🏪</div>
                     </div>
                 </div>
+                <?php /* <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                   <!-- Total Sales Card -->
+                   <div
+                       class="card-3d p-6 rounded-2xl flex justify-between items-center transform transition duration-200 hover:-translate-y-1">
+                       <div>
+                           <span class="text-xs font-black text-blue-200 uppercase tracking-wider">Total Sales
+                               Amount (Paid)</span>
+                           <div class="text-3xl font-black mt-2 text-white drop-shadow-md">
+                               {{ number_format($totalRevenue) }} <span
+                                   class="text-xs font-normal text-blue-200">MMK</span>
+                           </div>
+                       </div>
+                       <!-- <div class="text-2xl bg-blue-900/80 p-3 rounded-xl border border-blue-500">💳</div> -->
+                   </div>
+
+                   <!-- Admin Commission Card -->
+                   <div
+                       class="card-3d p-6 rounded-2xl flex justify-between items-center transform transition duration-200 hover:-translate-y-1">
+                       <div>
+                           <span class="text-xs font-black text-blue-200 uppercase tracking-wider">Admin Commission
+                               (2%)</span>
+                           <div class="text-3xl font-black mt-2 text-emerald-300 drop-shadow-md">
+                               +{{ number_format($totalCommission) }} <span
+                                   class="text-xs font-normal text-blue-200">MMK</span>
+                           </div>
+                       </div>
+                       <!-- <div class="text-2xl bg-blue-900/80 p-3 rounded-xl border border-blue-500">🏦</div> -->
+                   </div>
+
+                   <!-- Vendor Amount Card -->
+                   <div
+                       class="card-3d p-6 rounded-2xl flex justify-between items-center transform transition duration-200 hover:-translate-y-1">
+                       <div>
+                           <span class="text-xs font-black text-blue-200 uppercase tracking-wider">Vendor Payout
+                               (98%)</span>
+                           <div class="text-3xl font-black mt-2 text-cyan-300 drop-shadow-md">
+                               {{ number_format($totalVendorPayout) }} <span
+                                   class="text-xs font-normal text-blue-200">MMK</span>
+                           </div>
+                       </div>
+                       <!-- <div class="text-2xl bg-blue-900/80 p-3 rounded-xl border border-blue-500">🏪</div> -->
+                   </div>
+               </div> */ ?>
 
                 <!-- Orders List -->
                 <div class="space-y-6">
