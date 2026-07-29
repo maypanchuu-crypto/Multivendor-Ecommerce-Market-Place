@@ -281,7 +281,7 @@
                                     </div>
 
                                     <!-- Approve Button -->
-                                    <!-- @if($order->status !== 'paid' && $order->status !== 'completed')
+                                    @if($order->status !== 'paid' && $order->status !== 'completed')
                                         <form action="{{ route('admin.orders.complete', $order->id) }}" method="POST"
                                             class="inline">
                                             @csrf
@@ -290,7 +290,7 @@
                                                 Approve & Split
                                             </button>
                                         </form>
-                                    @endif -->
+                                    @endif
                                 </div>
                             </div>
 
