@@ -221,14 +221,63 @@ class VendorDashboardController extends Controller
         return redirect()->back()->with('success', 'Product deleted successfully!');
     }
 
-    public function orderIndex()
+    public function orderIndex(Request $request)
     {
-        // မိမိဆိုင်က ပစ္စည်းတွေ ပါဝင်နေတဲ့ Order Items စာရင်းကိုပဲ ဆွဲထုတ်ခြင်း
-        $myOrders = OrderItem::with('order', 'product')
-            ->where('vendor_id', Auth::id())
-            ->latest()
+        $vendorId = Auth::id();
+        $status = $request->input('status', 'all'); 
+
+        // 1. Base Query: မိမိ ဆိုင်၏ Order Items များကို ယူမည်
+        $query = OrderItem::with('order', 'product')
+            ->where('vendor_id', $vendorId);
+
+        // Filter dropdown အတွက် Status အရ စစ်ထုတ်ခြင်း
+        if ($status === 'paid') {
+            $query->whereHas('order', function ($q) {
+                $q->whereIn('status', ['paid']);
+            });
+        } elseif ($status === 'pending') {
+            $query->whereHas('order', function ($q) {
+                $q->whereNotIn('status', ['paid']);
+            });
+        }
+
+        $myOrders = $query->latest()->get();
+
+        // 2. Total Items Sold (Paid ဖြစ်ပြီးသား Item အရေအတွက် သီးသန့်)
+        $paidItems = OrderItem::where('vendor_id', $vendorId)
+            ->whereHas('order', function ($q) {
+                $q->whereIn('status', ['paid']);
+            })
             ->get();
 
-        return view('vendor.orders.index', compact('myOrders'));
+        $paidItemsCount = $paidItems->sum('quantity');
+
+        // 3. Total Net Earnings (Paid ဖြစ်ပြီးသား Item များ၏ Net Amount 98% သီးသန့်)
+        $paidNetEarnings = $paidItems->sum(function ($item) {
+            return $item->vendor_amount > 0
+                ? $item->vendor_amount
+                : (($item->price * $item->quantity) * 0.98);
+        });
+
+        // Count များတွက်ရန် (Dropdown အတွက်)
+        $allOrdersCount = OrderItem::where('vendor_id', $vendorId)->count();
+        $pendingOrdersCount = OrderItem::where('vendor_id', $vendorId)
+            ->whereHas('order', function ($q) {
+                $q->whereNotIn('status', ['paid']);
+            })->count();
+        $paidOrdersCount = OrderItem::where('vendor_id', $vendorId)
+            ->whereHas('order', function ($q) {
+                $q->whereIn('status', ['paid']);
+            })->count();
+
+        return view('vendor.orders.index', compact(
+            'myOrders',
+            'status',
+            'paidItemsCount',
+            'paidNetEarnings',
+            'allOrdersCount',
+            'pendingOrdersCount',
+            'paidOrdersCount'
+        ));
     }
 }

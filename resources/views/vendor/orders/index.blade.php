@@ -1,4 +1,5 @@
-<x-app-layout :hideSearch="true" :cartIcon="true" :messageIcon="true" :hideRoleMenu="true" :hideDropdown="true" :menuBtn="true">
+<x-app-layout :hideSearch="true" :cartIcon="true" :messageIcon="true" :hideRoleMenu="true" :hideDropdown="true"
+    :menuBtn="true">
     {{-- Main Background: Dashboard ထဲကအတိုင်း Mint Green အရောင် --}}
     <div id="sidebarOverlay"
         class="fixed top-[65px] left-0 right-0 bottom-0 bg-black/40 z-30 hidden transition-opacity duration-300">
@@ -114,15 +115,16 @@
                 </div>
             </div>
 
-            {{-- Stat Cards Section --}}
+            <!-- Stat Cards Section -->
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <!-- Total Items Sold Card -->
+                <!-- Total Items Sold Card (Paid Only) -->
                 <div
                     class="p-6 rounded-2xl bg-white border-2 border-[#104e35] shadow-[4px_4px_0px_#104e35] flex items-center justify-between">
                     <div>
-                        <span class="text-xs font-black uppercase tracking-wider text-[#ea580c]">Total Items Sold</span>
+                        <span class="text-xs font-black uppercase tracking-wider text-[#ea580c]">Total Items Sold
+                            (Paid)</span>
                         <h3 class="text-3xl font-black text-[#ea580c] mt-1">
-                            {{ $myOrders->count() }} <span class="text-base font-bold text-[#104e35]">Items</span>
+                            {{ $paidItemsCount }} <span class="text-base font-bold text-[#104e35]">Items</span>
                         </h3>
                     </div>
                     <div
@@ -131,19 +133,14 @@
                     </div>
                 </div>
 
-                <!-- Total Net Profit Card -->
+                <!-- Total Net Profit Card (Paid Only) -->
                 <div
                     class="p-6 rounded-2xl bg-white border-2 border-[#104e35] shadow-[4px_4px_0px_#104e35] flex items-center justify-between">
                     <div>
                         <span class="text-xs font-black uppercase tracking-wider text-[#ea580c]">Total Net Earnings
                             (98%)</span>
                         <h3 class="text-3xl font-black text-[#ea580c] mt-1">
-                            @php
-                                $totalProfit = $myOrders->sum(function ($item) {
-                                    return $item->vendor_amount > 0 ? $item->vendor_amount : (($item->price * $item->quantity) * 0.98);
-                                });
-                            @endphp
-                            {{ number_format($totalProfit) }} <span
+                            {{ number_format($paidNetEarnings) }} <span
                                 class="text-base font-bold text-[#104e35]">MMK</span>
                         </h3>
                     </div>
@@ -160,10 +157,20 @@
 
                 <div class="flex items-center justify-between border-b-2 border-[#104e35]/20 pb-4">
                     <h2 class="text-xl font-black text-[#104e35]">Order Items History</h2>
-                    <span
-                        class="px-3 py-1 bg-[#d8f5e5] text-[#104e35] border-2 border-[#104e35] rounded-xl font-bold text-xs shadow-[2px_2px_0px_#104e35]">
-                        Total Orders: {{ $myOrders->count() }}
-                    </span>
+                    <form method="GET" action="{{ route('vendor.orders.index') }}" id="statusFilterForm">
+                        <select name="status" onchange="document.getElementById('statusFilterForm').submit()"
+                            class="px-3 py-1.5 bg-[#d8f5e5] text-[#104e35] border-2 border-[#104e35] rounded-xl font-bold text-xs shadow-[2px_2px_0px_#104e35] focus:ring-0 focus:border-[#104e35] cursor-pointer">
+                            <option value="all" {{ $status === 'all' ? 'selected' : '' }}>
+                                Total Orders ({{ $allOrdersCount }})
+                            </option>
+                            <option value="pending" {{ $status === 'pending' ? 'selected' : '' }}>
+                                Pending ({{ $pendingOrdersCount }})
+                            </option>
+                            <option value="paid" {{ $status === 'paid' ? 'selected' : '' }}>
+                                Paid ({{ $paidOrdersCount }})
+                            </option>
+                        </select>
+                    </form>
                 </div>
 
                 <div class="space-y-4">
