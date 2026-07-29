@@ -125,8 +125,13 @@
                             @endif
                         @endif
 
-                        <x-dropdown-link :href="route('wallet.index')"
-                            class="!text-amber-500 dark:!text-amber-400 hover:!text-amber-600 dark:hover:!text-amber-300">{{ __('Wallet') }}</x-dropdown-link>
+                        @if(Auth::check() && Auth::user()->role === 'customer')
+                            <x-dropdown-link :href="route('wallet.index')"
+                                class="!text-amber-500 dark:!text-amber-400 hover:!text-amber-600 dark:hover:!text-amber-300">
+                                {{ __('Wallet') }}
+                            </x-dropdown-link>
+                        @endif
+                        
 
                         <!-- @if(!isset($hideDarkMode) || !$hideDarkMode)
                                     <div id="darkModeRow"

@@ -78,6 +78,16 @@
                         Customer Marketplace
                     </a>
 
+                    <a href="{{ route('wallet.index') }}"
+                        class="btn-3d flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-blue-800 text-white font-medium text-sm border border-blue-700 transform transition duration-200 hover:-translate-y-1">
+                        <svg class="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" stroke-width="2"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M11 15l-3-3m0 0l3-3m-3 3h8M3 12a9 9 0 1118 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        Wallet
+                    </a>
+
                     <a href="{{ route('admin.orders.index') }}"
                         class="btn-3d flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-blue-800 text-white font-medium text-sm border border-blue-700 transform transition duration-200 hover:-translate-y-1">
                         <svg class="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" stroke-width="2"
