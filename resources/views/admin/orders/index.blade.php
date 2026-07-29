@@ -1,229 +1,207 @@
 <x-app-layout>
-    <div class="container mx-auto px-4 py-8 max-w-6xl" x-data="{ openSlipModal: null }">
+    <div class="min-h-screen bg-slate-900 text-slate-100 py-10 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-7xl mx-auto space-y-8">
 
-        <div class="mb-8">
-            <h1 class="text-2xl font-black text-gray-900 dark:text-white tracking-tight">Order & Finance Overview</h1>
-            <p class="text-sm text-gray-500 dark:text-gray-400">Review incoming customer payments, approve orders, and
-                distribute automated commissions.</p>
-        </div>
-
-        @if(session('success'))
-            <div x-data="{ show: true }" x-show="show"
-                class="mb-6 flex items-center justify-between p-4 bg-emerald-50 dark:bg-emerald-950/20 border border-emerald-200 dark:border-emerald-900/50 rounded-2xl shadow-sm">
-                <div class="flex items-center space-x-3">
-                    <div class="p-1.5 bg-emerald-500 rounded-lg text-white">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7">
-                            </path>
-                        </svg>
-                    </div>
-                    <p class="text-xs font-bold text-emerald-800 dark:text-emerald-400">{{ session('success') }}</p>
-                </div>
-                <button @click="show = false" class="text-emerald-500 hover:text-emerald-700 dark:hover:text-emerald-300">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12">
-                        </path>
-                    </svg>
-                </button>
-            </div>
-        @endif
-
-        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+            {{-- Header Section --}}
             <div
-                class="bg-white dark:bg-gray-900 p-5 rounded-2xl border dark:border-gray-800 shadow-sm flex items-center space-x-4">
-                <div class="p-3 bg-blue-50 dark:bg-blue-950/50 text-blue-600 dark:text-blue-400 rounded-xl">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
-                    </svg>
-                </div>
+                class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-6 rounded-3xl bg-gradient-to-r from-blue-900/60 via-indigo-900/40 to-slate-900 border border-blue-500/30 shadow-[0_10px_30px_rgba(30,58,138,0.5)] backdrop-blur-xl">
                 <div>
-                    <span class="text-xs font-bold text-gray-400 uppercase">Total Orders</span>
-                    <h3 class="text-xl font-black text-gray-900 dark:text-white mt-0.5">{{ $orders->count() }}</h3>
+                    <h1
+                        class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-200 tracking-wide">
+                        Order & Commission Management
+                    </h1>
+                    <p class="text-slate-400 text-sm mt-1">အော်ဒါအသေးစိတ်၊ Admin ကော်မရှင်နှင့် Vendor Share များအား
+                        စစ်ဆေးသည့်နေရာ</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span
+                        class="px-4 py-2 rounded-2xl bg-blue-500/20 text-blue-300 border border-blue-400/30 text-xs font-bold shadow-[inset_0_2px_4px_rgba(255,255,255,0.1)]">
+                        Total Orders: {{ $orders->count() }}
+                    </span>
                 </div>
             </div>
-            <div
-                class="bg-white dark:bg-gray-900 p-5 rounded-2xl border dark:border-gray-800 shadow-sm flex items-center space-x-4">
-                <div class="p-3 bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 rounded-xl">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                </div>
-                <div>
-                    <span class="text-xs font-bold text-gray-400 uppercase">Pending Actions</span>
-                    <h3 class="text-xl font-black text-amber-600 mt-0.5">
-                        {{ $orders->where('status', 'pending')->count() }}
-                    </h3>
-                </div>
-            </div>
-            <div
-                class="bg-white dark:bg-gray-900 p-5 rounded-2xl border dark:border-gray-800 shadow-sm flex items-center space-x-4">
-                <div class="p-3 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 rounded-xl">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M9 8h6m-5 4h3m-7 8h10a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
-                    </svg>
-                </div>
-                <div>
-                    <span class="text-xs font-bold text-gray-400 uppercase">Completed Sales</span>
-                    <h3 class="text-xl font-black text-emerald-600 mt-0.5">
-                        {{ $orders->where('status', 'completed')->count() }}
-                    </h3>
-                </div>
-            </div>
-        </div>
 
-        <div class="space-y-6">
-            @forelse($orders as $order)
+            {{-- Flash Alert --}}
+            @if(session('success'))
                 <div
-                    class="bg-white dark:bg-gray-900 rounded-2xl border dark:border-gray-800 shadow-sm overflow-hidden transition hover:shadow-md">
+                    class="p-4 rounded-2xl bg-emerald-500/10 border border-emerald-500/40 text-emerald-300 shadow-[0_4px_20px_rgba(16,185,129,0.2)] flex items-center gap-3">
+                    <svg class="w-6 h-6 text-emerald-400 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    <span class="font-medium text-sm">{{ session('success') }}</span>
+                </div>
+            @endif
 
+            {{-- Summary Cards (3D Blue Style) --}}
+            @php
+                $totalRevenue = $orders->sum('total_amount');
+                $totalCommission = $orders->flatMap->items->sum('admin_commission');
+                $totalVendorPayout = $orders->flatMap->items->sum('vendor_amount');
+            @endphp
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Total Sales Card -->
+                <div
+                    class="relative group p-6 rounded-3xl bg-gradient-to-b from-blue-600/30 to-blue-900/40 border border-blue-400/30 shadow-[0_15px_35px_rgba(37,99,235,0.25)] hover:shadow-[0_20px_40px_rgba(37,99,235,0.4)] transition-all duration-300 transform hover:-translate-y-1">
+                    <div class="text-xs font-bold uppercase tracking-wider text-blue-300 mb-2">Total Sales Amount</div>
+                    <div class="text-3xl font-extrabold text-white">{{ number_format($totalRevenue) }} <span
+                            class="text-sm font-normal text-blue-300">MMK</span></div>
                     <div
-                        class="p-5 bg-gray-50/70 dark:bg-gray-800/40 border-b dark:border-gray-800 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                        <div class="flex items-center space-x-3">
-                            <div
-                                class="px-3 py-1.5 bg-gray-200 dark:bg-gray-800 rounded-xl text-xs font-bold text-gray-700 dark:text-gray-300">
-                                ORDER #{{ $order->id }}
-                            </div>
-                            <span
-                                class="text-xs text-gray-400 font-medium">{{ $order->created_at->format('d M Y, h:i A') }}</span>
-                        </div>
-                        <div>
-                            @if($order->status === 'pending')
-                                <span
-                                    class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold rounded-full bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> Pending Approval
-                                </span>
-                            @else
-                                <span
-                                    class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400">
-                                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Completed
-                                </span>
-                            @endif
-                        </div>
+                        class="absolute top-4 right-4 p-3 bg-blue-500/20 rounded-2xl border border-blue-300/20 text-blue-300">
+                        💳
                     </div>
+                </div>
 
-                    <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Admin Commission Card -->
+                <div
+                    class="relative group p-6 rounded-3xl bg-gradient-to-b from-indigo-600/30 to-indigo-900/40 border border-indigo-400/30 shadow-[0_15px_35px_rgba(79,70,229,0.25)] hover:shadow-[0_20px_40px_rgba(79,70,229,0.4)] transition-all duration-300 transform hover:-translate-y-1">
+                    <div class="text-xs font-bold uppercase tracking-wider text-indigo-300 mb-2">Admin Commission (2%)
+                    </div>
+                    <div class="text-3xl font-extrabold text-emerald-400">+{{ number_format($totalCommission) }} <span
+                            class="text-sm font-normal text-indigo-300">MMK</span></div>
+                    <div
+                        class="absolute top-4 right-4 p-3 bg-indigo-500/20 rounded-2xl border border-indigo-300/20 text-indigo-300">
+                        🏦
+                    </div>
+                </div>
 
-                        <div class="space-y-3">
-                            <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Customer Details</h4>
-                            <div class="space-y-1.5">
-                                <div class="text-sm font-black text-gray-800 dark:text-white">{{ $order->customer_name }}
-                                </div>
+                <!-- Vendor Amount Card -->
+                <div
+                    class="relative group p-6 rounded-3xl bg-gradient-to-b from-sky-600/30 to-sky-900/40 border border-sky-400/30 shadow-[0_15px_35px_rgba(14,165,233,0.25)] hover:shadow-[0_20px_40px_rgba(14,165,233,0.4)] transition-all duration-300 transform hover:-translate-y-1">
+                    <div class="text-xs font-bold uppercase tracking-wider text-sky-300 mb-2">Vendor Payout (98%)</div>
+                    <div class="text-3xl font-extrabold text-cyan-300">{{ number_format($totalVendorPayout) }} <span
+                            class="text-sm font-normal text-sky-300">MMK</span></div>
+                    <div
+                        class="absolute top-4 right-4 p-3 bg-sky-500/20 rounded-2xl border border-sky-300/20 text-sky-300">
+                        🏪
+                    </div>
+                </div>
+            </div>
+
+            {{-- Orders List --}}
+            <div class="space-y-6">
+                @forelse($orders as $order)
+                    <div
+                        class="rounded-3xl bg-slate-800/80 border border-blue-500/20 shadow-[0_10px_30px_rgba(0,0,0,0.5)] overflow-hidden transition-all hover:border-blue-500/40">
+
+                        {{-- Order Header --}}
+                        <div
+                            class="p-5 bg-gradient-to-r from-blue-950/80 via-slate-900 to-slate-900/90 border-b border-blue-500/20 flex flex-wrap items-center justify-between gap-4">
+                            <div class="flex items-center gap-4">
                                 <div
-                                    class="text-xs font-semibold text-gray-500 dark:text-gray-400 flex items-center gap-1.5">
-                                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M3 5a2 2 0 012-2h3.28a1 1 0 01.94.72.5l.54 1.84a1 1 0 01-.27.9l-1.2 1.2a13.04 13.04 0 005.62 5.62l1.2-1.2a1 1 0 01.9-.27l1.84.54a1 1 0 01.72.94V19a2 2 0 01-2 2h-1C7.82 21 3 16.18 3 10V5z">
-                                        </path>
-                                    </svg>
-                                    {{ $order->customer_phone }}
+                                    class="w-12 h-12 rounded-2xl bg-blue-600/20 border border-blue-400/40 flex items-center justify-center font-black text-blue-400 text-lg shadow-[inset_0_2px_4px_rgba(255,255,255,0.1)]">
+                                    #{{ $order->id }}
                                 </div>
-                                <div class="text-xs text-gray-400 leading-relaxed">{{ $order->shipping_address }}</div>
-                            </div>
-
-                            @if($order->payment_slip)
-                                <button @click="openSlipModal = '{{ asset('storage/' . $order->payment_slip) }}'"
-                                    class="mt-2 inline-flex items-center gap-1.5 text-xs font-bold text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-950/40 hover:bg-blue-100 px-3 py-2 rounded-xl transition">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
-                                        </path>
-                                    </svg>
-                                    View Payment Slip
-                                </button>
-                            @endif
-                        </div>
-
-                        <div class="md:col-span-2 space-y-3">
-                            <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider">Ordered Products</h4>
-                            <div class="space-y-2">
-                                @foreach($order->items as $item)
-                                    <div
-                                        class="flex justify-between items-center p-3 bg-gray-50 dark:bg-gray-800/40 border dark:border-gray-800 rounded-xl text-xs">
-                                        <div>
-                                            <span
-                                                class="font-black text-gray-900 dark:text-white">{{ $item->product->name ?? 'Product Deleted' }}
-                                            </span>
-                                            <span class="text-gray-400 ml-1 font-medium">
-                                                (x{{ $item->quantity }})
-                                            </span>
-                                            @if($item->color || $item->size)
-                                                <div class="text-[10px] text-gray-400 font-medium mt-0.5">
-                                                    @if($item->color) Option: {{ $item->color }} @endif
-                                                    @if($item->size) [{{ $item->size }}] @endif
-                                                </div>
-                                            @endif
-                                        </div>
-                                        <div class="text-right">
-                                            <span
-                                                class="font-black text-gray-900 dark:text-white">{{ number_format($item->price * $item->quantity) }}
-                                                MMK</span>
-                                            @if($order->status === 'completed')
-                                                <div class="text-[10px] font-bold mt-0.5 text-emerald-600 dark:text-emerald-400">
-                                                    Shop: +{{ number_format($item->vendor_amount) }} | Comm:
-                                                    {{ number_format($item->admin_commission) }}
-                                                </div>
-                                            @endif
-                                        </div>
-                                    </div>
-                                @endforeach
-                            </div>
-
-                            <div
-                                class="border-t dark:border-gray-800 pt-4 mt-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                                 <div>
-                                    <span class="text-xs font-bold text-gray-400 block">Grand Total:</span>
+                                    <div class="font-bold text-white text-base flex items-center gap-2">
+                                        {{ $order->customer_name }}
+                                        <span
+                                            class="text-xs font-normal text-slate-400">({{ $order->customer_phone }})</span>
+                                    </div>
+                                    <div class="text-xs text-slate-400 mt-0.5">
+                                        📍 {{ $order->shipping_address }} • <span
+                                            class="text-slate-500">{{ $order->created_at->format('d M Y, h:i A') }}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-4">
+                                {{-- Status Badge --}}
+                                @if($order->status === 'paid' || $order->status === 'completed')
                                     <span
-                                        class="text-lg font-black text-blue-600 dark:text-blue-400">{{ number_format($order->total_amount) }}
-                                        MMK</span>
+                                        class="px-3.5 py-1.5 rounded-xl bg-emerald-500/10 border border-emerald-500/40 text-emerald-400 text-xs font-bold shadow-[0_0_15px_rgba(16,185,129,0.2)]">
+                                        ● Paid / Completed
+                                    </span>
+                                @else
+                                    <span
+                                        class="px-3.5 py-1.5 rounded-xl bg-amber-500/10 border border-amber-500/40 text-amber-400 text-xs font-bold shadow-[0_0_15px_rgba(245,158,11,0.2)]">
+                                        ● {{ ucfirst($order->status) }}
+                                    </span>
+                                @endif
+
+                                {{-- Total Amount --}}
+                                <div class="text-right">
+                                    <div class="text-xs text-slate-400">Total Amount</div>
+                                    <div class="text-lg font-black text-blue-400">{{ number_format($order->total_amount) }}
+                                        MMK</div>
                                 </div>
 
-                                @if($order->status === 'pending')
+                                {{-- Approve Button --}}
+                                @if($order->status !== 'paid' && $order->status !== 'completed')
                                     <form action="{{ route('admin.orders.complete', $order->id) }}" method="POST"
-                                        class="w-full sm:w-auto">
+                                        class="inline">
                                         @csrf
                                         <button type="submit"
-                                            class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold px-5 py-3 rounded-xl shadow-md shadow-blue-500/10 transition">
-                                            Approve Order & Distribute Income
+                                            class="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-bold shadow-[0_4px_15px_rgba(37,99,235,0.4)] active:scale-95 transition-all">
+                                            Approve & Split
                                         </button>
                                     </form>
                                 @endif
                             </div>
                         </div>
+
+                        {{-- Order Items Table --}}
+                        <div class="p-5 overflow-x-auto">
+                            <table class="w-full text-left text-sm text-slate-300">
+                                <thead>
+                                    <tr
+                                        class="border-b border-slate-700/60 text-xs uppercase text-slate-400 font-semibold tracking-wider">
+                                        <th class="pb-3 px-3">Product</th>
+                                        <th class="pb-3 px-3">Vendor</th>
+                                        <th class="pb-3 px-3 text-center">Qty</th>
+                                        <th class="pb-3 px-3 text-right">Unit Price</th>
+                                        <th class="pb-3 px-3 text-right">Subtotal</th>
+                                        <th class="pb-3 px-3 text-right text-emerald-400">Admin Fee</th>
+                                        <th class="pb-3 px-3 text-right text-cyan-400">Vendor Share</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-700/40">
+                                    @foreach($order->items as $item)
+                                        @php
+                                            $itemTotal = $item->price * $item->quantity;
+                                            // DB ထဲမှာ admin_commission ရှိရင် ယူမည်၊ မရှိသေးရင် 2% ခန့်မှန်းတွက်ပြမည်
+                                            $adminComm = $item->admin_commission > 0 ? $item->admin_commission : ($itemTotal * 0.02);
+                                            $vendorAmt = $item->vendor_amount > 0 ? $item->vendor_amount : ($itemTotal - $adminComm);
+                                        @endphp
+                                        <tr class="hover:bg-slate-700/20 transition-colors">
+                                            <td class="py-3 px-3 font-semibold text-white">
+                                                {{ $item->product->name ?? 'Product Deleted' }}
+                                                @if($item->color || $item->size)
+                                                    <span class="text-xs text-slate-400 font-normal block">
+                                                        ({{ implode(', ', array_filter([$item->color, $item->size])) }})
+                                                    </span>
+                                                @endif
+                                            </td>
+                                            <td class="py-3 px-3 text-slate-300">
+                                                <span
+                                                    class="px-2.5 py-1 rounded-lg bg-slate-700/60 text-xs text-blue-300 border border-slate-600">
+                                                    {{ $item->vendor->shop_name ?? $item->vendor->name ?? 'N/A' }}
+                                                </span>
+                                            </td>
+                                            <td class="py-3 px-3 text-center font-bold text-white">{{ $item->quantity }}</td>
+                                            <td class="py-3 px-3 text-right">{{ number_format($item->price) }} MMK</td>
+                                            <td class="py-3 px-3 text-right font-bold text-slate-200">
+                                                {{ number_format($itemTotal) }} MMK</td>
+                                            <td class="py-3 px-3 text-right font-semibold text-emerald-400">
+                                                +{{ number_format($adminComm) }} MMK</td>
+                                            <td class="py-3 px-3 text-right font-semibold text-cyan-300">
+                                                {{ number_format($vendorAmt) }} MMK</td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+
                     </div>
-                </div>
-            @empty
-                <div
-                    class="bg-white dark:bg-gray-900 p-12 text-center rounded-2xl border dark:border-gray-800 text-gray-400 font-medium">
-                    No order records found in system.
-                </div>
-            @endforelse
-        </div>
-
-        <div x-show="openSlipModal"
-            class="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-sm flex items-center justify-center p-4"
-            x-cloak>
-            <div class="bg-white dark:bg-gray-900 rounded-2xl max-w-lg w-full p-6 shadow-2xl relative border dark:border-gray-800"
-                @click.away="openSlipModal = null">
-                <div class="flex justify-between items-center mb-4">
-                    <h3 class="font-black text-gray-900 dark:text-white text-base">Payment Verification Slip</h3>
-                    <button @click="openSlipModal = null"
-                        class="p-1.5 bg-gray-100 dark:bg-gray-800 rounded-lg text-gray-500 hover:text-gray-700 dark:hover:text-gray-300">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M6 18L18 6M6 6l12 12"></path>
-                        </svg>
-                    </button>
-                </div>
-                <div
-                    class="bg-gray-50 dark:bg-gray-950 rounded-xl p-2 flex justify-center overflow-hidden max-h-[70vh]">
-                    <img :src="openSlipModal" class="object-contain w-full h-auto rounded-lg"
-                        alt="KPay Transaction Record">
-                </div>
+                @empty
+                    <div class="p-12 text-center rounded-3xl bg-slate-800/50 border border-blue-500/20 shadow-xl">
+                        <div class="text-4xl mb-3">📦</div>
+                        <h3 class="text-lg font-bold text-slate-300">မည့်သည့် Order မှ မရှိသေးပါ။</h3>
+                        <p class="text-slate-500 text-sm mt-1">Customer များမှ Order တင်လာပါက ဤနေရာတွင် ပေါ်လာပါမည်။</p>
+                    </div>
+                @endforelse
             </div>
-        </div>
 
+        </div>
     </div>
 </x-app-layout>

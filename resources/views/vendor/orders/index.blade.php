@@ -115,9 +115,9 @@
                             <span class="text-[10px] font-bold text-gray-400 block uppercase tracking-wider">Your Net
                                 Earning:</span>
                             <span class="text-base font-black text-indigo-600 dark:text-indigo-400">
-                                {{ number_format(($item->price * $item->quantity) * 0.95) }} MMK
+                                {{ number_format(($item->price * $item->quantity) * 0.98) }} MMK
                             </span>
-                            <span class="block text-[9px] font-semibold text-gray-400 mt-0.5">(5% Commission
+                            <span class="block text-[9px] font-semibold text-gray-400 mt-0.5">(2% Commission
                                 Deducted)</span>
                         </div>
                     </div>

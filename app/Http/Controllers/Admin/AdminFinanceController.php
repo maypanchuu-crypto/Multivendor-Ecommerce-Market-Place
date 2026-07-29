@@ -107,8 +107,8 @@ class AdminFinanceController extends Controller
     }
 
     public function orderIndex()
-    {        
-        $orders = Order::with('items.product', 'user')->latest()->get();
+    {
+        $orders = Order::with(['items.product', 'items.vendor', 'user'])->latest()->get();
         return view('admin.orders.index', compact('orders'));
     }
 }
