@@ -1,4 +1,3 @@
-<!DOCTYPE html>
 <x-app-layout :hideSearch="true" :cartIcon="true" :messageIcon="true" :hideRoleMenu="true" :hideDarkMode="true">
     <html lang="en">
 
@@ -51,9 +50,7 @@
     </head>
 
     <body class="bg-blue-600 text-white min-h-screen font-sans antialiased pt-16">
-        <!-- 💡 Main Layout ကို Navbar ရဲ့ Height အလိုက် တွန်းပေးဖို့ pt-16 ထည့်ထားပါတယ် -->
 
-        <!-- Sidebar Overlay (Navbar အောက် ရောက်စေရန် top-16 နဲ့ z-30 ထားပါသည်) -->
         <div id="sidebarOverlay"
             class="fixed top-16 inset-x-0 bottom-0 bg-blue-950/60 backdrop-blur-sm z-30 hidden transition-opacity duration-300">
         </div>
@@ -63,7 +60,6 @@
             <div>
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-lg font-black tracking-wider text-yellow-400 drop-shadow">ADMIN MENU</h2>
-                    <!-- Close Icon X (မူလအတိုင်း ဘာ Animation မှ မပါပါ) -->
                     <button id="closeBtn" class="text-blue-200 hover:text-white p-1">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
@@ -72,18 +68,6 @@
                 </div>
 
                 <div class="space-y-3">
-
-                    <!-- <a href="{{ route('admin.dashboard') }}"
-                        class="btn-3d flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-blue-800 text-white font-medium text-sm border border-blue-700 transform transition duration-200 hover:-translate-y-1">
-                        <svg class="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" stroke-width="2"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
-                            </path>
-                        </svg>
-                        Dashboard
-                    </a> -->
-
                     <a href="{{ route('dashboard') }}"
                         class="btn-3d flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-blue-800 text-white font-medium text-sm border border-blue-700 transform transition duration-200 hover:-translate-y-1">
                         <svg class="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" stroke-width="2"
@@ -132,17 +116,6 @@
                         User Management
                     </a>
 
-                    <a href="#"
-                        class="btn-3d flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-blue-800 text-white font-medium text-sm border border-blue-700 transform transition duration-200 hover:-translate-y-1">
-                        <svg class="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" stroke-width="2"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12 3 7.582 7.03 4 12 4s9 3.582 9 8z">
-                            </path>
-                        </svg>
-                        Communication
-                    </a>
-
                     <div id="darkModeRow"
                         class="btn-3d flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-blue-800 text-white font-medium text-sm cursor-pointer border border-blue-700 select-none transform transition duration-200 hover:-translate-y-1">
                         <svg id="nightModeIcon" class="w-5 h-5 text-yellow-400 block dark:hidden" fill="none"
@@ -162,7 +135,6 @@
                 </div>
             </div>
 
-            <!-- Logout Button (Card Effect) -->
             <form method="POST" action="{{ route('logout') }}" class="border-t border-blue-800 pt-4">
                 @csrf
                 <button type="submit"
@@ -201,24 +173,29 @@
                     </div>
                 </div>
 
+                <!-- Daily Revenue Card -->
                 <div
                     class="card-3d p-6 rounded-2xl flex justify-between items-center transform transition duration-200 hover:-translate-y-1">
                     <div>
-                        <span class="text-xs font-black text-blue-200 uppercase tracking-wider">Monthly Revenue</span>
-                        <div class="text-3xl font-black mt-2 text-cyan-300 drop-shadow-md">4.8M MMK</div>
+                        <span class="text-xs font-black text-blue-200 uppercase tracking-wider">Daily Revenue</span>
+                        <div class="text-3xl font-black mt-2 text-cyan-300 drop-shadow-md">
+                            {{ number_format($dailyRevenue) }} MMK
+                        </div>
                     </div>
                     <span
-                        class="btn-3d text-xs font-black text-emerald-300 bg-emerald-900/80 border border-emerald-500 px-3 py-1.5 rounded-xl">+21%</span>
+                        class="btn-3d text-[10px] font-black text-emerald-300 bg-emerald-900/80 border border-emerald-500 px-2.5 py-1.5 rounded-xl">2%
+                        Commission</span>
                 </div>
             </div>
 
             <!-- Charts Section -->
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
-                <!-- Revenue Growth Chart -->
+                <!-- Real Data Revenue Growth Chart -->
                 <div class="card-3d rounded-2xl p-6 flex flex-col justify-between" x-data="{
                         selectedYear: new Date().getFullYear(),
                         selectedMonth: new Date().getMonth() + 1,
+                        dbRevenueData: {{ json_encode($revenueData) }},
                         
                         availableYears() {
                             let startYear = 2024;
@@ -233,23 +210,43 @@
                         daysInMonth() {
                             return new Date(this.selectedYear, this.selectedMonth, 0).getDate();
                         },
+
+                        getDailyRevenue(day) {
+                            if (this.dbRevenueData[this.selectedYear] && this.dbRevenueData[this.selectedYear][this.selectedMonth]) {
+                                return this.dbRevenueData[this.selectedYear][this.selectedMonth][day] || 0;
+                            }
+                            return 0;
+                        },
+
+                        getMaxRevenueInMonth() {
+                            let max = 0;
+                            for (let d = 1; d <= this.daysInMonth(); d++) {
+                                let val = this.getDailyRevenue(d);
+                                if (val > max) max = val;
+                            }
+                            return max > 0 ? max : 1; 
+                        },
+
                         getGraphHeight(day) {
-                            let heights = [30, 45, 40, 65, 85, 70, 50, 90, 35, 60, 75, 40, 55, 80, 95, 20, 65, 50, 70, 85, 40, 60, 30, 75, 90, 45, 60, 55, 70, 80, 65];
-                            return (heights[(day - 1) % heights.length]) + '%';
+                            let val = this.getDailyRevenue(day);
+                            let max = this.getMaxRevenueInMonth();
+                            if (val === 0) return '4%'; // 0MMK ဖြစ်နေလျှင် အနည်းငယ်မြင်ရစေရန်
+                            let percentage = (val / max) * 100;
+                            return Math.max(percentage, 8) + '%';
                         }
                     }">
                     <div>
                         <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 mb-6">
                             <div>
                                 <h3 class="text-xl font-black text-white drop-shadow">Revenue Growth</h3>
-                                <p class="text-xs text-blue-200">Daily financial performance analysis.</p>
+                                <p class="text-xs text-blue-200">Daily commission earnings performance.</p>
                             </div>
 
                             <div class="flex gap-2">
                                 <select x-model="selectedYear"
                                     class="btn-3d text-xs bg-blue-900 border border-blue-500 text-white rounded-xl px-3 py-2 focus:outline-none font-bold cursor-pointer">
                                     <template x-for="year in availableYears()" :key="year">
-                                        <option :value="year" x-text="year" :selected="year === selectedYear"></option>
+                                        <option :value="year" x-text="year" :selected="year == selectedYear"></option>
                                     </template>
                                 </select>
 
@@ -277,7 +274,7 @@
                                 <template x-for="day in daysInMonth()" :key="day">
                                     <div class="flex-1 flex flex-col items-center group h-full justify-end">
                                         <div class="absolute mb-16 hidden group-hover:block bg-blue-950 text-yellow-300 border border-yellow-400 text-[10px] font-black px-2 py-1 rounded-lg shadow-2xl z-20 whitespace-nowrap"
-                                            x-text="'Day ' + day + ': ' + (parseInt(getGraphHeight(day)) * 500).toLocaleString() + ' MMK'">
+                                            x-text="'Day ' + day + ': ' + Number(getDailyRevenue(day)).toLocaleString() + ' MMK'">
                                         </div>
                                         <div class="w-full bar-3d bg-gradient-to-t from-blue-700 to-cyan-400 group-hover:from-yellow-500 group-hover:to-amber-300 rounded-t-sm transition-all duration-200 relative cursor-pointer"
                                             :class="day === daysInMonth() ? 'bg-gradient-to-t from-amber-500 to-yellow-300' : ''"

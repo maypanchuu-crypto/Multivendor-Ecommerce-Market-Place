@@ -1,135 +1,264 @@
-<x-app-layout :hideNav="true">
-    <div class="container mx-auto px-4 py-8 max-w-5xl">
+<x-app-layout :hideSearch="true" :cartIcon="true" :messageIcon="true" :hideRoleMenu="true" :hideDropdown="true" :menuBtn="true">
+    {{-- Main Background: Dashboard ထဲကအတိုင်း Mint Green အရောင် --}}
+    <div id="sidebarOverlay"
+        class="fixed top-[65px] left-0 right-0 bottom-0 bg-black/40 z-30 hidden transition-opacity duration-300">
+    </div>
 
-        <div class="mb-8">
-            <h1 class="text-2xl font-black text-gray-900 dark:text-white tracking-tight">Shop Sales & Items</h1>
-            <p class="text-sm text-gray-500 dark:text-gray-400">Track and manage individual product sales and automated
-                net earnings after commission.</p>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+    <!-- 💡 Sidebar Section (3D Styled) -->
+    <div id="sidebar"
+        class="fixed top-[65px] left-0 h-[calc(100vh-65px)] w-64 bg-white dark:bg-gray-800 z-30 shadow-2xl transform -translate-x-full transition-transform duration-300 ease-in-out p-5 flex flex-col justify-between overflow-y-auto border-r-4 border-emerald-800 dark:border-emerald-300">
+        <div>
             <div
-                class="bg-white dark:bg-gray-900 p-5 rounded-2xl border dark:border-gray-800 shadow-sm flex items-center space-x-4">
-                <div class="p-3 bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 rounded-xl">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M7 12l3-3 3 3 4-4M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z">
+                class="flex justify-between items-center mb-6 border-b-2 border-emerald-800 dark:border-emerald-300 pb-3">
+                <h2 class="text-xl font-black text-emerald-950 dark:text-emerald-100 tracking-wider uppercase">
+                    Vendor Menu</h2>
+                <button id="closeBtn"
+                    class="text-emerald-800 dark:text-emerald-200 p-1 hover:scale-110 transition-transform">
+                    <svg class="w-6 h-6 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="space-y-3">
+                <a href="{{ route('dashboard') }}"
+                    class="btn-3d flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white dark:bg-emerald-900 text-emerald-950 dark:text-emerald-100 font-black text-sm">
+                    <svg class="w-5 h-5 text-emerald-600 dark:text-emerald-300 stroke-[2.5]" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M11 15l-3-3m0 0l3-3m-3 3h8M3 12a9 9 0 1118 0 9 9 0 0118 0z"></path>
+                    </svg>
+                    Customer Marketplace
+                </a>
+
+                <a href="{{ route('vendor.orders.index') }}"
+                    class="btn-3d flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white dark:bg-emerald-900 text-emerald-950 dark:text-emerald-100 font-black text-sm">
+                    <svg class="w-5 h-5 text-emerald-600 dark:text-emerald-300 stroke-[2.5]" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-14L4 7m8 4v10M4 7v10l8 4"></path>
+                    </svg>
+                    My Shop Orders
+                </a>
+
+                <a href="#"
+                    class="btn-3d flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white dark:bg-emerald-900 text-emerald-950 dark:text-emerald-100 font-black text-sm">
+                    <svg class="w-5 h-5 text-emerald-600 dark:text-emerald-300 stroke-[2.5]" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                    </svg>
+                    Wallet
+                </a>
+
+                <a href="#"
+                    class="btn-3d flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white dark:bg-emerald-900 text-emerald-950 dark:text-emerald-100 font-black text-sm">
+                    <svg class="w-5 h-5 text-emerald-600 dark:text-emerald-300 stroke-[2.5]" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
                         </path>
                     </svg>
-                </div>
-                <div>
-                    <span class="text-xs font-bold text-gray-400 uppercase">Items Sold</span>
-                    <h3 class="text-xl font-black text-gray-900 dark:text-white mt-0.5">{{ $myOrders->count() }} Items
-                    </h3>
-                </div>
-            </div>
-            <div
-                class="bg-white dark:bg-gray-900 p-5 rounded-2xl border dark:border-gray-800 shadow-sm flex items-center space-x-4">
-                <div class="p-3 bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 rounded-xl">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M12 16V5">
+                    Messages
+                </a>
+
+                <!-- 💡 Dark Mode Switch (navigation.blade.php ပုံစံအတိုင်း ပြင်ဆင်ထားပါသည်) -->
+                <div id="darkModeRow"
+                    class="btn-3d flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white dark:bg-emerald-900 text-emerald-950 dark:text-emerald-100 font-black text-sm cursor-pointer select-none">
+
+                    <!-- 🌙 Night Mode Icon (Light mode မှာပဲ ပြမည်) -->
+                    <svg id="nightModeIcon" class="w-5 h-5 text-emerald-600 stroke-[2.5] block dark:hidden" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z">
                         </path>
                     </svg>
-                </div>
-                <div>
-                    <span class="text-xs font-bold text-gray-400 uppercase">Total Estimated Profit</span>
-                    <h3 class="text-xl font-black text-emerald-600 mt-0.5">
-                        @php
-                            $totalProfit = $myOrders->sum(function ($item) {
-                                return ($item->price * $item->quantity) * 0.95;
-                            });
-                        @endphp
-                        {{ number_format($totalProfit) }} MMK
-                    </h3>
+
+                    <!-- ☀️ Day Mode Icon (Dark mode မှာပဲ ပြမည်) -->
+                    <svg id="dayModeIcon" class="w-5 h-5 text-yellow-400 stroke-[2.5] hidden dark:block" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round"
+                            d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M16.243 17.657l.707.707M6.343 6.343l.707-.707M14.5 12a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z">
+                        </path>
+                    </svg>
+
+                    <!-- 📝 Dynamic Text (JavaScript မှ Control လုပ်မည်) -->
+                    <span id="darkModeText" class="tracking-wide">Night Mode</span>
                 </div>
             </div>
         </div>
 
-        <div class="space-y-4">
-            @forelse($myOrders as $item)
+        <form method="POST" action="{{ route('logout') }}" class="pt-4">
+            @csrf
+            <button type="submit"
+                class="btn-3d w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-rose-500 text-white font-black text-sm text-left shadow-none">
+                <svg class="w-5 h-5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
+                    </path>
+                </svg>
+                Logout
+            </button>
+        </form>
+    </div>
+
+    <div class="min-h-screen bg-[#d8f5e5] text-slate-800 py-10 px-4 sm:px-6 lg:px-8">
+        <div class="max-w-5xl mx-auto space-y-8">
+
+            {{-- Header Section --}}
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h1 class="text-3xl font-black text-[#104e35] tracking-tight">
+                        Shop Sales & Order Items 🛒
+                    </h1>
+                </div>
+            </div>
+
+            {{-- Stat Cards Section --}}
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <!-- Total Items Sold Card -->
                 <div
-                    class="bg-white dark:bg-gray-900 p-6 rounded-2xl border dark:border-gray-800 shadow-sm flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6 transition hover:shadow-md">
+                    class="p-6 rounded-2xl bg-white border-2 border-[#104e35] shadow-[4px_4px_0px_#104e35] flex items-center justify-between">
+                    <div>
+                        <span class="text-xs font-black uppercase tracking-wider text-[#ea580c]">Total Items Sold</span>
+                        <h3 class="text-3xl font-black text-[#ea580c] mt-1">
+                            {{ $myOrders->count() }} <span class="text-base font-bold text-[#104e35]">Items</span>
+                        </h3>
+                    </div>
+                    <div
+                        class="w-14 h-14 rounded-2xl bg-[#ffebd9] border-2 border-[#ea580c] flex items-center justify-center text-2xl shadow-[2px_2px_0px_#ea580c]">
+                        📦
+                    </div>
+                </div>
 
-                    <div class="space-y-2">
-                        <div class="flex items-center space-x-2">
-                            <span
-                                class="text-[10px] font-black bg-gray-100 dark:bg-gray-800 text-gray-500 px-2 py-1 rounded-md">
-                                INVOICE #{{ $item->order->id }}
-                            </span>
-                            <span
-                                class="text-[10px] font-bold text-gray-400">{{ $item->created_at->format('d M Y') }}</span>
-                        </div>
+                <!-- Total Net Profit Card -->
+                <div
+                    class="p-6 rounded-2xl bg-white border-2 border-[#104e35] shadow-[4px_4px_0px_#104e35] flex items-center justify-between">
+                    <div>
+                        <span class="text-xs font-black uppercase tracking-wider text-[#ea580c]">Total Net Earnings
+                            (98%)</span>
+                        <h3 class="text-3xl font-black text-[#ea580c] mt-1">
+                            @php
+                                $totalProfit = $myOrders->sum(function ($item) {
+                                    return $item->vendor_amount > 0 ? $item->vendor_amount : (($item->price * $item->quantity) * 0.98);
+                                });
+                            @endphp
+                            {{ number_format($totalProfit) }} <span
+                                class="text-base font-bold text-[#104e35]">MMK</span>
+                        </h3>
+                    </div>
+                    <div
+                        class="w-14 h-14 rounded-2xl bg-[#ffebd9] border-2 border-[#ea580c] flex items-center justify-center text-2xl shadow-[2px_2px_0px_#ea580c]">
+                        💰
+                    </div>
+                </div>
+            </div>
 
-                        <div>
-                            <h3 class="text-sm font-black text-gray-900 dark:text-white tracking-tight">
-                                {{ $item->product->name ?? 'Product Deleted' }}
-                            </h3>
-                            <p class="text-xs text-gray-400 font-medium mt-0.5">
-                                Qty: <span class="text-gray-700 dark:text-gray-300 font-bold">{{ $item->quantity }}</span>
-                                | Original Price: {{ number_format($item->price) }} MMK
-                                @if($item->color || $item->size)
-                                    <span class="text-indigo-500 dark:text-indigo-400 font-bold ml-1">
-                                        ({{ $item->color ?? '' }} {{ $item->size ? '[' . $item->size . ']' : '' }})
-                                    </span>
-                                @endif
-                            </p>
-                        </div>
+            {{-- Order Details Section (Table / Card Banner Style) --}}
+            <div
+                class="bg-white rounded-2xl border-2 border-[#104e35] shadow-[5px_5px_0px_#104e35] overflow-hidden p-6 space-y-6">
+
+                <div class="flex items-center justify-between border-b-2 border-[#104e35]/20 pb-4">
+                    <h2 class="text-xl font-black text-[#104e35]">Order Items History</h2>
+                    <span
+                        class="px-3 py-1 bg-[#d8f5e5] text-[#104e35] border-2 border-[#104e35] rounded-xl font-bold text-xs shadow-[2px_2px_0px_#104e35]">
+                        Total Orders: {{ $myOrders->count() }}
+                    </span>
+                </div>
+
+                <div class="space-y-4">
+                    @forelse($myOrders as $item)
+                        @php
+                            $itemTotal = $item->price * $item->quantity;
+                            $netEarning = $item->vendor_amount > 0 ? $item->vendor_amount : ($itemTotal * 0.98);
+                        @endphp
 
                         <div
-                            class="pt-2 border-t dark:border-gray-800/60 flex items-start gap-1.5 text-gray-500 dark:text-gray-400 text-xs">
-                            <svg class="w-3.5 h-3.5 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z">
-                                </path>
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                            </svg>
-                            <div>
-                                <span
-                                    class="font-bold text-gray-700 dark:text-gray-300">{{ $item->order->customer_name }}</span>
-                                <span class="text-gray-400">({{ $item->order->customer_phone }})</span>
-                                <div class="text-[11px] text-gray-400 font-normal mt-0.5">
-                                    {{ $item->order->shipping_address }}</div>
+                            class="p-5 rounded-2xl bg-[#f7fdfa] border-2 border-[#104e35] shadow-[3px_3px_0px_#104e35] flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:bg-white transition-all">
+
+                            {{-- Product & Order Details --}}
+                            <div class="space-y-2 flex-1">
+                                <div class="flex items-center gap-2">
+                                    <span
+                                        class="px-2.5 py-1 bg-[#ea580c] text-white rounded-lg font-black text-[10px] tracking-wider border border-[#104e35]">
+                                        INVOICE #{{ $item->order->id ?? 'N/A' }}
+                                    </span>
+                                    <span class="text-xs font-bold text-[#2d6a4f]">
+                                        📅 {{ $item->created_at->format('d M Y, h:i A') }}
+                                    </span>
+                                </div>
+
+                                <div>
+                                    <h3 class="text-lg font-black text-[#104e35]">
+                                        {{ $item->product->name ?? 'Product Deleted' }}
+                                    </h3>
+                                    <p class="text-xs font-bold text-slate-600 mt-0.5">
+                                        Qty: <span class="text-[#ea580c] font-black">{{ $item->quantity }}</span> |
+                                        Unit Price: <span
+                                            class="text-[#104e35] font-black">{{ number_format($item->price) }} MMK</span>
+                                        @if($item->color || $item->size)
+                                            <span
+                                                class="ml-1 text-[#ea580c] bg-[#ffebd9] px-2 py-0.5 rounded-md border border-[#ea580c]/40 font-bold">
+                                                ({{ implode(' ', array_filter([$item->color, $item->size ? '[' . $item->size . ']' : ''])) }})
+                                            </span>
+                                        @endif
+                                    </p>
+                                </div>
+
+                                {{-- Customer Info --}}
+                                <div class="pt-2 border-t border-[#104e35]/10 flex items-start gap-2 text-xs">
+                                    <span class="text-base">📍</span>
+                                    <div>
+                                        <span
+                                            class="font-black text-[#104e35]">{{ $item->order->customer_name ?? 'Unknown Customer' }}</span>
+                                        <span
+                                            class="text-slate-500 font-bold">({{ $item->order->customer_phone ?? 'No Phone' }})</span>
+                                        <div class="text-slate-600 font-semibold mt-0.5">
+                                            {{ $item->order->shipping_address ?? 'No shipping address provided.' }}
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
 
-                    <div
-                        class="w-full sm:w-auto flex sm:flex-col justify-between sm:justify-center items-center sm:items-end border-t sm:border-t-0 pt-4 sm:pt-0 dark:border-gray-800 gap-2">
-                        <div>
-                            @if($item->order->status === 'completed')
-                                <span
-                                    class="inline-flex items-center gap-1 px-2.5 py-1 text-[10px] font-black rounded-full bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400">
-                                    Approved
-                                </span>
-                            @else
-                                <span
-                                    class="inline-flex items-center gap-1 px-2.5 py-1 text-[10px] font-black rounded-full bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400">
-                                    Processing
-                                </span>
-                            @endif
-                        </div>
+                            {{-- Earnings & Status Side --}}
+                            <div
+                                class="w-full md:w-auto flex md:flex-col justify-between md:justify-center items-center md:items-end border-t md:border-t-0 pt-3 md:pt-0 border-[#104e35]/10 gap-2 shrink-0">
+                                <div>
+                                    @if(($item->order->status ?? '') === 'completed' || ($item->order->status ?? '') === 'paid')
+                                        <span
+                                            class="px-3 py-1 rounded-xl bg-[#d8f5e5] text-[#104e35] border border-[#104e35] font-black text-xs shadow-[2px_2px_0px_#104e35]">
+                                            ✓ Approved / Paid
+                                        </span>
+                                    @else
+                                        <span
+                                            class="px-3 py-1 rounded-xl bg-[#fff3c4] text-[#b45309] border border-[#b45309] font-black text-xs shadow-[2px_2px_0px_#b45309]">
+                                            ⏳ Processing
+                                        </span>
+                                    @endif
+                                </div>
 
-                        <div class="text-right sm:mt-2">
-                            <span class="text-[10px] font-bold text-gray-400 block uppercase tracking-wider">Your Net
-                                Earning:</span>
-                            <span class="text-base font-black text-indigo-600 dark:text-indigo-400">
-                                {{ number_format(($item->price * $item->quantity) * 0.98) }} MMK
-                            </span>
-                            <span class="block text-[9px] font-semibold text-gray-400 mt-0.5">(2% Commission
-                                Deducted)</span>
-                        </div>
-                    </div>
+                                <div class="text-right">
+                                    <span class="text-[10px] font-black text-slate-500 block uppercase tracking-wider">Your
+                                        Net Earning</span>
+                                    <span class="text-xl font-black text-[#ea580c]">
+                                        {{ number_format($netEarning) }} MMK
+                                    </span>
+                                    <span class="block text-[9px] font-bold text-[#2d6a4f]">(2% Commission Deducted)</span>
+                                </div>
+                            </div>
 
+                        </div>
+                    @empty
+                        <div
+                            class="p-10 text-center rounded-2xl bg-[#d8f5e5]/40 border-2 border-dashed border-[#104e35]/40 text-[#104e35]">
+                            <div class="text-4xl mb-2">🍃</div>
+                            <h3 class="text-base font-black">There are no sales records yet.</h3>
+                        </div>
+                    @endforelse
                 </div>
-            @empty
-                <div
-                    class="bg-white dark:bg-gray-900 p-12 text-center rounded-2xl border dark:border-gray-800 text-gray-400 font-medium">
-                    No product sales records yet.
-                </div>
-            @endforelse
+
+            </div>
+
         </div>
-
     </div>
 </x-app-layout>

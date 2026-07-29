@@ -1,7 +1,6 @@
 <x-app-layout>
     <div class="container mx-auto px-4 py-8 max-w-7xl">
-        <h1 class="text-2xl font-black text-gray-900 dark:text-white mb-6">Withdrawal Requests
-            (ငွေထုတ်ရန်တောင်းဆိုမှုများ)</h1>
+        <h1 class="text-2xl font-black text-gray-900 dark:text-white mb-6">Withdrawal Requests</h1>
 
         @if(session('success'))
             <div class="mb-4 p-4 bg-green-50 text-green-700 rounded-xl border font-bold text-sm">{{ session('success') }}

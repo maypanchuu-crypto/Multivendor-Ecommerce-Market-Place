@@ -10,8 +10,6 @@
                         class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-200 tracking-wide">
                         Order & Commission Management
                     </h1>
-                    <p class="text-slate-400 text-sm mt-1">အော်ဒါအသေးစိတ်၊ Admin ကော်မရှင်နှင့် Vendor Share များအား
-                        စစ်ဆေးသည့်နေရာ</p>
                 </div>
                 <div class="flex items-center gap-3">
                     <span
