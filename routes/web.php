@@ -64,7 +64,7 @@ Route::middleware('auth')->group(function () {
         Route::get('/orders', [AdminFinanceController::class, 'orderIndex'])->name('orders.index');
 
         // အော်ဒါကို အောင်မြင်ကြောင်း သတ်မှတ်ပြီး Vendor ဆီ ပိုက်ဆံခွဲပေးမည့် Route
-        Route::post('/orders/{id}/complete', [AdminFinanceController::class, 'completeOrder'])->name('orders.complete');
+        // Route::post('/orders/{id}/complete', [AdminFinanceController::class, 'completeOrder'])->name('orders.complete');
 
         // User Management Routes
         Route::get('/users', [UserManagementController::class, 'index'])->name('users.index');
