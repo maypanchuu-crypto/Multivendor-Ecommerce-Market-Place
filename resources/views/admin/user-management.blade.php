@@ -87,6 +87,15 @@
                         <span class="normal-case tracking-normal">Customer Marketplace</span>
                     </a>
 
+                    <a href="{{ route('admin.orders.index') }}"
+                        class="btn-3d flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-blue-800 text-white font-medium text-sm border border-blue-700 transform transition duration-200 hover:-translate-y-1">
+                        <svg class="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" stroke-width="2"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
+                        </svg>
+                        Order & Finance Overview
+                    </a>
+
                     <a href="{{ route('admin.vendor.requests') }}"
                         class="btn-3d flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-blue-800 text-white font-medium text-sm border border-blue-700 transform transition duration-200 hover:-translate-y-1">
                         <svg class="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" stroke-width="2"
@@ -95,17 +104,6 @@
                         </svg>
                         <span class="normal-case tracking-normal">Vendor Requests</span>
                     </a>
-
-                    <!-- <a href="{{ route('admin.users.index') }}"
-                        class="btn-3d flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-blue-800 text-white font-medium text-sm border border-blue-700 transform transition duration-200 hover:-translate-y-1">
-                        <svg class="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" stroke-width="2"
-                            viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round"
-                                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z">
-                            </path>
-                        </svg>
-                        <span class="normal-case tracking-normal">User Management</span>
-                    </a> -->
 
                     <a href="#"
                         class="btn-3d flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-blue-800 text-white font-medium text-sm border border-blue-700 transform transition duration-200 hover:-translate-y-1">
@@ -245,23 +243,26 @@
                                     </td>
 
                                     <td class="p-4">
-    @if($user->role === 'admin')
-        <!-- Dark Red 3D Text -->
-        <span class="text-xs font-black text-rose-600 [text-shadow:_0_1px_0_#4c0519,_0_2px_0_#27020d,_0_3px_2px_rgba(0,0,0,0.8)]">
-            Admin
-        </span>
-    @elseif($user->role === 'vendor')
-        <!-- Dark Green 3D Text -->
-        <span class="text-xs font-black text-emerald-600 [text-shadow:_0_1px_0_#064e3b,_0_2px_0_#022c22,_0_3px_2px_rgba(0,0,0,0.8)]">
-            Vendor
-        </span>
-    @else
-        <!-- Gold 3D Text -->
-        <span class="text-xs font-black text-amber-400 [text-shadow:_0_1px_0_#b45309,_0_2px_0_#78350f,_0_3px_2px_rgba(0,0,0,0.8)]">
-            Customer
-        </span>
-    @endif
-</td>
+                                        @if($user->role === 'admin')
+                                            <!-- Dark Red 3D Text -->
+                                            <span
+                                                class="text-xs font-black text-rose-600 [text-shadow:_0_1px_0_#4c0519,_0_2px_0_#27020d,_0_3px_2px_rgba(0,0,0,0.8)]">
+                                                Admin
+                                            </span>
+                                        @elseif($user->role === 'vendor')
+                                            <!-- Dark Green 3D Text -->
+                                            <span
+                                                class="text-xs font-black text-emerald-600 [text-shadow:_0_1px_0_#064e3b,_0_2px_0_#022c22,_0_3px_2px_rgba(0,0,0,0.8)]">
+                                                Vendor
+                                            </span>
+                                        @else
+                                            <!-- Gold 3D Text -->
+                                            <span
+                                                class="text-xs font-black text-amber-400 [text-shadow:_0_1px_0_#b45309,_0_2px_0_#78350f,_0_3px_2px_rgba(0,0,0,0.8)]">
+                                                Customer
+                                            </span>
+                                        @endif
+                                    </td>
 
                                     <td class="p-4">
                                         @if($user->vendor_status === 'banned')

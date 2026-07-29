@@ -87,14 +87,14 @@
                         <span class="normal-case tracking-normal">Customer Marketplace</span>
                     </a>
 
-                    <!-- <a href="{{ route('admin.vendor.requests') }}"
+                    <a href="{{ route('admin.orders.index') }}"
                         class="btn-3d flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-blue-800 text-white font-medium text-sm border border-blue-700 transform transition duration-200 hover:-translate-y-1">
                         <svg class="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" stroke-width="2"
                             viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
                         </svg>
-                        <span class="normal-case tracking-normal">Vendor Requests</span>
-                    </a> -->
+                        Order & Finance Overview
+                    </a>
 
                     <a href="{{ route('admin.users.index') }}"
                         class="btn-3d flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-blue-800 text-white font-medium text-sm border border-blue-700 transform transition duration-200 hover:-translate-y-1">
@@ -206,23 +206,23 @@
                                         {{ $req->shop_description }}
                                     </td>
                                     <!-- <td class="p-4">
-                                        @if($req->payment_slip)
-                                            <button onclick="showSlip('{{ asset('storage/' . $req->payment_slip) }}')"
-                                                class="btn-3d text-xs bg-blue-900 hover:bg-blue-800 text-cyan-300 font-bold px-3 py-1.5 rounded-xl border border-cyan-500 transition-all flex items-center gap-1.5">
-                                                <svg class="w-4 h-4 text-yellow-400" fill="none" stroke="currentColor"
-                                                    stroke-width="2" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
-                                                    </path>
-                                                </svg>
-                                                View Slip
-                                            </button>
-                                        @else
-                                            <span class="text-xs text-blue-300/60 font-semibold">No Slip</span>
-                                        @endif
-                                    </td> -->
+                                            @if($req->payment_slip)
+                                                <button onclick="showSlip('{{ asset('storage/' . $req->payment_slip) }}')"
+                                                    class="btn-3d text-xs bg-blue-900 hover:bg-blue-800 text-cyan-300 font-bold px-3 py-1.5 rounded-xl border border-cyan-500 transition-all flex items-center gap-1.5">
+                                                    <svg class="w-4 h-4 text-yellow-400" fill="none" stroke="currentColor"
+                                                        stroke-width="2" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z">
+                                                        </path>
+                                                    </svg>
+                                                    View Slip
+                                                </button>
+                                            @else
+                                                <span class="text-xs text-blue-300/60 font-semibold">No Slip</span>
+                                            @endif
+                                        </td> -->
                                     <td class="p-4 text-right">
                                         <div class="flex justify-end gap-2 items-center">
                                             <form action="{{ route('admin.vendor.approve', $req->id) }}" method="POST">
