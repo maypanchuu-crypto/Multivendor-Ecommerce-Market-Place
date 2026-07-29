@@ -29,7 +29,7 @@
                     <label class="block text-xs font-bold text-gray-600 mb-1">New Wallet Password</label>
                     <input type="password" name="new_password" required
                         class="w-full border border-gray-300 p-2.5 rounded-xl text-sm focus:outline-none focus:border-emerald-500"
-                        placeholder="အနည်းဆုံး ၆ လုံးဖြည့်ပါ">
+                        placeholder="Enter new password">
                     @error('new_password')
                         <span class="text-xs text-red-500 font-semibold">{{ $message }}</span>
                     @enderror

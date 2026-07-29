@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\OrderItem;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cookie;
 
 class ProductController extends Controller
 {
@@ -30,7 +31,12 @@ class ProductController extends Controller
 
         $moreProducts = Product::inRandomOrder()->get();
 
-        return view('dashboard', compact('trendingProducts', 'moreProducts'));
+        $cart = json_decode(Cookie::get('shopping_cart', '[]'), true);
+        $cartCount = array_reduce($cart, function ($sum, $item) {
+            return $sum + ($item['quantity'] ?? 0);
+        }, 0);
+
+        return view('dashboard', compact('trendingProducts', 'moreProducts', 'cartCount'));
     }
 
     public function show($id)

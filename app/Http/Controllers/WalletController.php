@@ -25,12 +25,12 @@ class WalletController extends Controller
         $wallet = $user->wallet; // User Model ရဲ့ Wallet Relationship ကို သုံးထားသည်
 
         if (!$wallet) {
-            return back()->withErrors(['current_password' => 'Wallet အကောင့် မတွေ့ရှိပါ။']);
+            return back()->withErrors(['current_password' => 'Wallet account not found.']);
         }
 
         // ၁။ မူရင်း Current Wallet Password မှန်/မမှန် စစ်ဆေးခြင်း
         if (!Hash::check($request->current_password, $wallet->wallet_password)) {
-            return back()->withErrors(['current_password' => 'လက်ရှိ Wallet Password မမှန်ကန်ပါ။']);
+            return back()->withErrors(['current_password' => 'Current Wallet Password is incorrect.']);
         }
 
         // ၂။ Password အသစ်ကို Hash လုပ်ပြီး Update လုပ်ခြင်း
@@ -38,6 +38,6 @@ class WalletController extends Controller
             'wallet_password' => Hash::make($request->new_password)
         ]);
 
-        return back()->with('status', 'Wallet Password အောင်မြင်စွာ ပြောင်းလဲပြီးပါပြီ။');
+        return back()->with('status', 'Wallet Password updated successfully.');
     }
 }

@@ -238,6 +238,7 @@ class VendorDashboardController extends Controller
 
     public function orderIndex(Request $request)
     {
+        $vendor = Auth::user();
         $vendorId = Auth::id();
         $status = $request->input('status', 'all');
 
@@ -286,6 +287,7 @@ class VendorDashboardController extends Controller
             })->count();
 
         return view('vendor.orders.index', compact(
+            'vendor',
             'myOrders',
             'status',
             'paidItemsCount',

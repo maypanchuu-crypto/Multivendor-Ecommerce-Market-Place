@@ -1,30 +1,43 @@
 <x-app-layout :hideSearch="true" :cartIcon="true" :messageIcon="true" :hideRoleMenu="true" :hideDropdown="true">
+    <x-slot name="header">
+        <div class="flex items-center gap-3">
+            <h2 class="text-base font-black tracking-wide text-orange-500 dark:text-orange-400">
+                {{ $vendor->shop_name }}
+                <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 ml-1"></span>
+            </h2>
+        </div>
+    </x-slot>
+
     {{-- Main Background: Dashboard ထဲကအတိုင်း Mint Green အရောင် --}}
     <div id="sidebarOverlay"
         class="fixed top-[65px] left-0 right-0 bottom-0 bg-black/40 z-30 hidden transition-opacity duration-300">
     </div>
 
-    <!-- 💡 Sidebar Section (3D Styled) -->
+    <!-- 💡 Sidebar Section (Dashboard Style အတိအကျ) -->
     <div id="sidebar"
-        class="fixed top-[65px] left-0 h-[calc(100vh-65px)] w-64 bg-white dark:bg-gray-800 z-30 shadow-2xl transform -translate-x-full transition-transform duration-300 ease-in-out p-5 flex flex-col justify-between overflow-y-auto border-r-4 border-emerald-800 dark:border-emerald-300">
+        class="fixed top-[65px] left-0 h-[calc(100vh-65px)] w-64 bg-[#d1fae5] dark:bg-[#064e3b] z-30 shadow-2xl transform -translate-x-full transition-transform duration-300 ease-in-out p-5 flex flex-col justify-between overflow-y-auto border-r-4 border-[#065f46] dark:border-emerald-300">
         <div>
+            <!-- Sidebar Header -->
             <div
-                class="flex justify-between items-center mb-6 border-b-2 border-emerald-800 dark:border-emerald-300 pb-3">
-                <h2 class="text-xl font-black text-emerald-950 dark:text-emerald-100 tracking-wider uppercase">
-                    Vendor Menu</h2>
+                class="flex justify-between items-center mb-6 border-b-2 border-[#065f46] dark:border-emerald-300 pb-3">
+                <h2 class="text-xl font-black text-[#065f46] dark:text-emerald-100 tracking-wider uppercase">
+                    Vendor Menu
+                </h2>
                 <button id="closeBtn"
-                    class="text-emerald-800 dark:text-emerald-200 p-1 hover:scale-110 transition-transform">
+                    class="text-[#065f46] dark:text-emerald-200 p-1 hover:scale-110 transition-transform">
                     <svg class="w-6 h-6 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
                     </svg>
                 </button>
             </div>
 
+            <!-- Navigation Links (3D Solid Block Style) -->
             <div class="space-y-3">
+
                 <a href="{{ route('vendor.dashboard') }}"
-                    class="btn-3d flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white dark:bg-emerald-900 text-emerald-950 dark:text-emerald-100 font-black text-sm">
-                    <svg class="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" stroke-width="2"
-                        viewBox="0 0 24 24">
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white dark:bg-emerald-950 border-2 border-[#065f46] dark:border-emerald-300 text-[#065f46] dark:text-emerald-100 font-black text-sm shadow-[2px_3px_0px_0px_#065f46] dark:shadow-[2px_3px_0px_0px_#a7f3d0] hover:translate-y-[-2px] active:translate-y-[2px] transition-all">
+                    <svg class="w-5 h-5 text-[#065f46] dark:text-emerald-300 stroke-[2.5]" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
                         </path>
@@ -33,8 +46,8 @@
                 </a>
 
                 <a href="{{ route('dashboard') }}"
-                    class="btn-3d flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white dark:bg-emerald-900 text-emerald-950 dark:text-emerald-100 font-black text-sm">
-                    <svg class="w-5 h-5 text-emerald-600 dark:text-emerald-300 stroke-[2.5]" fill="none"
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white dark:bg-emerald-950 border-2 border-[#065f46] dark:border-emerald-300 text-[#065f46] dark:text-emerald-100 font-black text-sm shadow-[2px_3px_0px_0px_#065f46] dark:shadow-[2px_3px_0px_0px_#a7f3d0] hover:translate-y-[-2px] active:translate-y-[2px] transition-all">
+                    <svg class="w-5 h-5 text-[#065f46] dark:text-emerald-300 stroke-[2.5]" fill="none"
                         stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M11 15l-3-3m0 0l3-3m-3 3h8M3 12a9 9 0 1118 0 9 9 0 0118 0z"></path>
@@ -43,8 +56,8 @@
                 </a>
 
                 <a href="#"
-                    class="btn-3d flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white dark:bg-emerald-900 text-emerald-950 dark:text-emerald-100 font-black text-sm">
-                    <svg class="w-5 h-5 text-emerald-600 dark:text-emerald-300 stroke-[2.5]" fill="none"
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white dark:bg-emerald-950 border-2 border-[#065f46] dark:border-emerald-300 text-[#065f46] dark:text-emerald-100 font-black text-sm shadow-[2px_3px_0px_0px_#065f46] dark:shadow-[2px_3px_0px_0px_#a7f3d0] hover:translate-y-[-2px] active:translate-y-[2px] transition-all">
+                    <svg class="w-5 h-5 text-[#065f46] dark:text-emerald-300 stroke-[2.5]" fill="none"
                         stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
@@ -53,8 +66,8 @@
                 </a>
 
                 <a href="#"
-                    class="btn-3d flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white dark:bg-emerald-900 text-emerald-950 dark:text-emerald-100 font-black text-sm">
-                    <svg class="w-5 h-5 text-emerald-600 dark:text-emerald-300 stroke-[2.5]" fill="none"
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white dark:bg-emerald-950 border-2 border-[#065f46] dark:border-emerald-300 text-[#065f46] dark:text-emerald-100 font-black text-sm shadow-[2px_3px_0px_0px_#065f46] dark:shadow-[2px_3px_0px_0px_#a7f3d0] hover:translate-y-[-2px] active:translate-y-[2px] transition-all">
+                    <svg class="w-5 h-5 text-[#065f46] dark:text-emerald-300 stroke-[2.5]" fill="none"
                         stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
@@ -63,36 +76,32 @@
                     Messages
                 </a>
 
-                <!-- 💡 Dark Mode Switch (navigation.blade.php ပုံစံအတိုင်း ပြင်ဆင်ထားပါသည်) -->
+                <!-- Dark Mode Toggle Button -->
                 <div id="darkModeRow"
-                    class="btn-3d flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white dark:bg-emerald-900 text-emerald-950 dark:text-emerald-100 font-black text-sm cursor-pointer select-none">
-
-                    <!-- 🌙 Night Mode Icon (Light mode မှာပဲ ပြမည်) -->
-                    <svg id="nightModeIcon" class="w-5 h-5 text-emerald-600 stroke-[2.5] block dark:hidden" fill="none"
+                    class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white dark:bg-emerald-950 border-2 border-[#065f46] dark:border-emerald-300 text-[#065f46] dark:text-emerald-100 font-black text-sm shadow-[2px_3px_0px_0px_#065f46] dark:shadow-[2px_3px_0px_0px_#a7f3d0] hover:translate-y-[-2px] active:translate-y-[2px] transition-all cursor-pointer select-none">
+                    <svg id="nightModeIcon" class="w-5 h-5 text-[#065f46] stroke-[2.5] block dark:hidden" fill="none"
                         stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z">
                         </path>
                     </svg>
-
-                    <!-- ☀️ Day Mode Icon (Dark mode မှာပဲ ပြမည်) -->
                     <svg id="dayModeIcon" class="w-5 h-5 text-yellow-400 stroke-[2.5] hidden dark:block" fill="none"
                         stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M16.243 17.657l.707.707M6.343 6.343l.707-.707M14.5 12a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z">
                         </path>
                     </svg>
-
-                    <!-- 📝 Dynamic Text (JavaScript မှ Control လုပ်မည်) -->
-                    <span id="darkModeText" class="tracking-wide">Night Mode</span>
+                    <span id="darkModeText">Night Mode</span>
                 </div>
+
             </div>
         </div>
 
+        <!-- Logout Form -->
         <form method="POST" action="{{ route('logout') }}" class="pt-4">
             @csrf
             <button type="submit"
-                class="btn-3d w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-rose-500 text-white font-black text-sm text-left shadow-none">
+                class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl bg-[#ff3b68] border-2 border-[#065f46] text-white font-black text-sm text-left shadow-[2px_3px_0px_0px_#065f46] hover:translate-y-[-2px] active:translate-y-[2px] transition-all">
                 <svg class="w-5 h-5 stroke-[2.5]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round"
                         d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">

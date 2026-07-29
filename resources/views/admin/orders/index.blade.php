@@ -385,7 +385,7 @@
                     @empty
                         <div class="card-3d p-12 text-center rounded-2xl">
                             <div class="text-4xl mb-3">📦</div>
-                            <h3 class="text-lg font-bold text-white">There are no orders yet.</h3>
+                            <h3 class="text-lg font-bold text-white">There are no pending orders yet.</h3>
                         </div>
                     @endforelse
                 </div>

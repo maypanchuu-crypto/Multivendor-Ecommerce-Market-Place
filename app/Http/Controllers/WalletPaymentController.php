@@ -20,7 +20,7 @@ class WalletPaymentController extends Controller
 
         // အော်ဒါက Paid ဖြစ်ပြီးသားဆိုလျှင် ပြန်ပေးမကြည့်ပါ
         if ($order->status === 'paid') {
-            return response('<div style="text-align:center; padding:50px;"><h2>⚠️ ဒီ Order က ငွေပေးချေမှု ပြီးစီးပြီးသား ဖြစ်ပါသည်။</h2></div>');
+            return response('<div style="text-align:center; padding:50px;"><h2>⚠️ This order has already been paid.</h2></div>');
         }
 
         return view('wallet.pay', compact('order'));
@@ -52,12 +52,12 @@ class WalletPaymentController extends Controller
 
         // Password စစ်ဆေးခြင်း
         if (!Hash::check($request->wallet_password, $wallet->wallet_password)) {
-            return back()->with('error', 'Wallet Password (PIN) မမှန်ကန်ပါ။');
+            return back()->with('error', 'Wallet Password (PIN) is incorrect.');
         }
 
         // Balance စစ်ဆေးခြင်း
         if ($wallet->balance < $order->total_amount) {
-            return back()->with('error', 'Wallet ထဲတွင် လက်ကျန်ငွေ မလုံလောက်ပါ။');
+            return back()->with('error', 'Insufficient balance in your wallet.');
         }
 
         // 💡 Transaction ဖြင့် Admin (2%) နှင့် Vendor (98%) သို့ ငွေခွဲဝေပေးခြင်း

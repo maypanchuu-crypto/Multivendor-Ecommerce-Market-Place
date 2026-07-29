@@ -44,11 +44,22 @@
             @if(!isset($cartIcon) || !$cartIcon)
                 <a href="{{ route('cart.index') }}"
                     class="relative text-amber-500 dark:text-amber-400 hover:text-amber-600 dark:hover:text-amber-300 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 transition">
+
+                    <!-- Cart SVG Icon -->
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round"
                             d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 0a2 2 0 100 4 2 2 0 000-4z">
                         </path>
                     </svg>
+
+                    <!-- 🟠 Badge -->
+                    @if(isset($cartCount) && $cartCount > 0)
+                        <span
+                            class="absolute -top-1 -right-1 bg-amber-500 text-white text-[11px] font-bold rounded-full h-5 w-5 flex items-center justify-center shadow-xs">
+                            {{ $cartCount > 99 ? '99+' : $cartCount }}
+                        </span>
+                    @endif
+
                 </a>
             @endif
         @endauth
@@ -115,29 +126,29 @@
                         @endif
 
                         <!-- @if(!isset($hideDarkMode) || !$hideDarkMode)
-                            <div id="darkModeRow"
-                                class="flex items-center gap-2 w-full px-4 py-2 text-left text-sm leading-5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none transition ease-in-out duration-150 cursor-pointer select-none">
+                                    <div id="darkModeRow"
+                                        class="flex items-center gap-2 w-full px-4 py-2 text-left text-sm leading-5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none transition ease-in-out duration-150 cursor-pointer select-none">
 
-                                
-                                <svg id="nightModeIcon" class="w-4 h-4 text-gray-400 block dark:hidden" fill="none"
-                                    stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z">
-                                    </path>
-                                </svg>
 
-                            
-                                <svg id="dayModeIcon" class="w-4 h-4 text-yellow-500 hidden dark:block" fill="none"
-                                    stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M16.243 17.657l.707.707M6.343 6.343l.707-.707M14.5 12a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z">
-                                    </path>
-                                </svg>
+                                        <svg id="nightModeIcon" class="w-4 h-4 text-gray-400 block dark:hidden" fill="none"
+                                            stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z">
+                                            </path>
+                                        </svg>
 
-                                
-                                <span id="darkModeText" class="tracking-wide font-medium">Night Mode</span>
-                            </div>
-                        @endif -->
+
+                                        <svg id="dayModeIcon" class="w-4 h-4 text-yellow-500 hidden dark:block" fill="none"
+                                            stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M16.243 17.657l.707.707M6.343 6.343l.707-.707M14.5 12a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z">
+                                            </path>
+                                        </svg>
+
+
+                                        <span id="darkModeText" class="tracking-wide font-medium">Night Mode</span>
+                                    </div>
+                                @endif -->
 
                         <form method="POST" action="{{ route('logout') }}">
                             @csrf
@@ -159,27 +170,27 @@
                             </x-dropdown-link>
                         @endif
                         <?php        /*<div id="darkModeRow"
-                                                            class="flex items-center gap-2 w-full px-4 py-2 text-left text-sm leading-5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none transition ease-in-out duration-150 cursor-pointer select-none">
+                                                                    class="flex items-center gap-2 w-full px-4 py-2 text-left text-sm leading-5 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 focus:outline-none transition ease-in-out duration-150 cursor-pointer select-none">
 
-                                                            <!-- 🌙 Night Mode ပြောင်းရန် Icon (Light mode မှာပဲ ပြမည်) -->
-                                                            <svg id="nightModeIcon" class="w-4 h-4 text-gray-400 block dark:hidden" fill="none"
-                                                                stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                                    d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z">
-                                                                </path>
-                                                            </svg>
+                                                                    <!-- 🌙 Night Mode ပြောင်းရန် Icon (Light mode မှာပဲ ပြမည်) -->
+                                                                    <svg id="nightModeIcon" class="w-4 h-4 text-gray-400 block dark:hidden" fill="none"
+                                                                        stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                                            d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z">
+                                                                        </path>
+                                                                    </svg>
 
-                                                            <!-- ☀️ Day Mode ပြောင်းရန် Icon (Dark mode မှာပဲ ပြမည်) -->
-                                                            <svg id="dayModeIcon" class="w-4 h-4 text-yellow-500 hidden dark:block" fill="none"
-                                                                stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                                    d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M16.243 17.657l.707.707M6.343 6.343l.707-.707M14.5 12a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z">
-                                                                </path>
-                                                            </svg>
+                                                                    <!-- ☀️ Day Mode ပြောင်းရန် Icon (Dark mode မှာပဲ ပြမည်) -->
+                                                                    <svg id="dayModeIcon" class="w-4 h-4 text-yellow-500 hidden dark:block" fill="none"
+                                                                        stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                                        <path stroke-linecap="round" stroke-linejoin="round"
+                                                                            d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M16.243 17.657l.707.707M6.343 6.343l.707-.707M14.5 12a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z">
+                                                                        </path>
+                                                                    </svg>
 
-                                                            <!-- 📝 စာသားပြသမည့်နေရာ (JavaScript မှ Day Mode သို့မဟုတ် Night Mode ဟု အခြေအနေပေါ်မူတည်ပြီး ပြောင်းပေးမည်) -->
-                                                            <span id="darkModeText" class="tracking-wide font-medium">Night Mode</span>
-                                                        </div>*/ ?>
+                                                                    <!-- 📝 စာသားပြသမည့်နေရာ (JavaScript မှ Day Mode သို့မဟုတ် Night Mode ဟု အခြေအနေပေါ်မူတည်ပြီး ပြောင်းပေးမည်) -->
+                                                                    <span id="darkModeText" class="tracking-wide font-medium">Night Mode</span>
+                                                                </div>*/ ?>
                     @endauth
                 </x-slot>
             </x-dropdown>

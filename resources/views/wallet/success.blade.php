@@ -8,10 +8,10 @@
                 </svg>
             </div>
             <h2 class="text-2xl font-black text-slate-800">🎉 Successful!</h2>
-            <p class="text-xs text-slate-500 mt-1">Order #{{ $order->id }} အတွက် ငွေပေးချေမှု အောင်မြင်ပါသည်။</p>
+            <p class="text-xs text-slate-500 mt-1">Order has been paid successfully.</p>
 
             <a href="/" class="mt-6 inline-block w-full bg-slate-800 text-white text-xs font-bold py-3 rounded-2xl">
-                Home သို့ ပြန်သွားမည်
+                Ok
             </a>
         </div>
     </div>
