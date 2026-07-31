@@ -22,22 +22,21 @@ class VendorDashboardController extends Controller
         $todayPaidItems = OrderItem::where('vendor_id', $vendor->id)
             ->whereHas('order', function ($q) {
                 $q->where('status', 'paid')
-                    ->whereDate('created_at', \Carbon\Carbon::today()); // ဒီနေ့ရက်စွဲ စစ်ထုတ်ခြင်း
+                    ->whereDate('created_at', \Carbon\Carbon::today());
             })
             ->get();
 
-        // 💡 1. ဒီနေ့ paid ဖြစ်ပြီးသား အော်ဒါအရေအတွက် (သို့မဟုတ် Item အရေအတွက်)
         $totalOrders = $todayPaidItems->count();
-        // မူကွဲ - Item အရေအတွက် စုစုပေါင်းယူချင်ပါက: $todayPaidItems->sum('quantity');
 
-        // 💡 2. ဒီနေ့ paid ဖြစ်ပြီးသား စုစုပေါင်း ဝင်ငွေ (98% Net Earnings)
         $totalEarnings = $todayPaidItems->sum(function ($item) {
             return $item->vendor_amount > 0
                 ? $item->vendor_amount
                 : (($item->price * $item->quantity) * 0.98);
         });
 
-        $query = Product::where('user_id', $vendor->id);
+        // 💡 Relation များ (`images` နှင့် `colorVariants`) ကို with() ဖြင့် တွဲခေါ်ပါ
+        $query = Product::where('user_id', $vendor->id)
+            ->with(['images', 'colorVariants']);
 
         $stock_status = $request->input('stock_status');
 

@@ -11,27 +11,17 @@
                     class="relative aspect-square md:h-[400px] md:w-full bg-white dark:bg-gray-900 rounded-2xl overflow-hidden border-2 border-white/80 shadow-[6px_8px_0px_0px_rgba(0,0,0,0.3)]">
                     <div class="w-full h-full flex transition-transform duration-300" id="imageSlider">
 
-                        <!-- 💡 Main Cover Image (ပထမဆုံး တစ်ပုံတည်း သေချာပြရန်) -->
-                        @if($product->image)
-                            <div class="w-full h-full flex-shrink-0">
-                                <img src="{{ asset('storage/' . $product->image) }}" class="w-full h-full object-cover"
-                                    alt="{{ $product->name }}">
-                            </div>
-                        @endif
-
-                        <!-- 💡 Gallery Images (Single Stock အတွက်) -->
+                        <!-- 💡 Gallery Images (product_images) -->
                         @if($product->images && $product->images->count() > 0)
                             @foreach($product->images as $img)
-                                @if($img->image_path !== $product->image)
-                                    <div class="w-full h-full flex-shrink-0">
-                                        <img src="{{ asset('storage/' . $img->image_path) }}"
-                                            class="w-full h-full object-contain p-2" alt="{{ $product->name }}">
-                                    </div>
-                                @endif
+                                <div class="w-full h-full flex-shrink-0">
+                                    <img src="{{ asset('storage/' . $img->image_path) }}"
+                                        class="w-full h-full object-contain p-2" alt="{{ $product->name }}">
+                                </div>
                             @endforeach
                         @endif
 
-                        <!-- 💡 Color Variants Images (Color နဲ့တင်ထားလျှင် ပြရန်) -->
+                        <!-- 💡 Color Variants Images (product_colors) -->
                         @if($product->colorVariants && $product->colorVariants->count() > 0)
                             @foreach($product->colorVariants as $colorVar)
                                 @if($colorVar->image_path)
@@ -44,35 +34,35 @@
                             @endforeach
                         @endif
 
+                        <!-- Fallback if no images found in both tables -->
+                        @if((!$product->images || $product->images->count() == 0) && (!$product->colorVariants || $product->colorVariants->count() == 0))
+                            <div class="w-full h-full flex items-center justify-center text-gray-400 font-bold">
+                                No Image Available
+                            </div>
+                        @endif
+
                     </div>
 
                     <!-- 🧊 3D Slider Buttons -->
-                    <button type="button" onclick="moveSlide(-1)"
-                        class="absolute left-3 top-1/2 -translate-y-1/2 bg-white text-gray-900 w-9 h-9 rounded-full flex items-center justify-center font-black shadow-[2px_4px_0px_0px_rgba(0,0,0,0.5)] border border-gray-300 active:translate-y-[-40%] active:shadow-none transition-all z-10">❮</button>
-                    <button type="button" onclick="moveSlide(1)"
-                        class="absolute right-3 top-1/2 -translate-y-1/2 bg-white text-gray-900 w-9 h-9 rounded-full flex items-center justify-center font-black shadow-[2px_4px_0px_0px_rgba(0,0,0,0.5)] border border-gray-300 active:translate-y-[-40%] active:shadow-none transition-all z-10">❯</button>
+                    @if(($product->images && $product->images->count() > 1) || ($product->colorVariants && $product->colorVariants->count() > 1))
+                        <button type="button" onclick="moveSlide(-1)"
+                            class="absolute left-3 top-1/2 -translate-y-1/2 bg-white text-gray-900 w-9 h-9 rounded-full flex items-center justify-center font-black shadow-[2px_4px_0px_0px_rgba(0,0,0,0.5)] border border-gray-300 active:translate-y-[-40%] active:shadow-none transition-all z-10">❮</button>
+                        <button type="button" onclick="moveSlide(1)"
+                            class="absolute right-3 top-1/2 -translate-y-1/2 bg-white text-gray-900 w-9 h-9 rounded-full flex items-center justify-center font-black shadow-[2px_4px_0px_0px_rgba(0,0,0,0.5)] border border-gray-300 active:translate-y-[-40%] active:shadow-none transition-all z-10">❯</button>
+                    @endif
                 </div>
 
                 <!-- Thumbnails Preview -->
                 <div class="flex gap-3 overflow-x-auto pb-2 justify-center">
-                    @if($product->image)
-                        <div class="w-14 h-14 border-2 border-white rounded-xl overflow-hidden cursor-pointer flex-shrink-0 shadow-[3px_4px_0px_0px_rgba(0,0,0,0.3)] transition transform hover:-translate-y-1"
-                            onclick="setSlide(0)">
-                            <img src="{{ asset('storage/' . $product->image) }}" class="w-full h-full object-cover">
-                        </div>
-                    @endif
-
-                    @php $thumbIndex = $product->image ? 1 : 0; @endphp
+                    @php $thumbIndex = 0; @endphp
 
                     @if($product->images && $product->images->count() > 0)
                         @foreach($product->images as $img)
-                            @if($img->image_path !== $product->image)
-                                <div class="w-14 h-14 border-2 border-white rounded-xl overflow-hidden cursor-pointer flex-shrink-0 shadow-[3px_4px_0px_0px_rgba(0,0,0,0.3)] transition transform hover:-translate-y-1"
-                                    onclick="setSlide({{ $thumbIndex }})">
-                                    <img src="{{ asset('storage/' . $img->image_path) }}" class="w-full h-full object-cover">
-                                </div>
-                                @php $thumbIndex++; @endphp
-                            @endif
+                            <div class="w-14 h-14 border-2 border-white rounded-xl overflow-hidden cursor-pointer flex-shrink-0 shadow-[3px_4px_0px_0px_rgba(0,0,0,0.3)] transition transform hover:-translate-y-1"
+                                onclick="setSlide({{ $thumbIndex }})">
+                                <img src="{{ asset('storage/' . $img->image_path) }}" class="w-full h-full object-cover">
+                            </div>
+                            @php $thumbIndex++; @endphp
                         @endforeach
                     @endif
 
@@ -140,24 +130,25 @@
                 <form action="{{ route('cart.add', $product->id) }}" method="POST"
                     class="pt-4 border-t-2 border-gray-100 dark:border-gray-800 space-y-5">
                     @csrf
-                        <div class="grid grid-cols-2 gap-4">
-                            @if($product->colorVariants && $product->colorVariants->count() > 0)
-                                <div>
-                                    <label for="color"
-                                        class="block text-xs text-amber-600 dark:text-amber-400 font-black uppercase mb-1.5">Color</label>
-                                    <select id="color" name="color" onchange="changeProductImageByColor(this.value)"
-                                        class="w-full px-3 py-2.5 bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-amber-500 dark:text-white font-black shadow-[2px_3px_0px_0px_rgba(0,0,0,0.15)]">
-                                        <option>Choose Color</option>
-                                        @foreach($product->colorVariants as $colorVar)
-                                            <option value="{{ strtolower($colorVar->color_name) }}">
-                                                {{ ucfirst($colorVar->color_name) }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            @endif                            
-                                <div>
-                                </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        @if($product->colorVariants && $product->colorVariants->count() > 0)
+                            <div>
+                                <label for="color"
+                                    class="block text-xs text-amber-600 dark:text-amber-400 font-black uppercase mb-1.5">Color</label>
+                                <select id="color" name="color" onchange="changeProductImageByColor(this.value)"
+                                    class="w-full px-3 py-2.5 bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-amber-500 dark:text-white font-black shadow-[2px_3px_0px_0px_rgba(0,0,0,0.15)]">
+                                    <option value="">Choose Color</option>
+                                    @foreach($product->colorVariants as $colorVar)
+                                        <option value="{{ strtolower($colorVar->color_name) }}">
+                                            {{ ucfirst($colorVar->color_name) }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        @endif
+                        <div>
                         </div>
+                    </div>
 
                     <div class="pt-2">
                         @if($product->stock > 0)

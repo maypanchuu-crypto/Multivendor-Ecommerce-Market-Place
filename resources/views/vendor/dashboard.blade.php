@@ -148,7 +148,7 @@
                         Wallet
                     </a>
 
-                    <a href="#"
+                    <!-- <a href="#"
                         class="btn-3d flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white dark:bg-emerald-900 text-emerald-950 dark:text-emerald-100 font-black text-sm">
                         <svg class="w-5 h-5 text-emerald-600 dark:text-emerald-300 stroke-[2.5]" fill="none"
                             stroke="currentColor" viewBox="0 0 24 24">
@@ -157,7 +157,7 @@
                             </path>
                         </svg>
                         Messages
-                    </a>
+                    </a> -->
 
                     <!-- 💡 Dark Mode Switch -->
                     <div id="darkModeRow"
@@ -372,9 +372,21 @@
                                     <td class="py-4 px-4">
                                         <div
                                             class="w-12 h-12 rounded-xl bg-white dark:bg-emerald-900 overflow-hidden border-2 border-emerald-800 dark:border-emerald-300 shadow-[2px_2px_0px_0px_#065f46] dark:shadow-[2px_2px_0px_0px_#a7f3d0] flex items-center justify-center">
-                                            @if($product->image)
-                                                <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('images/default-placeholder.png') }}"
-                                                    alt="{{ $product->name }}" class="w-full h-full object-cover"
+                                            @php
+                                                // ၁။ အရောင်အသွေး variants ရှိပြီး ပုံပါရှိပါက ပထမဆုံး အရောင်ပုံကို ယူမည်
+                                                $displayImage = null;
+                                                if ($product->colorVariants->isNotEmpty() && $product->colorVariants->first()->image_path) {
+                                                    $displayImage = $product->colorVariants->first()->image_path;
+                                                }
+                                                // ၂။ အရောင် variants မရှိပါက product_images (Gallery) ထဲမှ ပထမဆုံးပုံကို ယူမည်
+                                                elseif ($product->images->isNotEmpty()) {
+                                                    $displayImage = $product->images->first()->image_path;
+                                                }
+                                            @endphp
+
+                                            @if($displayImage)
+                                                <img src="{{ asset('storage/' . $displayImage) }}" alt="{{ $product->name }}"
+                                                    class="w-full h-full object-cover"
                                                     onerror="this.onerror=null; this.src='https://placehold.co/100x100?text=No+Image';">
                                             @else
                                                 <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor"
