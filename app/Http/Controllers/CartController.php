@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Cookie;
 
 class CartController extends Controller
 {
-    // Cart စာမျက်နှာ ပြသခြင်း
+
     public function index()
     {
         $cart = json_decode(Cookie::get('shopping_cart', '[]'), true);
@@ -17,61 +17,82 @@ class CartController extends Controller
             return $sum + ($item['price'] * $item['quantity']);
         }, 0);
 
-        return view('cart', compact('cart', 'subtotal')); // မိမိ view path အတိုင်း ညှိပါ
+        return view('cart', compact('cart', 'subtotal'));
     }
 
     public function addToCart(Request $request, $id)
     {
-        $product = Product::findOrFail($id);
+        $product = Product::with(['images', 'colorVariants'])->findOrFail($id);
         $cart = json_decode(Cookie::get('shopping_cart', '[]'), true);
 
         $size = $request->input('size', null);
         $color = $request->input('color', null);
         $quantity = (int) $request->input('quantity', 1);
 
+        // 💡 အရောင်နှင့် သက်ဆိုင်သော ပုံနှင့် Stock ကို ရှာဖွေခြင်း
+        $selectedImage = null;
+        $availableStock = $product->stock; // default fallback to main product stock
+
+        if ($color) {
+            $colorVariant = $product->colorVariants->first(function ($variant) use ($color) {
+                return strtolower(trim($variant->color_name ?? $variant->color ?? '')) === strtolower(trim($color));
+            });
+
+            if ($colorVariant) {
+                if ($colorVariant->image_path) {
+                    $selectedImage = $colorVariant->image_path;
+                }
+                // အရောင်အတွက် သီးသန့် stock ရှိပါက ယင်းကို သုံးမည်
+                if (isset($colorVariant->stock)) {
+                    $availableStock = $colorVariant->stock;
+                }
+            }
+        }
+
+        if (!$selectedImage && $product->images->isNotEmpty()) {
+            $selectedImage = $product->images->first()->image_path;
+        }
+
         // Cart Key
         $cartKey = $id . ($size ? '-' . $size : '') . ($color ? '-' . $color : '');
 
-        // Current Cart ထဲရှိနှင့်ပြီးသား အရေအတွက်ကို ရယူခြင်း
         $currentCartQty = isset($cart[$cartKey]) ? $cart[$cartKey]['quantity'] : 0;
         $newTotalQty = $currentCartQty + $quantity;
 
-        // 🔴 1. Cart ထဲမှာ ရောက်နေပြီးသား အရေအတွက်က Maximum Stock အထိ ဖြစ်နေပြီးသားဆိုလျှင်
-        if ($currentCartQty >= $product->stock) {
-            return redirect()->route('dashboard')->with('error', "Maximum stock capacity reached ({$product->stock} items already in cart)!");
+        if ($currentCartQty >= $availableStock) {
+            return redirect()->route('dashboard')->with('error', "Maximum stock capacity reached ({$availableStock} items already in cart)!");
         }
 
-        // 🔴 2. ထပ်ပေါင်းမယ့် အရေအတွက်က Stock ထက် ကျော်လွန်သွားပါက Maximum Stock အထိပဲ သတ်မှတ်ပေးမည်
-        if ($newTotalQty > $product->stock) {
+        if ($newTotalQty > $availableStock) {
             $cart[$cartKey] = [
                 'product_id' => $product->id,
                 'name' => $product->name,
                 'price' => $product->price,
-                'quantity' => $product->stock, // Max Stock အထိပဲ ထည့်ပေးမည်
-                'image' => $product->image,
+                'quantity' => $availableStock,
+                'image' => $selectedImage,
                 'size' => $size,
                 'color' => $color,
-                'stock' => $product->stock
+                'stock' => $availableStock // 💡 အရောင်အလိုက် stock ကို သိမ်းမည်
             ];
 
             Cookie::queue('shopping_cart', json_encode($cart), 43200);
-
-            return redirect()->route('dashboard')->with('warning', "Cart updated to maximum available stock ({$product->stock} items)!");
+            return redirect()->route('dashboard')->with('warning', "Cart updated to maximum available stock ({$availableStock} items)!");
         }
 
-        // 🟢 3. Stock မကျော်သေးပါက ပုံမှန်အတိုင်း ပေါင်းပေးမည်
         if (isset($cart[$cartKey])) {
             $cart[$cartKey]['quantity'] = $newTotalQty;
+            $cart[$cartKey]['image'] = $selectedImage;
+            $cart[$cartKey]['stock'] = $availableStock;
         } else {
             $cart[$cartKey] = [
                 'product_id' => $product->id,
                 'name' => $product->name,
                 'price' => $product->price,
                 'quantity' => $quantity,
-                'image' => $product->image,
+                'image' => $selectedImage,
                 'size' => $size,
                 'color' => $color,
-                'stock' => $product->stock
+                'stock' => $availableStock // 💡 အရောင်အလိုက် stock ကို သိမ်းမည်
             ];
         }
 
@@ -80,7 +101,7 @@ class CartController extends Controller
         return redirect()->route('dashboard')->with('success', 'Product added to cart!');
     }
 
-    // Cart ထဲမှ အရေအတွက် ပြင်ခြင်း
+
     public function updateCart(Request $request)
     {
         if ($request->id && $request->quantity) {
@@ -93,7 +114,7 @@ class CartController extends Controller
         return response()->json(['status' => 'success']);
     }
 
-    // Cart ထဲမှ Item ဖျက်ခြင်း
+
     public function removeCart(Request $request)
     {
         if ($request->id) {

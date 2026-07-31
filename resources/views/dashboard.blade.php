@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 @auth
-    <x-app-layout :menuBtn="true">
+    <x-app-layout :menuBtn="true" :messageIcon="true">
         <html lang="en">
 
         <head>

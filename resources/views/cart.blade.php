@@ -30,9 +30,35 @@
                                     <tr data-id="{{ $id }}" class="text-sm text-gray-700 dark:text-gray-300">
                                         <td class="py-6 flex items-center gap-4">
                                             <div
-                                                class="w-20 h-20 rounded-xl overflow-hidden bg-gray-50 border-2 border-amber-400/40 dark:border-gray-700 flex-shrink-0 shadow-sm">
-                                                <img src="{{ asset('storage/' . $details['image']) }}"
-                                                    class="w-full h-full object-cover">
+                                                class="w-20 h-20 rounded-xl overflow-hidden bg-gray-50 border-2 border-amber-400/40 dark:border-gray-700 flex-shrink-0 shadow-sm flex items-center justify-center">
+                                                @php
+                                                    $cartImage = $details['image'] ?? null;
+                                                    if (!$cartImage) {
+                                                        $p = \App\Models\Product::with(['images', 'colorVariants'])->find($details['product_id']);
+                                                        if ($p) {
+                                                            if (!empty($details['color'])) {
+                                                                $cv = $p->colorVariants->where('color', $details['color'])->first();
+                                                                if ($cv && $cv->image_path)
+                                                                    $cartImage = $cv->image_path;
+                                                            }
+                                                            if (!$cartImage && $p->images->isNotEmpty()) {
+                                                                $cartImage = $p->images->first()->image_path;
+                                                            }
+                                                        }
+                                                    }
+                                                @endphp
+
+                                                @if($cartImage)
+                                                    <img src="{{ asset('storage/' . $cartImage) }}"
+                                                        class="w-full h-full object-cover">
+                                                @else
+                                                    <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor"
+                                                        viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z">
+                                                        </path>
+                                                    </svg>
+                                                @endif
                                             </div>
                                             <div>
                                                 <h4 class="font-bold text-gray-900 dark:text-white">{{ $details['name'] }}</h4>
@@ -64,8 +90,25 @@
                                                 class="inline-flex items-center border-2 border-gray-300 dark:border-gray-600 rounded-xl bg-gray-50 dark:bg-gray-800 p-1 shadow-inner">
                                                 <button
                                                     class="px-2.5 py-1 text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white font-black update-cart-btn minus-btn transition-colors">-</button>
+                                                @php
+                                                    // 💡 Cart ထဲမှာ သိမ်းထားတဲ့ stock သို့မဟုတ် product_colors ထဲက stock ကို တိုက်စစ်ယူမည်
+                                                    $itemStock = $details['stock'] ?? null;
+                                                    if (!$itemStock && !empty($details['color'])) {
+                                                        $p = \App\Models\Product::with('colorVariants')->find($details['product_id']);
+                                                        if ($p) {
+                                                            $cv = $p->colorVariants->first(function ($variant) use ($details) {
+                                                                return strtolower(trim($variant->color_name ?? $variant->color ?? '')) === strtolower(trim($details['color']));
+                                                            });
+                                                            if ($cv && isset($cv->stock)) {
+                                                                $itemStock = $cv->stock;
+                                                            }
+                                                        }
+                                                    }
+                                                    $maxStockLimit = $itemStock ?? $details['stock'] ?? 99;
+                                                @endphp
                                                 <input type="number" value="{{ $details['quantity'] }}" min="1"
-                                                    max="{{ $details['stock'] ?? 99 }}" oninput="if(parseInt(this.value) > {{ $details['stock'] }}) this.value = {{ $details['stock'] }}; if(parseInt(this.value) < 1) this.value = 1;"
+                                                    max="{{ $maxStockLimit }}"
+                                                    oninput="if(parseInt(this.value) > {{ $maxStockLimit }}) { this.value = {{ $maxStockLimit }}; alert('Stock အရေအတွက် {{ $maxStockLimit }} ခုထက် ပို၍မရပါ။'); } if(parseInt(this.value) < 1) this.value = 1;"
                                                     class="w-12 text-center bg-transparent border-none text-xs font-black focus:outline-none quantity-input dark:text-white">
                                                 <button
                                                     class="px-2.5 py-1 text-gray-600 hover:text-black dark:text-gray-300 dark:hover:text-white font-black update-cart-btn plus-btn transition-colors">+</button>
@@ -166,13 +209,14 @@
                 const id = row.getAttribute('data-id');
                 const input = row.querySelector('.quantity-input');
                 let currentVal = parseInt(input.value);
-                let maxVal = parseInt(input.getAttribute('max')) || 99; // 💡 Product ရဲ့ Max Stock အရေအတွက်ကို ရယူခြင်း
+                let maxVal = parseInt(input.getAttribute('max')) || 99; // 💡 သက်ဆိုင်ရာအရောင်၏ Stock Limit ကိုယူခြင်း
 
                 if (this.classList.contains('plus-btn')) {
-                    if (currentVal < maxVal) { // 💡 Stock မပြည့်သေးမှ တိုးမည်
+                    if (currentVal < maxVal) {
                         currentVal += 1;
                     } else {
-                        alert("Stock အရေအတွက် " + maxVal + " ခုထက် ပိုဝယ်၍မရပါ!");
+                        alert("ရွေးချယ်ထားသော အရောင်အတွက် Stock အရေအတွက် " + maxVal + " ခုပြည့်သွားပါပြီ။ ထပ်တိုး၍ မရပါ။");
+                        return;
                     }
                 } else if (this.classList.contains('minus-btn') && currentVal > 1) {
                     currentVal -= 1;
@@ -188,9 +232,9 @@
                 const id = this.closest('tr').getAttribute('data-id');
                 let maxVal = parseInt(this.getAttribute('max')) || 99;
 
-                if (parseInt(this.value) > maxVal) { // 💡 Stock ထက် ကျော်ရိုက်ပါက Max ထိပဲ ပြန်လျှော့မည်
+                if (parseInt(this.value) > maxVal) {
                     this.value = maxVal;
-                    alert("Hit " + maxVal + " maximum stock!");
+                    alert("Maximum stock limit for this color is " + maxVal + "!");
                 }
                 if (parseInt(this.value) < 1 || !this.value) this.value = 1;
 

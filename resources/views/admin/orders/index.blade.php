@@ -86,6 +86,16 @@
                         Customer Marketplace
                     </a>
 
+                    <a href="{{ route('wallet.index') }}"
+                        class="btn-3d flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-blue-800 text-white font-medium text-sm border border-blue-700 transform transition duration-200 hover:-translate-y-1">
+                        <svg class="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" stroke-width="2"
+                            viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                                d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
+                        </svg>
+                        Wallet
+                    </a>
+
                     <a href="{{ route('admin.vendor.requests') }}"
                         class="btn-3d flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-blue-800 text-white font-medium text-sm border border-blue-700 transform transition duration-200 hover:-translate-y-1">
                         <svg class="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" stroke-width="2"
@@ -233,48 +243,48 @@
                     </div>
                 </div>
                 <?php /* <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                   <!-- Total Sales Card -->
-                   <div
-                       class="card-3d p-6 rounded-2xl flex justify-between items-center transform transition duration-200 hover:-translate-y-1">
-                       <div>
-                           <span class="text-xs font-black text-blue-200 uppercase tracking-wider">Total Sales
-                               Amount (Paid)</span>
-                           <div class="text-3xl font-black mt-2 text-white drop-shadow-md">
-                               {{ number_format($totalRevenue) }} <span
-                                   class="text-xs font-normal text-blue-200">MMK</span>
-                           </div>
-                       </div>
-                       <!-- <div class="text-2xl bg-blue-900/80 p-3 rounded-xl border border-blue-500">💳</div> -->
-                   </div>
+                  <!-- Total Sales Card -->
+                  <div
+                      class="card-3d p-6 rounded-2xl flex justify-between items-center transform transition duration-200 hover:-translate-y-1">
+                      <div>
+                          <span class="text-xs font-black text-blue-200 uppercase tracking-wider">Total Sales
+                              Amount (Paid)</span>
+                          <div class="text-3xl font-black mt-2 text-white drop-shadow-md">
+                              {{ number_format($totalRevenue) }} <span
+                                  class="text-xs font-normal text-blue-200">MMK</span>
+                          </div>
+                      </div>
+                      <!-- <div class="text-2xl bg-blue-900/80 p-3 rounded-xl border border-blue-500">💳</div> -->
+                  </div>
 
-                   <!-- Admin Commission Card -->
-                   <div
-                       class="card-3d p-6 rounded-2xl flex justify-between items-center transform transition duration-200 hover:-translate-y-1">
-                       <div>
-                           <span class="text-xs font-black text-blue-200 uppercase tracking-wider">Admin Commission
-                               (2%)</span>
-                           <div class="text-3xl font-black mt-2 text-emerald-300 drop-shadow-md">
-                               +{{ number_format($totalCommission) }} <span
-                                   class="text-xs font-normal text-blue-200">MMK</span>
-                           </div>
-                       </div>
-                       <!-- <div class="text-2xl bg-blue-900/80 p-3 rounded-xl border border-blue-500">🏦</div> -->
-                   </div>
+                  <!-- Admin Commission Card -->
+                  <div
+                      class="card-3d p-6 rounded-2xl flex justify-between items-center transform transition duration-200 hover:-translate-y-1">
+                      <div>
+                          <span class="text-xs font-black text-blue-200 uppercase tracking-wider">Admin Commission
+                              (2%)</span>
+                          <div class="text-3xl font-black mt-2 text-emerald-300 drop-shadow-md">
+                              +{{ number_format($totalCommission) }} <span
+                                  class="text-xs font-normal text-blue-200">MMK</span>
+                          </div>
+                      </div>
+                      <!-- <div class="text-2xl bg-blue-900/80 p-3 rounded-xl border border-blue-500">🏦</div> -->
+                  </div>
 
-                   <!-- Vendor Amount Card -->
-                   <div
-                       class="card-3d p-6 rounded-2xl flex justify-between items-center transform transition duration-200 hover:-translate-y-1">
-                       <div>
-                           <span class="text-xs font-black text-blue-200 uppercase tracking-wider">Vendor Payout
-                               (98%)</span>
-                           <div class="text-3xl font-black mt-2 text-cyan-300 drop-shadow-md">
-                               {{ number_format($totalVendorPayout) }} <span
-                                   class="text-xs font-normal text-blue-200">MMK</span>
-                           </div>
-                       </div>
-                       <!-- <div class="text-2xl bg-blue-900/80 p-3 rounded-xl border border-blue-500">🏪</div> -->
-                   </div>
-               </div> */ ?>
+                  <!-- Vendor Amount Card -->
+                  <div
+                      class="card-3d p-6 rounded-2xl flex justify-between items-center transform transition duration-200 hover:-translate-y-1">
+                      <div>
+                          <span class="text-xs font-black text-blue-200 uppercase tracking-wider">Vendor Payout
+                              (98%)</span>
+                          <div class="text-3xl font-black mt-2 text-cyan-300 drop-shadow-md">
+                              {{ number_format($totalVendorPayout) }} <span
+                                  class="text-xs font-normal text-blue-200">MMK</span>
+                          </div>
+                      </div>
+                      <!-- <div class="text-2xl bg-blue-900/80 p-3 rounded-xl border border-blue-500">🏪</div> -->
+                  </div>
+              </div> */ ?>
 
                 <!-- Orders List -->
                 <div class="space-y-6">
