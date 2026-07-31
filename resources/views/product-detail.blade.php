@@ -162,18 +162,20 @@
                     <div class="pt-2">
                         @if($product->stock > 0)
                             <div class="flex items-end gap-4">
-                                <!-- Quantity Input Section -->
-                                <div class="flex-shrink-0">
+                                <!-- 💡 Quantity Input Wrapper (ID ထည့်ရန်နှင့် initial stock အပေါ်မူတည်၍ hide/show လုပ်ရန်) -->
+                                <div id="quantityWrapper" class="flex-shrink-0"
+                                    style="display: {{ $initialStock > 0 ? 'block' : 'none' }};">
                                     <span
-                                        class="block text-xs font-black text-amber-600 dark:text-amber-400 uppercase mb-1.5">Qty</span>
+                                        class="block text-xs font-black text-amber-600 dark:text-amber-400 uppercase mb-1.5">Quantity</span>
                                     <input type="number" id="quantityInput" name="quantity" value="1" min="1"
                                         max="{{ $initialStock }}"
                                         class="w-20 px-3 py-2.5 border-2 border-gray-300 dark:border-gray-600 rounded-xl text-center bg-white dark:bg-gray-800 text-sm font-black focus:outline-none dark:text-white shadow-[2px_3px_0px_0px_rgba(0,0,0,0.15)]">
                                 </div>
 
-                                <button type="submit"
-                                    class="flex-1 bg-amber-500 hover:bg-amber-400 text-gray-950 font-black py-3 px-6 rounded-xl transition-all flex items-center justify-center gap-2 border-b-4 border-r-2 border-amber-800 shadow-[4px_6px_0px_0px_rgba(0,0,0,0.4)] active:translate-y-1 active:shadow-none">
-                                    Add to Cart
+                                <button type="submit" id="addToCartBtn"
+                                    class="flex-1 {{ $initialStock > 0 ? 'bg-amber-500 hover:bg-amber-400 text-gray-950 border-b-4 border-r-2 border-amber-800 shadow-[4px_6px_0px_0px_rgba(0,0,0,0.4)] active:translate-y-1 active:shadow-none' : 'bg-gray-200 dark:bg-gray-800 text-gray-500 cursor-not-allowed border-b-4 border-gray-400 dark:border-gray-900 shadow-sm' }} font-black py-3 px-6 rounded-xl transition-all flex items-center justify-center gap-2"
+                                    {{ $initialStock > 0 ? '' : 'disabled' }}>
+                                    {{ $initialStock > 0 ? 'Add to Cart' : 'Out of Stock' }}
                                 </button>
                             </div>
                         @else
@@ -231,18 +233,20 @@
 
                 const stockBadge = document.getElementById('stockBadge');
                 const stockText = document.getElementById('stockText');
+                const quantityWrapper = document.getElementById('quantityWrapper'); // 💡 Qty wrapper ကို ခေါ်ခြင်း
                 const quantityInput = document.getElementById('quantityInput');
-                const addToCartBtn = document.querySelector('button[type="submit"]');
+                const addToCartBtn = document.getElementById('addToCartBtn');
 
                 if (stock > 0) {
                     stockBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 text-xs font-black rounded-full bg-green-100 text-green-800 dark:bg-green-900/60 dark:text-green-300 border border-green-400 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.15)]";
                     stockText.innerHTML = `<span class="w-2 h-2 rounded-full bg-green-500 animate-pulse inline-block mr-1"></span>In Stock (${stock})`;
 
+                    // 💡 Stock ရှိပါက Qty ကို ပြန်ပြမည်
+                    if (quantityWrapper) quantityWrapper.style.display = 'block';
+
                     if (quantityInput) {
                         quantityInput.max = stock;
-                        if (parseInt(quantityInput.value) > stock) {
-                            quantityInput.value = stock;
-                        }
+                        quantityInput.value = 1;
                     }
 
                     if (addToCartBtn) {
@@ -254,14 +258,16 @@
                     stockBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 text-xs font-black rounded-full bg-rose-100 text-rose-800 dark:bg-rose-900/60 dark:text-rose-300 border border-rose-400 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.15)]";
                     stockText.innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-500 inline-block mr-1"></span>Out of Stock`;
 
+                    // 💡 Stock 0 ဖြစ်ပါက Qty ကို ဖျောက်မည်
+                    if (quantityWrapper) quantityWrapper.style.display = 'none';
+
                     if (quantityInput) {
-                        quantityInput.max = 0;
                         quantityInput.value = 0;
                     }
 
                     if (addToCartBtn) {
                         addToCartBtn.disabled = true;
-                        addToCartBtn.className = "w-full px-6 py-3 bg-gray-200 dark:bg-gray-800 text-gray-500 font-black text-sm rounded-xl cursor-not-allowed text-center border-b-4 border-gray-400 dark:border-gray-900 shadow-sm";
+                        addToCartBtn.className = "flex-1 bg-gray-200 dark:bg-gray-800 text-gray-500 font-black py-3 px-6 rounded-xl cursor-not-allowed text-center border-b-4 border-gray-400 dark:border-gray-900 shadow-sm";
                         addToCartBtn.innerText = "Out of Stock";
                     }
                 }
