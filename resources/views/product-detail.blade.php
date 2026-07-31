@@ -233,15 +233,17 @@
 
                 const stockBadge = document.getElementById('stockBadge');
                 const stockText = document.getElementById('stockText');
-                const quantityWrapper = document.getElementById('quantityWrapper'); // 💡 Qty wrapper ကို ခေါ်ခြင်း
+                const quantityWrapper = document.getElementById('quantityWrapper');
                 const quantityInput = document.getElementById('quantityInput');
                 const addToCartBtn = document.getElementById('addToCartBtn');
 
                 if (stock > 0) {
                     stockBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 text-xs font-black rounded-full bg-green-100 text-green-800 dark:bg-green-900/60 dark:text-green-300 border border-green-400 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.15)]";
-                    stockText.innerHTML = `<span class="w-2 h-2 rounded-full bg-green-500 animate-pulse inline-block mr-1"></span>In Stock (${stock})`;
 
-                    // 💡 Stock ရှိပါက Qty ကို ပြန်ပြမည်
+                    // 💡 အစက် (bullet) ကို ဖယ်ပြီး စာသားကိုသာ innerText ဖြင့် ပြောင်းမည်
+                    const dotSpan = '<span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>';
+                    stockBadge.innerHTML = dotSpan + `<span id="stockText">In Stock (${stock})</span>`;
+
                     if (quantityWrapper) quantityWrapper.style.display = 'block';
 
                     if (quantityInput) {
@@ -256,9 +258,11 @@
                     }
                 } else {
                     stockBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 text-xs font-black rounded-full bg-rose-100 text-rose-800 dark:bg-rose-900/60 dark:text-rose-300 border border-rose-400 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.15)]";
-                    stockText.innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-500 inline-block mr-1"></span>Out of Stock`;
 
-                    // 💡 Stock 0 ဖြစ်ပါက Qty ကို ဖျောက်မည်
+                    // 💡 အစက် (bullet) ကို ဖယ်ပြီး စာသားကိုသာ innerText ဖြင့် ပြောင်းမည်
+                    const dotSpan = '<span class="w-2 h-2 rounded-full bg-rose-500"></span>';
+                    stockBadge.innerHTML = dotSpan + `<span id="stockText">Out of Stock</span>`;
+
                     if (quantityWrapper) quantityWrapper.style.display = 'none';
 
                     if (quantityInput) {
