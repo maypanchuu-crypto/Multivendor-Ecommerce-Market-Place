@@ -5,13 +5,13 @@
         <div
             class="max-w-5xl w-full bg-gradient-to-br from-red-500 via-amber-400 via-green-500 via-cyan-500 to-purple-600 rounded-3xl p-6 sm:p-8 grid grid-cols-1 md:grid-cols-2 gap-8 border border-white/40 shadow-none">
 
-            <!-- 🟢 Left Side: Image Slider Section -->
+            
             <div class="space-y-4 w-full flex flex-col justify-between">
                 <div
                     class="relative aspect-square md:h-[400px] md:w-full bg-white dark:bg-gray-900 rounded-2xl overflow-hidden border-2 border-white/80 shadow-[6px_8px_0px_0px_rgba(0,0,0,0.3)]">
                     <div class="w-full h-full flex transition-transform duration-300" id="imageSlider">
 
-                        <!-- 💡 Gallery Images (product_images) -->
+                        
                         @if($product->images && $product->images->count() > 0)
                             @foreach($product->images as $img)
                                 <div class="w-full h-full flex-shrink-0">
@@ -21,7 +21,7 @@
                             @endforeach
                         @endif
 
-                        <!-- 💡 Color Variants Images (product_colors) -->
+                        
                         @if($product->colorVariants && $product->colorVariants->count() > 0)
                             @foreach($product->colorVariants as $colorVar)
                                 @if($colorVar->image_path)
@@ -34,7 +34,7 @@
                             @endforeach
                         @endif
 
-                        <!-- Fallback if no images found in both tables -->
+                        
                         @if((!$product->images || $product->images->count() == 0) && (!$product->colorVariants || $product->colorVariants->count() == 0))
                             <div class="w-full h-full flex items-center justify-center text-gray-400 font-bold">
                                 No Image Available
@@ -43,7 +43,7 @@
 
                     </div>
 
-                    <!-- 🧊 3D Slider Buttons -->
+                    
                     @if(($product->images && $product->images->count() > 1) || ($product->colorVariants && $product->colorVariants->count() > 1))
                         <button type="button" onclick="moveSlide(-1)"
                             class="absolute left-3 top-1/2 -translate-y-1/2 bg-white text-gray-900 w-9 h-9 rounded-full flex items-center justify-center font-black shadow-[2px_4px_0px_0px_rgba(0,0,0,0.5)] border border-gray-300 active:translate-y-[-40%] active:shadow-none transition-all z-10">❮</button>
@@ -52,7 +52,7 @@
                     @endif
                 </div>
 
-                <!-- Thumbnails Preview -->
+                
                 <div class="flex gap-3 overflow-x-auto pb-2 justify-center">
                     @php $thumbIndex = 0; @endphp
 
@@ -81,7 +81,7 @@
                 </div>
             </div>
 
-            <!-- 🟢 Right Side: Details Container -->
+            
             <div
                 class="flex flex-col justify-between space-y-5 bg-white/95 dark:bg-gray-900/95 p-6 sm:p-7 rounded-2xl border-t-2 border-l-2 border-white shadow-[8px_12px_0px_0px_rgba(0,0,0,0.25)]">
                 <div class="space-y-4">
@@ -101,10 +101,10 @@
                             {{ number_format($product->price) }} <span
                                 class="text-lg font-black text-red-600 dark:text-red-500">MMK</span>
                         </div>
-                        <!-- In-Stock / Out-of-Stock Badge Section -->
+                        
                         <div>
                             @php
-                                // ပထမဆုံး အရောင်၏ stock ကို default အနေဖြင့် ယူရန် (အရောင်ရှိလျှင်)
+                                
                                 $initialStock = $product->stock;
                                 if ($product->colorVariants && $product->colorVariants->count() > 0 && isset($product->colorVariants->first()->stock)) {
                                     $initialStock = $product->colorVariants->first()->stock;
@@ -139,7 +139,7 @@
                     class="pt-4 border-t-2 border-gray-100 dark:border-gray-800 space-y-5">
                     @csrf
                     <div class="grid grid-cols-2 gap-4">
-                        <!-- Color Select Dropdown -->
+                        
                         @if($product->colorVariants && $product->colorVariants->count() > 0)
                             <div>
                                 <label for="color"
@@ -162,7 +162,7 @@
                     <div class="pt-2">
                         @if($product->stock > 0)
                             <div class="flex items-end gap-4">
-                                <!-- 💡 Quantity Input Wrapper (ID ထည့်ရန်နှင့် initial stock အပေါ်မူတည်၍ hide/show လုပ်ရန်) -->
+                                
                                 <div id="quantityWrapper" class="flex-shrink-0"
                                     style="display: {{ $initialStock > 0 ? 'block' : 'none' }};">
                                     <span
@@ -216,7 +216,7 @@
             const targetColor = selectedColor.toString().trim().toLowerCase();
             const slides = slider ? slider.children : [];
 
-            // 1. Image Slider ကို ပြောင်းရန်
+            
             for (let i = 0; i < slides.length; i++) {
                 const slideColor = (slides[i].getAttribute('data-color') || '').toString().trim().toLowerCase();
                 if (slideColor === targetColor) {
@@ -225,7 +225,7 @@
                 }
             }
 
-            // 2. ရွေးချယ်လိုက်သော အရောင်၏ Stock ကို ရှာပြီး UI တွင် ပြောင်းလဲရန်
+            
             const colorSelect = document.getElementById('color');
             if (colorSelect) {
                 const selectedOption = colorSelect.options[colorSelect.selectedIndex];
@@ -240,7 +240,7 @@
                 if (stock > 0) {
                     stockBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 text-xs font-black rounded-full bg-green-100 text-green-800 dark:bg-green-900/60 dark:text-green-300 border border-green-400 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.15)]";
 
-                    // 💡 အစက် (bullet) ကို ဖယ်ပြီး စာသားကိုသာ innerText ဖြင့် ပြောင်းမည်
+                    
                     const dotSpan = '<span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>';
                     stockBadge.innerHTML = dotSpan + `<span id="stockText">In Stock (${stock})</span>`;
 
@@ -259,7 +259,7 @@
                 } else {
                     stockBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 text-xs font-black rounded-full bg-rose-100 text-rose-800 dark:bg-rose-900/60 dark:text-rose-300 border border-rose-400 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.15)]";
 
-                    // 💡 အစက် (bullet) ကို ဖယ်ပြီး စာသားကိုသာ innerText ဖြင့် ပြောင်းမည်
+                    
                     const dotSpan = '<span class="w-2 h-2 rounded-full bg-rose-500"></span>';
                     stockBadge.innerHTML = dotSpan + `<span id="stockText">Out of Stock</span>`;
 

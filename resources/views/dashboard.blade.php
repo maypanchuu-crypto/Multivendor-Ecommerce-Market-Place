@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 @auth
     <x-app-layout :menuBtn="true" :messageIcon="true">
+        <x-slot name="header">
+            <a href="{{ route('wallet.index') }}"
+                class="btn-3d flex items-center gap-3 px-3.5 py-2.5 rounded-xl bg-blue-800 text-white font-medium text-sm border border-blue-700 transform transition duration-200 hover:-translate-y-1">
+                <svg class="w-5 h-5 text-yellow-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z">
+                    </path>
+                </svg>
+                Wallet
+            </a>
+        </x-slot>
         <html lang="en">
 
         <head>
@@ -11,10 +21,10 @@
             <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
             <script src="https://cdn.tailwindcss.com"></script>
             <!-- <script>
-                            tailwind.config = {
-                                darkMode: 'class',
-                            }
-                        </script> -->
+                                    tailwind.config = {
+                                        darkMode: 'class',
+                                    }
+                                </script> -->
 
             <style>
                 html,
@@ -29,14 +39,14 @@
         </head>
 
         <body x-data="{ 
-                        searchQuery: '',
-                        products: {{ json_encode($trendingProducts->merge($moreProducts)->unique('id')->map(function ($product) {
+                                searchQuery: '',
+                                products: {{ json_encode($trendingProducts->merge($moreProducts)->unique('id')->map(function ($product) {
             $displayImage = '';
             if ($product->colorVariants && $product->colorVariants->whereNotNull('image_path')->count() > 0) {
                 $displayImage = asset('storage/' . $product->colorVariants->whereNotNull('image_path')->first()->image_path);
             } elseif ($product->images && $product->images->count() > 0) {
                 $displayImage = asset('storage/' . $product->images->first()->image_path);
-            } 
+            }
             // elseif ($product->image) {
             //     $displayImage = asset('storage/' . $product->image);
             // }
@@ -51,7 +61,7 @@
             ];
         })) }},
 
-                        trendingProducts: {{ json_encode($trendingProducts->map(function ($product) {
+                                trendingProducts: {{ json_encode($trendingProducts->map(function ($product) {
             $displayImage = '';
             if ($product->colorVariants && $product->colorVariants->whereNotNull('image_path')->count() > 0) {
                 $displayImage = asset('storage/' . $product->colorVariants->whereNotNull('image_path')->first()->image_path);
@@ -71,7 +81,7 @@
             ];
         })) }},
 
-                        moreProducts: {{ json_encode($moreProducts->map(function ($product) {
+                                moreProducts: {{ json_encode($moreProducts->map(function ($product) {
             $displayImage = '';
             if ($product->colorVariants && $product->colorVariants->whereNotNull('image_path')->count() > 0) {
                 $displayImage = asset('storage/' . $product->colorVariants->whereNotNull('image_path')->first()->image_path);
@@ -91,141 +101,141 @@
             ];
         })) }},
 
-                                    get filteredProducts() {
-                                        if (this.searchQuery.trim() === '') {
-                                            return [];
-                                        }
-                                        return this.products.filter(p => 
-                                            p.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-                                            p.description.toLowerCase().includes(this.searchQuery.toLowerCase())
-                                        );
-                                    }
-                                }" @product-search.window="searchQuery = $event.detail"
+                                            get filteredProducts() {
+                                                if (this.searchQuery.trim() === '') {
+                                                    return [];
+                                                }
+                                                return this.products.filter(p => 
+                                                    p.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+                                                    p.description.toLowerCase().includes(this.searchQuery.toLowerCase())
+                                                );
+                                            }
+                                        }" @product-search.window="searchQuery = $event.detail"
             class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 min-h-screen pb-24 relative overflow-x-hidden">
 
             <?php    /* <div id="sidebarOverlay"
-                               class="fixed inset-0 bg-black/40 z-40 hidden transition-opacity duration-300 overflow-y-auto">
-                           </div>
-                           <div id="sidebar"
-                               class="fixed top-0 left-0 h-full w-64 bg-white dark:bg-gray-800 z-50 shadow-2xl transform -translate-x-full transition-transform duration-300 ease-in-out p-5 flex flex-col justify-between overflow-y-auto">
-                               <div>
-                                   <div class="flex justify-between items-center mb-6">
-                                       <h2 class="text-xl font-bold text-gray-800 dark:text-white">Menu</h2>
-                                       <button id="closeBtn" class="text-gray-500 hover:text-gray-800 dark:hover:text-white p-1">
-                                           <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                               <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
-                                           </svg>
-                                       </button>
+                                       class="fixed inset-0 bg-black/40 z-40 hidden transition-opacity duration-300 overflow-y-auto">
                                    </div>
+                                   <div id="sidebar"
+                                       class="fixed top-0 left-0 h-full w-64 bg-white dark:bg-gray-800 z-50 shadow-2xl transform -translate-x-full transition-transform duration-300 ease-in-out p-5 flex flex-col justify-between overflow-y-auto">
+                                       <div>
+                                           <div class="flex justify-between items-center mb-6">
+                                               <h2 class="text-xl font-bold text-gray-800 dark:text-white">Menu</h2>
+                                               <button id="closeBtn" class="text-gray-500 hover:text-gray-800 dark:hover:text-white p-1">
+                                                   <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                       <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+                                                   </svg>
+                                               </button>
+                                           </div>
 
-                                   <div class="space-y-1">
-                                       <a href="#"
-                                           class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 font-bold text-sm">
-                                           <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2"
-                                               viewBox="0 0 24 24">
-                                               <path stroke-linecap="round" stroke-linejoin="round"
-                                                   d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
-                                               </path>
-                                           </svg>
-                                           Home
-                                       </a>
+                                           <div class="space-y-1">
+                                               <a href="#"
+                                                   class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-blue-50 dark:bg-blue-950/40 text-blue-600 dark:text-blue-400 font-bold text-sm">
+                                                   <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2"
+                                                       viewBox="0 0 24 24">
+                                                       <path stroke-linecap="round" stroke-linejoin="round"
+                                                           d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6">
+                                                       </path>
+                                                   </svg>
+                                                   Home
+                                               </a>
 
-                                       @if(Auth::check() && Auth::user()->role === 'vendor')
-                                           <a href="{{ route('vendor.dashboard') }}"
-                                               class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium text-sm">
-                                               <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                                   <path stroke-linecap="round" stroke-linejoin="round"
-                                                       d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                                               </svg>
-                                               Vendor Account
-                                           </a>
-                                       @elseif(Auth::check() && Auth::user()->role === 'admin')
-                                           <a href="{{ route('admin.dashboard') }}"
-                                               class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium text-sm">
-                                               <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                                   <path stroke-linecap="round" stroke-linejoin="round"
-                                                       d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                                               </svg>
-                                               Admin Account
-                                           </a>
-                                       @else
-                                           <a href="{{ route('vendor.register') }}"
-                                               class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium text-sm">
-                                               <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2"
-                                                   viewBox="0 0 24 24">
-                                                   <path stroke-linecap="round" stroke-linejoin="round"
-                                                       d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
-                                                   </path>
-                                               </svg>
-                                               Vendor Registration
-                                           </a>
-                                       @endif
+                                               @if(Auth::check() && Auth::user()->role === 'vendor')
+                                                   <a href="{{ route('vendor.dashboard') }}"
+                                                       class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium text-sm">
+                                                       <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                           <path stroke-linecap="round" stroke-linejoin="round"
+                                                               d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                                       </svg>
+                                                       Vendor Account
+                                                   </a>
+                                               @elseif(Auth::check() && Auth::user()->role === 'admin')
+                                                   <a href="{{ route('admin.dashboard') }}"
+                                                       class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium text-sm">
+                                                       <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                           <path stroke-linecap="round" stroke-linejoin="round"
+                                                               d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                                       </svg>
+                                                       Admin Account
+                                                   </a>
+                                               @else
+                                                   <a href="{{ route('vendor.register') }}"
+                                                       class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium text-sm">
+                                                       <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2"
+                                                           viewBox="0 0 24 24">
+                                                           <path stroke-linecap="round" stroke-linejoin="round"
+                                                               d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4">
+                                                           </path>
+                                                       </svg>
+                                                       Vendor Registration
+                                                   </a>
+                                               @endif
 
-                                       <a href="#"
-                                           class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium text-sm">
-                                           <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                               <path stroke-linecap="round" stroke-linejoin="round"
-                                                   d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01">
-                                               </path>
-                                           </svg>
-                                           Orders
-                                       </a>
+                                               <a href="#"
+                                                   class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium text-sm">
+                                                   <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                       <path stroke-linecap="round" stroke-linejoin="round"
+                                                           d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01">
+                                                       </path>
+                                                   </svg>
+                                                   Orders
+                                               </a>
 
-                                       <div id="darkModeRow"
-                                           class="flex items-center justify-between px-3 py-2.5 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium text-sm cursor-pointer select-none">
-                                           <span class="flex items-center gap-3 tracking-wide">
-                                               <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2"
-                                                   viewBox="0 0 24 24">
-                                                   <path stroke-linecap="round" stroke-linejoin="round"
-                                                       d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z">
-                                                   </path>
-                                               </svg>
-                                               Dark Mode
-                                           </span>
-                                           <div class="relative w-9 h-5 flex-shrink-0 pointer-events-none">
-                                               <input type="checkbox" id="darkModeToggle" class="sr-only peer">
-                                               <div
-                                                   class="absolute inset-0 bg-gray-200 dark:bg-gray-700 rounded-full transition-colors peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-4">
+                                               <div id="darkModeRow"
+                                                   class="flex items-center justify-between px-3 py-2.5 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium text-sm cursor-pointer select-none">
+                                                   <span class="flex items-center gap-3 tracking-wide">
+                                                       <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2"
+                                                           viewBox="0 0 24 24">
+                                                           <path stroke-linecap="round" stroke-linejoin="round"
+                                                               d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z">
+                                                           </path>
+                                                       </svg>
+                                                       Dark Mode
+                                                   </span>
+                                                   <div class="relative w-9 h-5 flex-shrink-0 pointer-events-none">
+                                                       <input type="checkbox" id="darkModeToggle" class="sr-only peer">
+                                                       <div
+                                                           class="absolute inset-0 bg-gray-200 dark:bg-gray-700 rounded-full transition-colors peer-checked:bg-blue-600 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-4">
+                                                       </div>
+                                                   </div>
                                                </div>
+
+                                               <!-- <a href="#"
+                                                   class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium text-sm">
+                                                   <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2"
+                                                       viewBox="0 0 24 24">
+                                                       <path stroke-linecap="round" stroke-linejoin="round"
+                                                           d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
+                                                       </path>
+                                                   </svg>
+                                                   Messages
+                                               </a> -->
                                            </div>
                                        </div>
 
-                                       <!-- <a href="#"
-                                           class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 font-medium text-sm">
-                                           <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" stroke-width="2"
-                                               viewBox="0 0 24 24">
-                                               <path stroke-linecap="round" stroke-linejoin="round"
-                                                   d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
-                                               </path>
-                                           </svg>
-                                           Messages
-                                       </a> -->
-                                   </div>
-                               </div>
-
-                               <form method="POST" action="{{ route('logout') }}"
-                                   class="border-t border-gray-100 dark:border-gray-700 pt-4">
-                                   @csrf
-                                   <button type="submit"
-                                       class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20 font-medium text-sm text-left">
-                                       <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                           <path stroke-linecap="round" stroke-linejoin="round"
-                                               d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
-                                           </path>
-                                       </svg>
-                                       Logout
-                                   </button>
-                               </form>
-                           </div> */ ?>
+                                       <form method="POST" action="{{ route('logout') }}"
+                                           class="border-t border-gray-100 dark:border-gray-700 pt-4">
+                                           @csrf
+                                           <button type="submit"
+                                               class="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20 font-medium text-sm text-left">
+                                               <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                                   <path stroke-linecap="round" stroke-linejoin="round"
+                                                       d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
+                                                   </path>
+                                               </svg>
+                                               Logout
+                                           </button>
+                                       </form>
+                                   </div> */ ?>
 
             <main class="max-w-7xl mx-auto px-4 pt-10 pb-36 font-sans" x-data="{ 
-                                  chunkSize: window.innerWidth < 640 ? 3 : 6,
-                                  init() {
-                                      window.addEventListener('resize', () => {
-                                          this.chunkSize = window.innerWidth < 640 ? 3 : 6;
-                                      });
-                                  }
-                              }">
+                                          chunkSize: window.innerWidth < 640 ? 3 : 6,
+                                          init() {
+                                              window.addEventListener('resize', () => {
+                                                  this.chunkSize = window.innerWidth < 640 ? 3 : 6;
+                                              });
+                                          }
+                                      }">
 
                 @if (session('success'))
                     <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 4000)"
@@ -483,94 +493,94 @@
             </main>
 
             <!-- <div
-                            class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 shadow-lg px-6 py-2 flex justify-around items-center z-40">
-                            <a href="#"
-                                class="flex flex-col items-center gap-0.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10zM9 14h6v7H9v-7z"></path>
-                                </svg>
-                                <span class="text-[10px] font-medium">Shops</span>
-                            </a>
+                                    class="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 shadow-lg px-6 py-2 flex justify-around items-center z-40">
+                                    <a href="#"
+                                        class="flex flex-col items-center gap-0.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10zM9 14h6v7H9v-7z"></path>
+                                        </svg>
+                                        <span class="text-[10px] font-medium">Shops</span>
+                                    </a>
 
-                            <a href="{{ route('cart.index') }}"
-                                class="flex flex-col items-center gap-0.5 text-blue-600 dark:text-blue-400">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 0a2 2 0 100 4 2 2 0 000-4z">
-                                    </path>
-                                </svg>
-                                <span class="text-[10px] font-medium">Cart</span>
-                            </a>
+                                    <a href="{{ route('cart.index') }}"
+                                        class="flex flex-col items-center gap-0.5 text-blue-600 dark:text-blue-400">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 0a2 2 0 100 4 2 2 0 000-4z">
+                                            </path>
+                                        </svg>
+                                        <span class="text-[10px] font-medium">Cart</span>
+                                    </a>
 
-                            <a href="#"
-                                class="flex flex-col items-center gap-0.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01">
-                                    </path>
-                                </svg>
-                                <span class="text-[10px] font-medium">Order History</span>
-                            </a>
+                                    <a href="#"
+                                        class="flex flex-col items-center gap-0.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01">
+                                            </path>
+                                        </svg>
+                                        <span class="text-[10px] font-medium">Order History</span>
+                                    </a>
 
-                            <a href="#"
-                                class="flex flex-col items-center gap-0.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round"
-                                        d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
-                                    </path>
-                                </svg>
-                                <span class="text-[10px] font-medium">Message</span>
-                            </a>
+                                    <a href="#"
+                                        class="flex flex-col items-center gap-0.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300">
+                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
+                                            </path>
+                                        </svg>
+                                        <span class="text-[10px] font-medium">Message</span>
+                                    </a>
 
-                        </div> -->
+                                </div> -->
 
             <!-- <script>
-                            const menuBtn = document.getElementById('menuBtn');
-                            const closeBtn = document.getElementById('closeBtn');
-                            const sidebar = document.getElementById('sidebar');
-                            const sidebarOverlay = document.getElementById('sidebarOverlay');
-                            const darkModeRow = document.getElementById('darkModeRow');
-                            const darkModeToggle = document.getElementById('darkModeToggle');
+                                    const menuBtn = document.getElementById('menuBtn');
+                                    const closeBtn = document.getElementById('closeBtn');
+                                    const sidebar = document.getElementById('sidebar');
+                                    const sidebarOverlay = document.getElementById('sidebarOverlay');
+                                    const darkModeRow = document.getElementById('darkModeRow');
+                                    const darkModeToggle = document.getElementById('darkModeToggle');
 
-                            // Sidebar Open/Close Logic
-                            menuBtn.addEventListener('click', () => {
-                                sidebar.classList.remove('-translate-x-full');
-                                sidebarOverlay.classList.remove('hidden');
-                            });
+                                    // Sidebar Open/Close Logic
+                                    menuBtn.addEventListener('click', () => {
+                                        sidebar.classList.remove('-translate-x-full');
+                                        sidebarOverlay.classList.remove('hidden');
+                                    });
 
-                            const closeSidebar = () => {
-                                sidebar.classList.add('-translate-x-full');
-                                sidebarOverlay.classList.add('hidden');
-                            };
-                            closeBtn.addEventListener('click', closeSidebar);
-                            sidebarOverlay.addEventListener('click', closeSidebar);
+                                    const closeSidebar = () => {
+                                        sidebar.classList.add('-translate-x-full');
+                                        sidebarOverlay.classList.add('hidden');
+                                    };
+                                    closeBtn.addEventListener('click', closeSidebar);
+                                    sidebarOverlay.addEventListener('click', closeSidebar);
 
-                            // Dark Mode Function
-                            function updateTheme(isDark) {
-                                if (isDark) {
-                                    document.documentElement.classList.add('dark');
-                                    localStorage.setItem('theme', 'dark');
-                                    darkModeToggle.checked = true;
-                                } else {
-                                    document.documentElement.classList.remove('dark');
-                                    localStorage.setItem('theme', 'light');
-                                    darkModeToggle.checked = false;
-                                }
-                            }
+                                    // Dark Mode Function
+                                    function updateTheme(isDark) {
+                                        if (isDark) {
+                                            document.documentElement.classList.add('dark');
+                                            localStorage.setItem('theme', 'dark');
+                                            darkModeToggle.checked = true;
+                                        } else {
+                                            document.documentElement.classList.remove('dark');
+                                            localStorage.setItem('theme', 'light');
+                                            darkModeToggle.checked = false;
+                                        }
+                                    }
 
-                            // Init Dark Mode
-                            if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-                                updateTheme(true);
-                            } else {
-                                updateTheme(false);
-                            }
+                                    // Init Dark Mode
+                                    if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                                        updateTheme(true);
+                                    } else {
+                                        updateTheme(false);
+                                    }
 
-                            // Toggle Dark Mode Event
-                            darkModeRow.addEventListener('click', () => {
-                                updateTheme(!darkModeToggle.checked);
-                            });
-                        </script> -->
+                                    // Toggle Dark Mode Event
+                                    darkModeRow.addEventListener('click', () => {
+                                        updateTheme(!darkModeToggle.checked);
+                                    });
+                                </script> -->
             <script>
                 const darkModeRow = document.getElementById('darkModeRow');
                 const darkModeText = document.getElementById('darkModeText');
@@ -641,8 +651,8 @@
         </head>
 
         <body x-data="{ 
-                        searchQuery: '',
-                        products: {{ json_encode($trendingProducts->merge($moreProducts)->unique('id')->map(function ($product) {
+                                searchQuery: '',
+                                products: {{ json_encode($trendingProducts->merge($moreProducts)->unique('id')->map(function ($product) {
             $displayImage = '';
             if ($product->colorVariants && $product->colorVariants->whereNotNull('image_path')->count() > 0) {
                 $displayImage = asset('storage/' . $product->colorVariants->whereNotNull('image_path')->first()->image_path);
@@ -662,7 +672,7 @@
             ];
         })) }},
 
-                        trendingProducts: {{ json_encode($trendingProducts->map(function ($product) {
+                                trendingProducts: {{ json_encode($trendingProducts->map(function ($product) {
             $displayImage = '';
             if ($product->colorVariants && $product->colorVariants->whereNotNull('image_path')->count() > 0) {
                 $displayImage = asset('storage/' . $product->colorVariants->whereNotNull('image_path')->first()->image_path);
@@ -682,7 +692,7 @@
             ];
         })) }},
 
-                        moreProducts: {{ json_encode($moreProducts->map(function ($product) {
+                                moreProducts: {{ json_encode($moreProducts->map(function ($product) {
             $displayImage = '';
             if ($product->colorVariants && $product->colorVariants->whereNotNull('image_path')->count() > 0) {
                 $displayImage = asset('storage/' . $product->colorVariants->whereNotNull('image_path')->first()->image_path);
@@ -702,26 +712,26 @@
             ];
         })) }},
 
-                                    get filteredProducts() {
-                                        if (this.searchQuery.trim() === '') {
-                                            return [];
-                                        }
-                                        return this.products.filter(p => 
-                                            p.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-                                            p.description.toLowerCase().includes(this.searchQuery.toLowerCase())
-                                        );
-                                    }
-                                }" @product-search.window="searchQuery = $event.detail"
+                                            get filteredProducts() {
+                                                if (this.searchQuery.trim() === '') {
+                                                    return [];
+                                                }
+                                                return this.products.filter(p => 
+                                                    p.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+                                                    p.description.toLowerCase().includes(this.searchQuery.toLowerCase())
+                                                );
+                                            }
+                                        }" @product-search.window="searchQuery = $event.detail"
             class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 min-h-screen pb-24 relative overflow-x-hidden">
 
             <main class="max-w-7xl mx-auto px-4 pt-10 pb-36 font-sans" x-data="{ 
-                                  chunkSize: window.innerWidth < 640 ? 3 : 6,
-                                  init() {
-                                      window.addEventListener('resize', () => {
-                                          this.chunkSize = window.innerWidth < 640 ? 3 : 6;
-                                      });
-                                  }
-                              }">
+                                          chunkSize: window.innerWidth < 640 ? 3 : 6,
+                                          init() {
+                                              window.addEventListener('resize', () => {
+                                                  this.chunkSize = window.innerWidth < 640 ? 3 : 6;
+                                              });
+                                          }
+                                      }">
 
                 <div
                     class="mb-10 relative overflow-hidden bg-gradient-to-r from-amber-500 via-orange-600 to-red-600 text-white rounded-2xl shadow-xl border border-white/10 transform transition-all duration-300 hover:scale-[1.01]">
@@ -753,15 +763,15 @@
                         </div>
 
                         <!-- <div class="flex items-center gap-3 shrink-0">
-                                        <a href="{{ route('register') }}" 
-                                           class="px-5 py-3 text-xs sm:text-sm font-extrabold bg-white text-indigo-700 hover:bg-blue-50 hover:text-blue-800 rounded-xl shadow-lg transition-all duration-200 active:scale-95 text-center w-full sm:w-auto">
-                                            Register လုပ်ရန်
-                                        </a>
-                                        <a href="{{ route('login') }}" 
-                                           class="px-5 py-3 text-xs sm:text-sm font-bold bg-transparent border border-white/40 hover:bg-white/10 rounded-xl transition-all duration-200 text-center w-full sm:w-auto">
-                                            Sign In
-                                        </a>
-                                    </div> -->
+                                                <a href="{{ route('register') }}" 
+                                                   class="px-5 py-3 text-xs sm:text-sm font-extrabold bg-white text-indigo-700 hover:bg-blue-50 hover:text-blue-800 rounded-xl shadow-lg transition-all duration-200 active:scale-95 text-center w-full sm:w-auto">
+                                                    Register လုပ်ရန်
+                                                </a>
+                                                <a href="{{ route('login') }}" 
+                                                   class="px-5 py-3 text-xs sm:text-sm font-bold bg-transparent border border-white/40 hover:bg-white/10 rounded-xl transition-all duration-200 text-center w-full sm:w-auto">
+                                                    Sign In
+                                                </a>
+                                            </div> -->
                     </div>
                 </div>
 

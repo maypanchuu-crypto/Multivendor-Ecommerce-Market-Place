@@ -13,8 +13,8 @@
 
         @if(!isset($logo) || !$logo)
             <div class="flex items-center gap-3 select-none">
-                <!-- Logo ပုံစံ -->
-                <img src="{{ asset('logo.png') }}" alt="Logo" class="w-11 h-11 object-contain rounded-xl">
+                
+                <img src="{{ asset('logo.jpg') }}" alt="Logo" class="w-11 h-11 object-contain rounded-xl">
 
                 <span
                     class="text-xl font-black tracking-wider bg-gradient-to-r from-red-500 via-yellow-500 via-green-500 via-blue-500 to-purple-500 bg-clip-text text-transparent font-sans drop-shadow-sm hidden sm:inline-block">
