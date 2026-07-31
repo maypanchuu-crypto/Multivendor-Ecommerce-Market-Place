@@ -101,20 +101,28 @@
                             {{ number_format($product->price) }} <span
                                 class="text-lg font-black text-red-600 dark:text-red-500">MMK</span>
                         </div>
+                        <!-- In-Stock / Out-of-Stock Badge Section -->
                         <div>
-                            @if($product->stock > 0)
+                            @php
+                                // ပထမဆုံး အရောင်၏ stock ကို default အနေဖြင့် ယူရန် (အရောင်ရှိလျှင်)
+                                $initialStock = $product->stock;
+                                if ($product->colorVariants && $product->colorVariants->count() > 0 && isset($product->colorVariants->first()->stock)) {
+                                    $initialStock = $product->colorVariants->first()->stock;
+                                }
+                            @endphp
+
+                            <span id="stockBadge"
+                                class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-black rounded-full {{ $initialStock > 0 ? 'bg-green-100 text-green-800 dark:bg-green-900/60 dark:text-green-300 border border-green-400' : 'bg-rose-100 text-rose-800 dark:bg-rose-900/60 dark:text-rose-300 border border-rose-400' }} shadow-[2px_2px_0px_0px_rgba(0,0,0,0.15)]">
                                 <span
-                                    class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-black rounded-full bg-green-100 text-green-800 dark:bg-green-900/60 dark:text-green-300 border border-green-400 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.15)]">
-                                    <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
-                                    In Stock ({{ $product->stock }})
+                                    class="w-2 h-2 rounded-full {{ $initialStock > 0 ? 'bg-green-500 animate-pulse' : 'bg-rose-500' }}"></span>
+                                <span id="stockText">
+                                    @if($initialStock > 0)
+                                        In Stock ({{ $initialStock }})
+                                    @else
+                                        Out of Stock
+                                    @endif
                                 </span>
-                            @else
-                                <span
-                                    class="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-black rounded-full bg-rose-100 text-rose-800 dark:bg-rose-900/60 dark:text-rose-300 border border-rose-400 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.15)]">
-                                    <span class="w-2 h-2 rounded-full bg-rose-500"></span>
-                                    Out of Stock
-                                </span>
-                            @endif
+                            </span>
                         </div>
                     </div>
 
@@ -131,6 +139,7 @@
                     class="pt-4 border-t-2 border-gray-100 dark:border-gray-800 space-y-5">
                     @csrf
                     <div class="grid grid-cols-2 gap-4">
+                        <!-- Color Select Dropdown -->
                         @if($product->colorVariants && $product->colorVariants->count() > 0)
                             <div>
                                 <label for="color"
@@ -138,7 +147,8 @@
                                 <select id="color" name="color" onchange="changeProductImageByColor(this.value)"
                                     class="w-full px-3 py-2.5 bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-amber-500 dark:text-white font-black shadow-[2px_3px_0px_0px_rgba(0,0,0,0.15)]">
                                     @foreach($product->colorVariants as $colorVar)
-                                        <option value="{{ strtolower($colorVar->color_name) }}">
+                                        <option value="{{ strtolower($colorVar->color_name) }}"
+                                            data-stock="{{ $colorVar->stock ?? $product->stock }}">
                                             {{ ucfirst($colorVar->color_name) }}
                                         </option>
                                     @endforeach
@@ -152,10 +162,12 @@
                     <div class="pt-2">
                         @if($product->stock > 0)
                             <div class="flex items-end gap-4">
+                                <!-- Quantity Input Section -->
                                 <div class="flex-shrink-0">
                                     <span
                                         class="block text-xs font-black text-amber-600 dark:text-amber-400 uppercase mb-1.5">Qty</span>
-                                    <input type="number" name="quantity" value="1" min="1" max="{{ $product->stock }}"
+                                    <input type="number" id="quantityInput" name="quantity" value="1" min="1"
+                                        max="{{ $initialStock }}"
                                         class="w-20 px-3 py-2.5 border-2 border-gray-300 dark:border-gray-600 rounded-xl text-center bg-white dark:bg-gray-800 text-sm font-black focus:outline-none dark:text-white shadow-[2px_3px_0px_0px_rgba(0,0,0,0.15)]">
                                 </div>
 
@@ -202,11 +214,56 @@
             const targetColor = selectedColor.toString().trim().toLowerCase();
             const slides = slider ? slider.children : [];
 
+            // 1. Image Slider ကို ပြောင်းရန်
             for (let i = 0; i < slides.length; i++) {
                 const slideColor = (slides[i].getAttribute('data-color') || '').toString().trim().toLowerCase();
                 if (slideColor === targetColor) {
                     setSlide(i);
                     break;
+                }
+            }
+
+            // 2. ရွေးချယ်လိုက်သော အရောင်၏ Stock ကို ရှာပြီး UI တွင် ပြောင်းလဲရန်
+            const colorSelect = document.getElementById('color');
+            if (colorSelect) {
+                const selectedOption = colorSelect.options[colorSelect.selectedIndex];
+                const stock = parseInt(selectedOption.getAttribute('data-stock')) || 0;
+
+                const stockBadge = document.getElementById('stockBadge');
+                const stockText = document.getElementById('stockText');
+                const quantityInput = document.getElementById('quantityInput');
+                const addToCartBtn = document.querySelector('button[type="submit"]');
+
+                if (stock > 0) {
+                    stockBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 text-xs font-black rounded-full bg-green-100 text-green-800 dark:bg-green-900/60 dark:text-green-300 border border-green-400 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.15)]";
+                    stockText.innerHTML = `<span class="w-2 h-2 rounded-full bg-green-500 animate-pulse inline-block mr-1"></span>In Stock (${stock})`;
+
+                    if (quantityInput) {
+                        quantityInput.max = stock;
+                        if (parseInt(quantityInput.value) > stock) {
+                            quantityInput.value = stock;
+                        }
+                    }
+
+                    if (addToCartBtn) {
+                        addToCartBtn.disabled = false;
+                        addToCartBtn.className = "flex-1 bg-amber-500 hover:bg-amber-400 text-gray-950 font-black py-3 px-6 rounded-xl transition-all flex items-center justify-center gap-2 border-b-4 border-r-2 border-amber-800 shadow-[4px_6px_0px_0px_rgba(0,0,0,0.4)] active:translate-y-1 active:shadow-none";
+                        addToCartBtn.innerText = "Add to Cart";
+                    }
+                } else {
+                    stockBadge.className = "inline-flex items-center gap-1.5 px-3 py-1 text-xs font-black rounded-full bg-rose-100 text-rose-800 dark:bg-rose-900/60 dark:text-rose-300 border border-rose-400 shadow-[2px_2px_0px_0px_rgba(0,0,0,0.15)]";
+                    stockText.innerHTML = `<span class="w-2 h-2 rounded-full bg-rose-500 inline-block mr-1"></span>Out of Stock`;
+
+                    if (quantityInput) {
+                        quantityInput.max = 0;
+                        quantityInput.value = 0;
+                    }
+
+                    if (addToCartBtn) {
+                        addToCartBtn.disabled = true;
+                        addToCartBtn.className = "w-full px-6 py-3 bg-gray-200 dark:bg-gray-800 text-gray-500 font-black text-sm rounded-xl cursor-not-allowed text-center border-b-4 border-gray-400 dark:border-gray-900 shadow-sm";
+                        addToCartBtn.innerText = "Out of Stock";
+                    }
                 }
             }
         }
