@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
-use App\Models\Wallet;
+// use App\Models\Wallet;
 
 class RegisteredUserController extends Controller
 {
@@ -45,14 +45,14 @@ class RegisteredUserController extends Controller
                 'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/'
             ],
 
-            // ၂။ 🔐 Password ကို အနည်းဆုံး ၈ လုံး + စာလုံး + နံပါတ် + သင်္ကေတ ပါဝင်အောင် စစ်ဆေးခြင်း
+            
             'password' => [
                 'required',
                 'confirmed',
-                Rules\Password::min(8) // အနည်းဆုံး ၈ လုံး
-                    ->letters()        // စာလုံး (a-z, A-Z) ပါရမည်
-                    ->numbers()        // နံပါတ် (0-9) ပါရမည်
-                    ->symbols()        // အထူးသင်္ကေတ (!, @, #, $, %, etc.) ပါရမည်
+                Rules\Password::min(8) 
+                    ->letters()       
+                    ->numbers()        
+                    ->symbols()        
             ],
         ]);
 
@@ -62,11 +62,11 @@ class RegisteredUserController extends Controller
             'password' => Hash::make($request->password),
         ]);
 
-        Wallet::create([
-            'user_id' => $user->id,
-            'balance' => 100000.00, // Starting Balance
-            'wallet_password' => Hash::make('123456'), // Default PIN / Password
-        ]);
+        // Wallet::create([
+        //     'user_id' => $user->id,
+        //     'balance' => 100000.00, // Starting Balance
+        //     'wallet_password' => Hash::make('123456'), // Default PIN / Password
+        // ]);
 
         event(new Registered($user));
 
