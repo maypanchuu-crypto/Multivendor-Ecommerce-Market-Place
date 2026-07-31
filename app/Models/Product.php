@@ -40,4 +40,9 @@ class Product extends Model
     {
         return $this->hasMany(OrderItem::class);
     }
+
+    public function colorVariants()
+    {
+        return $this->hasMany(ProductColor::class);
+    }
 }

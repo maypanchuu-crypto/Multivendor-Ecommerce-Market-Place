@@ -81,6 +81,16 @@
                 border-color: #a7f3d0;
                 box-shadow: 3px 4px 0px 0px #a7f3d0;
             }
+
+            input[type=number]::-webkit-inner-spin-button,
+            input[type=number]::-webkit-outer-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
+
+            input[type=number] {
+                -moz-appearance: textfield;
+            }
         </style>
     </head>
 
@@ -149,11 +159,10 @@
                         Messages
                     </a>
 
-                    <!-- 💡 Dark Mode Switch (navigation.blade.php ပုံစံအတိုင်း ပြင်ဆင်ထားပါသည်) -->
+                    <!-- 💡 Dark Mode Switch -->
                     <div id="darkModeRow"
                         class="btn-3d flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white dark:bg-emerald-900 text-emerald-950 dark:text-emerald-100 font-black text-sm cursor-pointer select-none">
 
-                        <!-- 🌙 Night Mode Icon (Light mode မှာပဲ ပြမည်) -->
                         <svg id="nightModeIcon" class="w-5 h-5 text-emerald-600 stroke-[2.5] block dark:hidden"
                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -161,7 +170,6 @@
                             </path>
                         </svg>
 
-                        <!-- ☀️ Day Mode Icon (Dark mode မှာပဲ ပြမည်) -->
                         <svg id="dayModeIcon" class="w-5 h-5 text-yellow-400 stroke-[2.5] hidden dark:block" fill="none"
                             stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -169,7 +177,6 @@
                             </path>
                         </svg>
 
-                        <!-- 📝 Dynamic Text (JavaScript မှ Control လုပ်မည်) -->
                         <span id="darkModeText" class="tracking-wide">Night Mode</span>
                     </div>
                 </div>
@@ -271,7 +278,6 @@
                         Upload your inventory items and start receiving orders instantly from customers.
                     </p>
                 </div>
-                <!-- 💡 Button လေးပဲ Hover / Click စေမည် -->
                 <a href="{{ route('vendor.product.create') }}"
                     class="btn-3d bg-orange-500 hover:bg-orange-600 text-white font-black text-xs px-5 py-3 rounded-xl border-2 border-orange-700 shadow-[2px_3px_0px_0px_#c2410c] active:translate-y-0.5 active:shadow-none transition-all text-center whitespace-nowrap">
                     + Add New Product
@@ -282,7 +288,7 @@
             <div
                 class="mt-8 bg-white dark:bg-emerald-900 rounded-2xl p-6 border-2 border-emerald-800 dark:border-emerald-300 shadow-[3px_4px_0px_0px_#065f46] dark:shadow-[3px_4px_0px_0px_#a7f3d0]">
 
-                <!-- 💡 Header Section (Right-aligned Total Items & Search Dropdown) -->
+                <!-- 💡 Header Section -->
                 <div
                     class="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b-2 border-emerald-800/20 dark:border-emerald-300/20 pb-4">
                     <div>
@@ -332,7 +338,7 @@
                                     clip-rule="evenodd"></path>
                             </svg>
                             <div>
-                                <span class="font-bold">အောင်မြင်သည်!</span> {{ session('success') }}
+                                <span class="font-bold">{{ session('success') }}</span>
                             </div>
                         </div>
 
@@ -367,8 +373,9 @@
                                         <div
                                             class="w-12 h-12 rounded-xl bg-white dark:bg-emerald-900 overflow-hidden border-2 border-emerald-800 dark:border-emerald-300 shadow-[2px_2px_0px_0px_#065f46] dark:shadow-[2px_2px_0px_0px_#a7f3d0] flex items-center justify-center">
                                             @if($product->image)
-                                                <img src="{{ asset('storage/' . $product->image) }}" alt="Product Image"
-                                                    class="w-full h-full object-cover">
+                                                <img src="{{ $product->image ? asset('storage/' . $product->image) : asset('images/default-placeholder.png') }}"
+                                                    alt="{{ $product->name }}" class="w-full h-full object-cover"
+                                                    onerror="this.onerror=null; this.src='https://placehold.co/100x100?text=No+Image';">
                                             @else
                                                 <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor"
                                                     stroke-width="2" viewBox="0 0 24 24">
@@ -462,14 +469,22 @@
 
         </main>
 
-        <div id="editProductModal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4">
+        <!-- 💡 3D Styled Edit Product Modal Container -->
+        <div id="editProductModal"
+            class="fixed inset-0 bg-black/60 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm transition-opacity duration-300">
             <div
-                class="bg-white dark:bg-gray-800 rounded-2xl max-w-md w-full p-6 shadow-xl border dark:border-gray-700 max-h-[90vh] overflow-y-auto">
-                <div class="flex justify-between items-center mb-4">
-                    <h4 class="text-lg font-black text-gray-900 dark:text-white">Edit Product</h4>
+                class="bg-white dark:bg-emerald-950 rounded-2xl max-w-xl w-full p-6 shadow-[5px_6px_0px_0px_#065f46] dark:shadow-[5px_6px_0px_0px_#a7f3d0] border-2 border-emerald-800 dark:border-emerald-300 max-h-[90vh] overflow-y-auto">
+
+                <!-- Header -->
+                <div
+                    class="flex justify-between items-center mb-5 border-b-2 border-emerald-800/20 dark:border-emerald-300/20 pb-3">
+                    <div>
+                        <h4 class="text-xl font-black text-orange-600 dark:text-orange-400 tracking-wide uppercase">Edit
+                            Product Details</h4>
+                    </div>
                     <button type="button" onclick="closeEditModal()"
-                        class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        class="text-emerald-800 dark:text-emerald-200 hover:text-orange-500 p-1 rounded-xl hover:bg-emerald-100 dark:hover:bg-emerald-900 transition-all">
+                        <svg class="w-6 h-6 stroke-[3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
                         </svg>
                     </button>
@@ -479,79 +494,129 @@
                     @csrf
                     @method('PUT')
 
-                    <div>
-                        <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">Product
-                            Name</label>
-                        <input type="text" name="name" id="edit_name" required
-                            class="w-full px-4 py-2 bg-gray-50 dark:bg-gray-700 border dark:border-gray-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-4">
-                        <div>
-                            <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">Price
-                                (MMK)</label>
-                            <input type="number" name="price" id="edit_price" required min="0"
-                                class="w-full px-4 py-2 bg-gray-50 dark:bg-gray-700 border dark:border-gray-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-                        <div>
-                            <label
-                                class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">Stock</label>
-                            <input type="number" name="stock" id="edit_stock" required min="0"
-                                class="w-full px-4 py-2 bg-gray-50 dark:bg-gray-700 border dark:border-gray-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-                    </div>
-
+                    <!-- Product Name -->
                     <div>
                         <label
-                            class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">Description</label>
-                        <textarea name="description" id="edit_description" rows="3"
-                            class="w-full px-4 py-2 bg-gray-50 dark:bg-gray-700 border dark:border-gray-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    </textarea>
-
+                            class="block text-xs font-black text-emerald-900 dark:text-emerald-100 uppercase mb-1">Product
+                            Name</label>
+                        <input type="text" name="name" id="edit_name" required
+                            class="w-full px-4 py-2.5 bg-emerald-50 dark:bg-emerald-900 border-2 border-emerald-800 dark:border-emerald-300 rounded-xl text-sm font-bold text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500 shadow-[2px_2px_0px_0px_#065f46] dark:shadow-[2px_2px_0px_0px_#a7f3d0]">
                     </div>
 
-                    <div class="grid grid-cols-2 gap-4">
+                    <!-- Price -->
+                    <div>
+                        <label
+                            class="block text-xs font-black text-emerald-900 dark:text-emerald-100 uppercase mb-1">Price
+                            (MMK)</label>
+                        <input type="number" name="price" id="edit_price" required min="0"
+                            class="w-full px-4 py-2.5 bg-emerald-50 dark:bg-emerald-900 border-2 border-emerald-800 dark:border-emerald-300 rounded-xl text-sm font-bold text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500 shadow-[2px_2px_0px_0px_#065f46] dark:shadow-[2px_2px_0px_0px_#a7f3d0]">
+                    </div>
+
+                    <!-- Description -->
+                    <div>
+                        <label
+                            class="block text-xs font-black text-emerald-900 dark:text-emerald-100 uppercase mb-1">Description</label>
+                        <textarea name="description" id="edit_description" rows="3"
+                            class="w-full px-4 py-2.5 bg-emerald-50 dark:bg-emerald-900 border-2 border-emerald-800 dark:border-emerald-300 rounded-xl text-sm font-bold text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500 shadow-[2px_2px_0px_0px_#065f46] dark:shadow-[2px_2px_0px_0px_#a7f3d0]"></textarea>
+                    </div>
+
+                    <!-- 🔘 Color Checkbox Switch -->
+                    <div
+                        class="flex items-center gap-3 p-4 bg-emerald-100/60 dark:bg-emerald-900/80 rounded-xl border-2 border-emerald-800 dark:border-emerald-300 mt-6 shadow-[2px_2px_0px_0px_#065f46]">
+                        <input type="checkbox" id="edit_has_colors" name="has_colors" value="1"
+                            onchange="toggleEditColorSection()"
+                            class="w-4 h-4 text-orange-600 rounded focus:ring-orange-500 cursor-pointer">
+                        <label for="edit_has_colors"
+                            class="text-xs font-bold text-emerald-950 dark:text-emerald-100 cursor-pointer select-none">
+                            🎨 This product has multiple color variants
+                        </label>
+                    </div>
+
+                    <!-- =================================================== -->
+                    <!-- 1️⃣ OPTION A: Single Stock + Multiple Images (No Color) -->
+                    <!-- =================================================== -->
+                    <div id="editNoColorSection" class="space-y-4 pt-2">
                         <div>
                             <label
-                                class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-1">Available
-                                Sizes</label>
-                            <input type="text" name="sizes" id="edit_sizes" placeholder="e.g. S, M, L"
-                                class="w-full px-4 py-2 bg-gray-50 dark:bg-gray-700 border dark:border-gray-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                class="block text-xs font-black text-emerald-900 dark:text-emerald-100 uppercase mb-1">Stock
+                                Quantity</label>
+                            <input type="number" name="stock" id="edit_stock" min="0" value="1"
+                                class="w-full px-4 py-2.5 bg-emerald-50 dark:bg-emerald-900 border-2 border-emerald-800 dark:border-emerald-300 rounded-xl text-sm font-bold text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500 shadow-[2px_2px_0px_0px_#065f46] dark:shadow-[2px_2px_0px_0px_#a7f3d0]">
                         </div>
+
+                        <!-- Existing Images for No-Color Product -->
                         <div>
+                            <label
+                                class="block text-xs font-black text-emerald-900 dark:text-emerald-100 uppercase mb-2">📸
+                                Existing Images</label>
+                            <div id="edit_existing_images_container"
+                                class="grid grid-cols-2 gap-3 bg-emerald-50 dark:bg-emerald-900/60 p-3 rounded-xl border-2 border-emerald-800 dark:border-emerald-300 shadow-[2px_2px_0px_0px_#065f46]">
+                            </div>
+                        </div>
+
+                        <!-- Upload New Images -->
+                        <div class="border-t-2 border-emerald-800/20 dark:border-emerald-300/20 pt-3">
+                            <label
+                                class="block text-xs font-black text-emerald-900 dark:text-emerald-100 uppercase mb-2">➕
+                                Add More Images (Optional)</label>
+                            <input type="file" name="new_images[]" id="edit_new_images" multiple
+                                onchange="previewNewImagesInModal(event)"
+                                class="block w-full text-xs font-bold text-emerald-950 dark:text-white border-2 border-emerald-800 dark:border-emerald-300 rounded-xl cursor-pointer bg-white dark:bg-emerald-900 p-2 shadow-[2px_2px_0px_0px_#065f46]"
+                                accept="image/*">
+                            <div id="edit_new_images_preview"
+                                class="mt-3 hidden grid grid-cols-2 gap-3 bg-orange-50 dark:bg-emerald-900/40 p-3 rounded-xl border-2 border-dashed border-orange-400">
+                            </div>
                         </div>
                     </div>
 
-                    <div class="mt-4">
-                        <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">Current
-                            Images & Colors</label>
-                        <div id="edit_existing_images_container"
-                            class="grid grid-cols-2 gap-3 bg-gray-100 dark:bg-gray-700/30 p-3 rounded-xl border dark:border-gray-700">
+                    <!-- =================================================== -->
+                    <!-- 2️⃣ OPTION B: Color + Stock + Image Grid View -->
+                    <!-- =================================================== -->
+                    <div id="editColorSection" class="space-y-4 pt-2 hidden">
+
+                        <!-- 💡 Existing Color Variants Grid (ပုံစံသစ်) -->
+                        <div>
+                            <label
+                                class="block text-xs font-black text-emerald-900 dark:text-emerald-100 uppercase mb-2">🎨
+                                Existing Color Variants</label>
+                            <div id="edit_existing_colors_container"
+                                class="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-emerald-50 dark:bg-emerald-900/60 p-3 rounded-xl border-2 border-emerald-800 dark:border-emerald-300 shadow-[2px_2px_0px_0px_#065f46]">
+                                <!-- Existing colors will be loaded here via JS -->
+                            </div>
                         </div>
+
+                        <!-- 💡 Add More Colors Section -->
+                        <div class="border-t-2 border-emerald-800/20 dark:border-emerald-300/20 pt-4">
+                            <div class="flex items-center justify-between mb-2">
+                                <label
+                                    class="block text-xs font-black text-emerald-900 dark:text-emerald-100 uppercase">➕
+                                    Add More Colors (Optional)</label>
+                                <button type="button" onclick="addEditColorRow()"
+                                    class="px-3 py-1.5 bg-orange-500 text-white rounded-lg text-xs font-bold border border-orange-700 shadow-[2px_2px_0px_0px_#c2410c] hover:bg-orange-600">
+                                    + Add Color Option
+                                </button>
+                            </div>
+                            <div id="editColorVariantContainer" class="space-y-3">
+                                <!-- Dynamic new color rows will be inserted here -->
+                            </div>
+                        </div>
+
                     </div>
 
-                    <div class="mt-4 border-t dark:border-gray-700 pt-4">
-                        <label class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase mb-2">📸 Add
-                            More
-                            Images & Colors (Optional)</label>
-                        <input type="file" name="new_images[]" id="edit_new_images" multiple
-                            onchange="previewNewImagesInModal(event)"
-                            class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 dark:bg-gray-700 dark:border-gray-600"
-                            accept="image/*">
-
-                        <div id="edit_new_images_preview"
-                            class="mt-3 hidden grid grid-cols-2 gap-3 bg-blue-50/50 dark:bg-gray-700/20 p-3 rounded-xl border border-dashed border-blue-300">
-                        </div>
-                    </div>
-
-                    <div class="flex justify-end gap-2 pt-2">
+                    <!-- Modal Action Buttons -->
+                    <div
+                        class="flex justify-end gap-3 pt-4 border-t-2 border-emerald-800/20 dark:border-emerald-300/20">
                         <button type="button" onclick="closeEditModal()"
-                            class="px-4 py-2 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-200 text-xs font-bold rounded-xl hover:bg-gray-200">Cancel</button>
+                            class="btn-3d px-4 py-2.5 bg-gray-200 dark:bg-emerald-900 text-gray-800 dark:text-emerald-100 text-xs font-black rounded-xl hover:bg-gray-300">
+                            Cancel
+                        </button>
                         <button type="submit"
-                            class="px-4 py-2 bg-blue-600 text-white text-xs font-bold rounded-xl hover:bg-blue-700 shadow-md">Update
-                            Product</button>
+                            class="btn-3d px-5 py-2.5 bg-orange-500 hover:bg-orange-600 text-white text-xs font-black rounded-xl border-2 border-orange-700 shadow-[2px_3px_0px_0px_#c2410c]">
+                            Update Product
+                        </button>
                     </div>
                 </form>
+
                 <form id="deleteProductForm" method="POST" style="display: none;">
                     @csrf
                     @method('DELETE')
@@ -622,15 +687,38 @@
             }
         }
 
+        // --- Checkbox toggle logic for Edit Modal ---
+        function toggleEditColorSection() {
+            const hasColors = document.getElementById('edit_has_colors').checked;
+            const colorSection = document.getElementById('editColorSection');
+            const noColorSection = document.getElementById('editNoColorSection');
+
+            if (hasColors) {
+                colorSection.classList.remove('hidden');
+                noColorSection.classList.add('hidden');
+            } else {
+                colorSection.classList.add('hidden');
+                noColorSection.classList.remove('hidden');
+            }
+        }
+
+        // Dynamic Color Row Index Tracker
+        let editColorRowIndex = 0;
+
         function openEditModal(productId) {
             const modal = document.getElementById('editProductModal');
             const form = document.getElementById('editProductForm');
             const existingContainer = document.getElementById('edit_existing_images_container');
+            const existingColorContainer = document.getElementById('edit_existing_colors_container'); // 💡 အရောင်ဟောင်းများပြရန်
+            const variantContainer = document.getElementById('editColorVariantContainer');
             const newPreviewContainer = document.getElementById('edit_new_images_preview');
 
             editModalFilesArray = [];
+            editColorRowIndex = 0;
 
             existingContainer.innerHTML = '<p class="text-xs text-gray-400 col-span-2 text-center">Loading images...</p>';
+            if (existingColorContainer) existingColorContainer.innerHTML = '<p class="text-xs text-gray-400 col-span-2 text-center">Loading colors...</p>';
+            variantContainer.innerHTML = '';
             newPreviewContainer.innerHTML = '';
             newPreviewContainer.classList.add('hidden');
             document.getElementById('edit_new_images').value = '';
@@ -642,49 +730,93 @@
                 .then(data => {
                     document.getElementById('edit_name').value = data.name;
                     document.getElementById('edit_price').value = data.price;
-                    document.getElementById('edit_stock').value = data.stock;
                     document.getElementById('edit_description').value = data.description || '';
-                    document.getElementById('edit_sizes').value = data.sizes ? JSON.parse(data.sizes).join(', ') : '';
 
-                    existingContainer.innerHTML = '';
-                    if (data.images && Array.isArray(data.images) && data.images.length > 0) {
-                        data.images.forEach(img => {
+                    const variants = data.color_variants || data.colors || [];
+                    const hasColors = Array.isArray(variants) && variants.length > 0;
+                    const checkbox = document.getElementById('edit_has_colors');
+
+                    checkbox.checked = hasColors;
+                    toggleEditColorSection();
+
+                    if (hasColors) {
+                        existingColorContainer.innerHTML = '';
+                        variants.forEach((variant, idx) => {
                             const div = document.createElement('div');
-                            div.className = 'p-2 bg-white dark:bg-gray-800 rounded-lg border dark:border-gray-600 flex flex-col gap-1.5 relative';
+                            div.className = 'p-3 bg-white dark:bg-emerald-950 rounded-xl border-2 border-emerald-800 dark:border-emerald-300 flex flex-col gap-2 relative shadow-[2px_2px_0px_0px_#065f46]';
                             div.innerHTML = `
-            <div class="aspect-video w-full rounded overflow-hidden border">
-                <img src="/storage/${img.image_path}" class="w-full h-full object-cover">
-            </div>
-            <div>
-                <input type="text" name="existing_image_colors[${img.id}]" value="${img.color || ''}" 
-                    placeholder="Color" class="w-full px-2 py-1 bg-gray-50 dark:bg-gray-700 border dark:border-gray-600 rounded text-[11px] focus:outline-none dark:text-white">
-            </div>
-            <label class="flex items-center gap-1 mt-1 text-[10px] text-rose-500 font-medium cursor-pointer">
-                <input type="checkbox" name="delete_images[]" value="${img.id}" class="rounded text-rose-600 focus:ring-rose-500"> Delete photo
-            </label>
-        `;
-                            existingContainer.appendChild(div);
+                                <input type="hidden" name="existing_variants[${idx}][id]" value="${variant.id}">
+                                <div class="aspect-video w-full rounded-lg overflow-hidden border border-emerald-800/40 bg-emerald-100">
+                                    <img src="/storage/${variant.image_path}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/100x100?text=No+Image';">
+                                </div>
+                                <div class="space-y-2">
+                                    <div>
+                                        <label class="block text-[10px] font-bold uppercase text-emerald-800 dark:text-emerald-200">Color Name</label>
+                                        <input type="text" name="existing_variants[${idx}][color_name]" value="${variant.color_name}" required
+                                            class="w-full px-2.5 py-1.5 bg-emerald-50 dark:bg-emerald-900 border border-emerald-800 rounded-lg text-xs dark:text-white focus:outline-none">
+                                    </div>
+                                    <div>
+                                        <label class="block text-[10px] font-bold uppercase text-emerald-800 dark:text-emerald-200">Stock Quantity</label>
+                                        <input type="number" name="existing_variants[${idx}][stock]" min="0" value="${variant.stock}" required
+                                            class="w-full px-2.5 py-1.5 bg-emerald-50 dark:bg-emerald-900 border border-emerald-800 rounded-lg text-xs dark:text-white focus:outline-none">
+                                    </div>
+                                    <div class="flex justify-end pt-1">
+                                        <label class="flex items-center gap-1 text-[10px] text-rose-600 dark:text-rose-400 font-black cursor-pointer">
+                                            <input type="checkbox" name="delete_variants[]" value="${variant.id}" class="rounded text-rose-600 focus:ring-rose-500 border-rose-500"> Delete
+                                        </label>
+                                    </div>
+                                </div>
+                            `;
+                            existingColorContainer.appendChild(div);
                         });
                     } else {
-                        existingContainer.innerHTML = '<p class="text-xs text-gray-400 col-span-2 text-center py-2">No gallery images uploaded for this product.</p>';
+                        document.getElementById('edit_stock').value = data.stock;
+                        // Non-color existing images rendering... (原有 logic)
                     }
+
                     modal.classList.remove('hidden');
                     modal.classList.add('flex');
                 });
+        }
+
+        // အရောင်အသစ်ထပ်ထည့်ရန် Row 
+        function addEditColorRow(variantData = null) {
+            const container = document.getElementById('editColorVariantContainer');
+            const div = document.createElement('div');
+            div.className = 'color-row p-3 bg-emerald-50 dark:bg-emerald-900/50 rounded-xl border-2 border-emerald-800 dark:border-emerald-300 grid grid-cols-1 sm:grid-cols-3 gap-3 items-center relative shadow-[2px_2px_0px_0px_#065f46]';
+
+            div.innerHTML = `
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-emerald-800 dark:text-emerald-200">Color Name</label>
+                    <input type="text" name="new_variants[${editColorRowIndex}][color_name]" placeholder="e.g. Red" required
+                        class="w-full px-3 py-1.5 bg-white dark:bg-emerald-950 border border-emerald-800 rounded-lg text-xs dark:text-white focus:outline-none">
+                </div>
+                <div>
+                    <label class="block text-[10px] font-bold uppercase text-emerald-800 dark:text-emerald-200">Stock Quantity</label>
+                    <input type="number" name="new_variants[${editColorRowIndex}][stock]" min="0" value="1" required
+                        class="w-full px-3 py-1.5 bg-white dark:bg-emerald-950 border border-emerald-800 rounded-lg text-xs dark:text-white focus:outline-none">
+                </div>
+                <div class="flex items-center gap-2">
+                    <div class="flex-1">
+                        <label class="block text-[10px] font-bold uppercase text-emerald-800 dark:text-emerald-200">Color Image</label>
+                        <input type="file" name="new_variants[${editColorRowIndex}][image]" accept="image/*" class="w-full text-[10px] text-gray-500" required>
+                    </div>
+                    <button type="button" onclick="this.closest('.color-row').remove()" class="mt-4 text-rose-500 font-bold text-xs p-1">✕</button>
+                </div>
+            `;
+            container.appendChild(div);
+            editColorRowIndex++;
         }
 
         let editModalFilesArray = [];
 
         function previewNewImagesInModal(event) {
             const input = event.target;
-            const container = document.getElementById('edit_new_images_preview');
-
             if (input.files && input.files.length > 0) {
                 Array.from(input.files).forEach(file => {
                     editModalFilesArray.push(file);
                 });
             }
-
             renderEditModalPreviews();
         }
 
@@ -700,21 +832,17 @@
                     const reader = new FileReader();
                     reader.onload = function (e) {
                         const div = document.createElement('div');
-                        div.className = 'p-2 bg-white dark:bg-gray-800 rounded-lg border dark:border-gray-600 flex flex-col gap-1.5 relative group';
+                        div.className = 'p-2 bg-white dark:bg-emerald-950 rounded-xl border-2 border-emerald-800 dark:border-emerald-300 flex flex-col gap-1.5 relative shadow-[2px_2px_0px_0px_#065f46] group';
 
                         div.innerHTML = `
-                    <button type="button" onclick="removeNewImageFromModal(${index})" 
-                        class="absolute -top-1.5 -right-1.5 bg-rose-500 hover:bg-rose-600 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs shadow-md z-10 transition-transform hover:scale-110">
-                        &times;
-                    </button>
-                    <div class="aspect-video w-full rounded overflow-hidden border bg-gray-50 flex items-center justify-center">
-                        <img src="${e.target.result}" class="w-full h-full object-cover">
-                    </div>
-                    <div>
-                        <input type="text" name="new_image_colors[${index}]" placeholder="New Color" 
-                            class="w-full px-2 py-1 bg-gray-50 dark:bg-gray-700 border dark:border-gray-600 rounded text-[11px] focus:outline-none dark:text-white">
-                    </div>
-                `;
+                            <button type="button" onclick="removeNewImageFromModal(${index})" 
+                                class="absolute -top-2 -right-2 bg-rose-500 hover:bg-rose-600 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs font-black shadow-md z-10 border border-rose-800 transition-transform hover:scale-110">
+                                &times;
+                            </button>
+                            <div class="aspect-video w-full rounded-lg overflow-hidden border border-emerald-800/40 bg-emerald-100">
+                                <img src="${e.target.result}" class="w-full h-full object-cover">
+                            </div>
+                        `;
                         container.appendChild(div);
                     }
                     reader.readAsDataURL(file);
@@ -740,9 +868,7 @@
         function confirmDelete(productId) {
             if (confirm("Are you sure you want to delete this product? This action cannot be undone.")) {
                 const form = document.getElementById('deleteProductForm');
-
                 form.action = `/vendor/products/${productId}`;
-
                 form.submit();
             }
         }

@@ -1,242 +1,329 @@
 <!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add New Product - {{ $vendor->shop_name }}</title>
-
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = { darkMode: 'class' }
-        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        } else {
-            document.documentElement.classList.remove('dark');
-        }
-    </script>
-</head>
-
-<body class="bg-gray-50 text-gray-900 dark:bg-gray-900 dark:text-gray-100 min-h-screen pb-24 relative">
-
-    <div id="sidebarOverlay" class="fixed inset-0 bg-black/40 z-40 hidden"></div>
-    <div id="sidebar"
-        class="fixed top-0 left-0 h-full w-64 bg-white dark:bg-gray-800 z-50 shadow-2xl transform -translate-x-full transition-transform duration-300 p-5 flex flex-col justify-between">
-        <div>
-            <div class="flex justify-between items-center mb-6">
-                <h2 class="text-xl font-bold dark:text-white">Vendor Menu</h2>
-                <button id="closeBtn" class="text-gray-500 p-1"><svg class="w-6 h-6" fill="none" stroke="currentColor"
-                        stroke-width="2" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
-                    </svg></button>
-            </div>
-            <div class="space-y-1">
-                <a href="{{ route('vendor.dashboard') }}"
-                    class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm font-medium">Dashboard
-                    Home</a>
-                <div id="darkModeRow"
-                    class="flex items-center justify-between px-3 py-2.5 rounded-lg text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 text-sm cursor-pointer">
-                    <span>Dark Mode</span>
-                    <input type="checkbox" id="darkModeToggle" class="sr-only">
-                </div>
-            </div>
+<x-app-layout :hideSearch="true" :cartIcon="true" :messageIcon="true" :hideRoleMenu="true" :hideDropdown="true">
+    <x-slot name="header">
+        <div class="flex items-center gap-3">
+            <h2 class="text-base font-black tracking-wide text-orange-500 dark:text-orange-400">
+                {{ $vendor->shop_name }}
+                <span class="text-xs font-semibold text-gray-500 dark:text-gray-400 ml-1"></span>
+            </h2>
         </div>
-    </div>
+    </x-slot>
+    <html lang="en">
 
-    <main class="max-w-2xl mx-auto px-4 py-8">
-        <div class="bg-white dark:bg-gray-800 rounded-2xl p-6 md:p-8 shadow-sm border dark:border-gray-700">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Add New Product - {{ $vendor->shop_name }}</title>
 
-            <div class="mb-6">
-                <h1 class="text-xl font-black text-gray-900 dark:text-white">Upload New Item</h1>
-                <p class="text-xs text-gray-400 mt-1">Fill in the details to list a new product in the marketplace.</p>
-            </div>
-
-            <form action="{{ route('vendor.product.store') }}" method="POST" enctype="multipart/form-data"
-                class="space-y-5">
-                @csrf
-
-                <div>
-                    <label for="name" class="block text-xs font-bold text-gray-400 uppercase mb-2">Product Name</label>
-                    <input type="text" id="name" name="name" value="{{ old('name') }}"
-                        class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-700 border dark:border-gray-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white @error('name') border-rose-500 @enderror"
-                        placeholder="e.g. Premium Cotton T-Shirt">
-                    @error('name') <p class="text-rose-500 text-[11px] mt-1 font-medium">{{ $message }}</p> @enderror
-                </div>
-
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <label for="price" class="block text-xs font-bold text-gray-400 uppercase mb-2">Price
-                            (MMK)</label>
-                        <input type="number" id="price" name="price" value="{{ old('price') }}" min="0"
-                            class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-700 border dark:border-gray-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white @error('price') border-rose-500 @enderror"
-                            placeholder="e.g. 15000">
-                        @error('price') <p class="text-rose-500 text-[11px] mt-1 font-medium">{{ $message }}</p>
-                        @enderror
-                    </div>
-                    <div>
-                        <label for="stock" class="block text-xs font-bold text-gray-400 uppercase mb-2">Available
-                            Stock</label>
-                        <input type="number" id="stock" name="stock" value="{{ old('stock', 1) }}" min="0"
-                            class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-700 border dark:border-gray-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white @error('stock') border-rose-500 @enderror"
-                            placeholder="e.g. 10">
-                        @error('stock') <p class="text-rose-500 text-[11px] mt-1 font-medium">{{ $message }}</p>
-                        @enderror
-                    </div>
-                </div>
-
-                <div>
-                    <label for="description" class="block text-xs font-bold text-gray-400 uppercase mb-2">Product
-                        Description</label>
-                    <textarea id="description" name="description" rows="4"
-                        class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-700 border dark:border-gray-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white @error('description') border-rose-500 @enderror"
-                        placeholder="Write features, size guide, or details...">
-                    </textarea>
-                    <div>
-                        <label App\Models\Product for="sizes"
-                            class="block text-xs font-bold text-gray-400 uppercase mb-2">Available Sizes (ကော်မာ ခံပြီး
-                            ရိုက်ထည့်ပါ)</label>
-                        <input type="text" id="sizes" name="sizes" value="{{ old('sizes') }}"
-                            class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-700 border dark:border-gray-600 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:text-white"
-                            placeholder="e.g. S, M, L, XL သို့မဟုတ် 30ml, 50ml (မလိုလျှင် လွတ်ထားပါ)">
-                        @error('sizes') <p class="text-rose-500 text-[11px] mt-1 font-medium">{{ $message }}</p>
-                        @enderror
-                    </div>
-                    @error('description') <p class="text-rose-500 text-[11px] mt-1 font-medium">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <!-- <div>
-                    <div class="mb-4">
-                        <label for="images" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Product
-                            Images (maximum size:2Mb)</label>
-
-                        <input type="file" name="images[]" id="images" multiple onchange="previewImages(event)"
-                            class="mt-1 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                            accept="image/*">
-
-                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">You can upload more than one image for
-                            this product.</p>
-                    </div>
-                    @error('images') <p class="text-rose-500 text-[11px] mt-1 font-medium">{{ $message }}</p> @enderror
-
-                    <div id="previewContainer"
-                        class="mt-4 hidden grid grid-cols-3 gap-3 bg-gray-100 dark:bg-gray-700/50 p-3 rounded-xl border border-gray-200 dark:border-gray-700">
-                    </div>
-                </div> -->
-
-                <div class="mt-6 border-t pt-4">
-                    <h3 class="text-md font-bold text-gray-700 dark:text-gray-300 mb-2">📸 Product Images & Colors
-                        (Maximum size 2Mb)</h3>
-                    <p class="text-xs text-gray-400 mb-3">ပုံများကို တစ်ပြိုင်နက် စုရွေးနိုင်ပါသည်။ ရွေးပြီးပါက
-                        ပုံတစ်ပုံချင်းစီအတွက် အရောင်သတ်မှတ်နိုင်မည့် အကွက်များ ပေါ်လာပါလိမ့်မည်။</p>
-
-                    <div>
-                        <input type="file" name="images[]" id="images" multiple
-                            onchange="previewImagesWithColorInputs(event)"
-                            class="mt-1 block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600"
-                            accept="image/*" required>
-                        @error('images') <p class="text-rose-500 text-[11px] mt-1 font-medium">{{ $message }}</p>
-                        @enderror
-                        @error('images.*') <p class="text-rose-500 text-[11px] mt-1 font-medium">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div id="previewContainer"
-                        class="mt-4 hidden grid grid-cols-1 sm:grid-cols-2 gap-4 bg-gray-100 dark:bg-gray-700/50 p-4 rounded-xl border border-gray-200 dark:border-gray-700">
-                    </div>
-                </div>
-
-                <div class="pt-2">
-                    <button type="submit"
-                        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm py-3 rounded-xl transition-all shadow-md">
-                        Publish Product
-                    </button>
-                </div>
-            </form>
-
-        </div>
-    </main>
-
-    <script>
-        // --- Multiple Image Preview Logic ---
-        function previewImagesWithColorInputs(event) {
-            const input = event.target;
-            const container = document.getElementById('previewContainer');
-
-            container.innerHTML = ''; // အဟောင်းတွေကို ရှင်းထုတ်မယ်
-
-            if (input.files && input.files.length > 0) {
-                container.classList.remove('hidden');
-
-                Array.from(input.files).forEach((file, index) => {
-                    const reader = new FileReader();
-
-                    reader.onload = function (e) {
-                        const div = document.createElement('div');
-                        div.className = 'p-3 bg-white dark:bg-gray-800 rounded-xl border dark:border-gray-600 flex flex-col gap-2 relative';
-
-                        div.innerHTML = `
-                    <div class="aspect-video w-full rounded-lg overflow-hidden border">
-                        <img src="${e.target.result}" class="w-full h-full object-cover">
-                    </div>
-                    
-                    <div>
-                        <label class="block text-[11px] font-semibold text-gray-400 uppercase mb-1">Color for Image ${index + 1}</label>
-                        <input type="text" name="image_colors[${index}]" placeholder="e.g. gray, red (မလိုလျှင် လွတ်ထားပါ)" 
-                               class="w-full px-3 py-1.5 bg-gray-50 dark:bg-gray-700 border dark:border-gray-600 rounded-lg text-xs focus:ring-2 focus:ring-blue-500 dark:text-white">
-                    </div>
-
-                    <button type="button" onclick="removeUploadedImage(${index})" 
-                            class="absolute top-2 right-2 bg-black/70 text-white w-5 h-5 rounded-full text-[10px] flex items-center justify-center hover:bg-rose-600 transition">✕</button>
-                `;
-                        container.appendChild(div);
-                    }
-                    reader.readAsDataURL(file);
-                });
-            } else {
-                container.classList.add('hidden');
+        <script src="https://cdn.tailwindcss.com"></script>
+        <script>
+            tailwind.config = {
+                darkMode: 'class',
             }
-        }
-
-        function removeUploadedImage(index) {
-            const input = document.getElementById('images');
-            const dt = new DataTransfer();
-            const { files } = input;
-
-            for (let i = 0; i < files.length; i++) {
-                if (index !== i) dt.items.add(files[i]);
-            }
-
-            input.files = dt.files;
-            previewImagesWithColorInputs({ target: input }); // Preview ပြန်ဆွဲမယ်
-        }
-
-        // --- Layout UI Sidebar & Darkmode Logic ---
-        const menuBtn = document.getElementById('menuBtn');
-        const closeBtn = document.getElementById('closeBtn');
-        const sidebar = document.getElementById('sidebar');
-        const sidebarOverlay = document.getElementById('sidebarOverlay');
-        const darkModeRow = document.getElementById('darkModeRow');
-        const darkModeToggle = document.getElementById('darkModeToggle');
-
-        function updateTheme(isDark) {
-            if (isDark) {
+            if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                 document.documentElement.classList.add('dark');
-                localStorage.setItem('theme', 'dark');
-                if (darkModeToggle) darkModeToggle.checked = true;
             } else {
                 document.documentElement.classList.remove('dark');
-                localStorage.setItem('theme', 'light');
-                if (darkModeToggle) darkModeToggle.checked = false;
             }
-        }
-        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) updateTheme(true);
-        if (darkModeRow) darkModeRow.addEventListener('click', () => updateTheme(!darkModeToggle.checked));
-        if (menuBtn) menuBtn.addEventListener('click', () => { sidebar.classList.remove('-translate-x-full'); sidebarOverlay.classList.remove('hidden'); });
-        const closeSidebar = () => { sidebar.classList.add('-translate-x-full'); sidebarOverlay.classList.add('hidden'); };
-        if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
-        if (sidebarOverlay) sidebarOverlay.addEventListener('click', closeSidebar);
-    </script>
-</body>
+        </script>
 
-</html>
+        <style>
+            html,
+            body {
+                transition: background-color 0.3s ease, color 0.3s ease;
+            }
+
+            /* 💡 Browsers အားလုံးအတွက် Scrollbar ဖျောက်ရန် */
+            ::-webkit-scrollbar {
+                display: none;
+            }
+
+            html,
+            body {
+                -ms-overflow-style: none;
+                scrollbar-width: none;
+            }
+
+            /* 💡 Body နှင့် Background အရောင် (Dashboard ပုံစံအတိုင်း) */
+            body,
+            div.min-h-screen {
+                background-color: #d1fae5 !important;
+                /* Fresh Emerald 100 */
+            }
+
+            /* Dark Mode အတွက် */
+            html.dark body,
+            html.dark div.min-h-screen {
+                background-color: #064e3b !important;
+                /* Dark Fresh Emerald 900 */
+            }
+
+            /* 💡 3D Solid Block Buttons & Cards */
+            .btn-3d {
+                transition: all 0.15s ease;
+                border: 2px solid #065f46;
+                box-shadow: 3px 4px 0px 0px #065f46;
+            }
+
+            .btn-3d:hover {
+                transform: translateY(-2px);
+                box-shadow: 4px 6px 0px 0px #065f46;
+            }
+
+            .btn-3d:active {
+                transform: translateY(2px);
+                box-shadow: 1px 1px 0px 0px #065f46;
+            }
+
+            html.dark .btn-3d {
+                border-color: #a7f3d0;
+                box-shadow: 3px 4px 0px 0px #a7f3d0;
+            }
+
+            /* Price Input ဘေးက Up/Down Arrows ဖျောက်ရန် */
+            input::-webkit-outer-spin-button,
+            input::-webkit-inner-spin-button {
+                -webkit-appearance: none;
+                margin: 0;
+            }
+
+            input[type=number] {
+                -moz-appearance: textfield;
+            }
+        </style>
+    </head>
+
+    <body class="text-gray-900 dark:text-gray-100 min-h-screen pb-24 relative overflow-x-hidden">
+
+        <main class="max-w-2xl mx-auto px-4 py-8">            
+
+            <!-- 💡 Main 3D Card Container -->
+            <div
+                class="bg-white dark:bg-emerald-900 rounded-2xl p-6 md:p-8 border-2 border-emerald-800 dark:border-emerald-300 shadow-[4px_6px_0px_0px_#065f46] dark:shadow-[4px_6px_0px_0px_#a7f3d0]">
+
+                <div class="mb-6 border-b-2 border-emerald-800/20 dark:border-emerald-300/20 pb-4">
+                    <h1 class="text-2xl font-black text-orange-600 dark:text-orange-400 tracking-wide uppercase">Upload
+                        New Item 🚀</h1>
+                    <p class="text-xs text-emerald-800 dark:text-emerald-200 font-bold mt-1">Fill in the details to list
+                        a new product in the marketplace.</p>
+                </div>
+
+                @if ($errors->any())
+                    <div
+                        class="bg-rose-100 dark:bg-rose-950/80 border-2 border-rose-500 text-rose-700 dark:text-rose-200 px-4 py-3 rounded-xl relative mb-6 shadow-[3px_3px_0px_0px_#e11d48] text-xs font-bold">
+                        <ul class="space-y-1">
+                            @foreach ($errors->all() as $error)
+                                <li>• {{ $error }}</li>
+                            @endforeach
+                        </ul>
+                    </div>
+                @endif
+
+                <form action="{{ route('vendor.product.store') }}" method="POST" enctype="multipart/form-data"
+                    class="space-y-5">
+                    @csrf
+
+                    <!-- Product Name -->
+                    <div>
+                        <label for="name"
+                            class="block text-xs font-black text-emerald-950 dark:text-emerald-100 uppercase mb-2">Product
+                            Name</label>
+                        <input type="text" id="name" name="name" value="{{ old('name') }}" required
+                            class="w-full px-4 py-2.5 bg-emerald-50 dark:bg-emerald-950 border-2 border-emerald-800 dark:border-emerald-300 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-orange-500 dark:text-white shadow-[2px_3px_0px_0px_#065f46] dark:shadow-[2px_3px_0px_0px_#a7f3d0]"
+                            placeholder="e.g. Close Up Toothpaste">
+                    </div>
+
+                    <!-- Price -->
+                    <div>
+                        <label for="price"
+                            class="block text-xs font-black text-emerald-950 dark:text-emerald-100 uppercase mb-2">Price
+                            (MMK)</label>
+                        <input type="number" id="price" name="price" value="{{ old('price') }}" min="0" required
+                            class="w-full px-4 py-2.5 bg-emerald-50 dark:bg-emerald-950 border-2 border-emerald-800 dark:border-emerald-300 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-orange-500 dark:text-white shadow-[2px_3px_0px_0px_#065f46] dark:shadow-[2px_3px_0px_0px_#a7f3d0]"
+                            placeholder="e.g. 70000">
+                    </div>
+
+                    <!-- Product Description -->
+                    <div>
+                        <label for="description"
+                            class="block text-xs font-black text-emerald-950 dark:text-emerald-100 uppercase mb-2">Product
+                            Description</label>
+                        <textarea id="description" name="description" rows="3"
+                            class="w-full px-4 py-2.5 bg-emerald-50 dark:bg-emerald-950 border-2 border-emerald-800 dark:border-emerald-300 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-orange-500 dark:text-white shadow-[2px_3px_0px_0px_#065f46] dark:shadow-[2px_3px_0px_0px_#a7f3d0]"
+                            placeholder="Toothpaste description...">{{ old('description') }}</textarea>
+                    </div>
+
+                    <!-- 🔘 Color Checkbox Switch -->
+                    <div
+                        class="flex items-center gap-3 p-4 bg-emerald-100/60 dark:bg-emerald-950/80 rounded-xl border-2 border-emerald-800 dark:border-emerald-300 mt-6 shadow-[2px_3px_0px_0px_#065f46] dark:shadow-[2px_3px_0px_0px_#a7f3d0]">
+                        <input type="checkbox" id="has_colors" name="has_colors" value="1"
+                            onchange="toggleColorSection()"
+                            class="w-4 h-4 text-orange-600 rounded focus:ring-orange-500 cursor-pointer">
+                        <label for="has_colors"
+                            class="text-xs font-black text-emerald-950 dark:text-emerald-100 cursor-pointer select-none">
+                            🎨 This product has multiple color variants
+                        </label>
+                    </div>
+
+                    <!-- =================================================== -->
+                    <!-- 1️⃣ OPTION A: Single Stock + Multiple Images -->
+                    <!-- =================================================== -->
+                    <div id="noColorSection" class="space-y-4 pt-2">
+                        <div>
+                            <label for="total_stock"
+                                class="block text-xs font-black text-emerald-950 dark:text-emerald-100 uppercase mb-2">Stock
+                                Quantity</label>
+                            <input type="number" id="total_stock" name="stock" min="0" value="1"
+                                class="w-full px-4 py-2.5 bg-emerald-50 dark:bg-emerald-950 border-2 border-emerald-800 dark:border-emerald-300 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-orange-500 dark:text-white shadow-[2px_3px_0px_0px_#065f46] dark:shadow-[2px_3px_0px_0px_#a7f3d0]">
+                        </div>
+
+                        <div>
+                            <label
+                                class="block text-xs font-black text-emerald-950 dark:text-emerald-100 uppercase mb-1">Product
+                                Images (Max size 2MB)</label>
+                            <p class="text-xs text-emerald-800 dark:text-emerald-200 font-bold mb-3">You can select many
+                                images at once.</p>
+
+                            <input type="file" id="multiImageInput" name="images[]" multiple accept="image/*"
+                                onchange="previewImages(event)"
+                                class="w-full px-4 py-2.5 bg-emerald-50 dark:bg-emerald-950 border-2 border-emerald-800 dark:border-emerald-300 rounded-xl text-xs font-bold text-emerald-950 dark:text-white shadow-[2px_3px_0px_0px_#065f46] dark:shadow-[2px_3px_0px_0px_#a7f3d0] cursor-pointer">
+                        </div>
+
+                        <!-- Image Previews Container -->
+                        <div id="imagePreviewContainer"
+                            class="grid grid-cols-2 gap-4 p-4 bg-emerald-100/50 dark:bg-emerald-950/50 rounded-xl border-2 border-emerald-800 dark:border-emerald-300 hidden">
+                            <!-- JavaScript မှ Preview ပုံများပြမည် -->
+                        </div>
+                    </div>
+
+                    <!-- =================================================== -->
+                    <!-- 2️⃣ OPTION B: Color + Stock + Image Dynamic Rows -->
+                    <!-- =================================================== -->
+                    <div id="colorSection" class="space-y-4 pt-2 hidden">
+                        <div class="flex items-center justify-between">
+                            <h3 class="text-sm font-black text-orange-600 dark:text-orange-400">🎨 Product Colors &
+                                Stock</h3>
+                            <button type="button" onclick="addColorRow()"
+                                class="px-3 py-1.5 bg-orange-500 text-white rounded-xl text-xs font-black border-2 border-orange-700 shadow-[2px_2px_0px_0px_#c2410c] hover:bg-orange-600">
+                                + Add Color Option
+                            </button>
+                        </div>
+
+                        <div id="colorVariantContainer" class="space-y-3">
+                            <!-- Initial Variant Row -->
+                            <div
+                                class="color-row p-3 bg-emerald-50 dark:bg-emerald-950/60 rounded-xl border-2 border-emerald-800 dark:border-emerald-300 grid grid-cols-1 sm:grid-cols-3 gap-3 items-center shadow-[2px_2px_0px_0px_#065f46]">
+                                <div>
+                                    <label
+                                        class="block text-[10px] font-black uppercase text-emerald-800 dark:text-emerald-200">Color
+                                        Name</label>
+                                    <input type="text" name="variants[0][color_name]" placeholder="e.g. Red, Black"
+                                        class="w-full px-3 py-1.5 bg-white dark:bg-emerald-900 border-2 border-emerald-800 rounded-lg text-xs font-bold dark:text-white focus:outline-none">
+                                </div>
+                                <div>
+                                    <label
+                                        class="block text-[10px] font-black uppercase text-emerald-800 dark:text-emerald-200">Stock
+                                        Quantity</label>
+                                    <input type="number" name="variants[0][stock]" min="0" value="1"
+                                        class="w-full px-3 py-1.5 bg-white dark:bg-emerald-900 border-2 border-emerald-800 rounded-lg text-xs font-bold dark:text-white focus:outline-none">
+                                </div>
+                                <div>
+                                    <label
+                                        class="block text-[10px] font-black uppercase text-emerald-800 dark:text-emerald-200">Color
+                                        Image</label>
+                                    <input type="file" name="variants[0][image]" accept="image/*"
+                                        class="w-full text-xs text-emerald-950 dark:text-emerald-200">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="pt-4">
+                        <button type="submit"
+                            class="btn-3d w-full bg-orange-500 hover:bg-orange-600 text-white font-black text-sm py-3.5 rounded-xl border-2 border-orange-700 shadow-[3px_4px_0px_0px_#c2410c] transition-all">
+                            Publish Product 🚀
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </main>
+
+        <script>
+            // --- Checkbox toggle logic ---
+            function toggleColorSection() {
+                const hasColors = document.getElementById('has_colors').checked;
+                const colorSection = document.getElementById('colorSection');
+                const noColorSection = document.getElementById('noColorSection');
+
+                if (hasColors) {
+                    colorSection.classList.remove('hidden');
+                    noColorSection.classList.add('hidden');
+                } else {
+                    colorSection.classList.add('hidden');
+                    noColorSection.classList.remove('hidden');
+                }
+            }
+
+            // --- Preview Images for Single Stock Mode ---
+            function previewImages(event) {
+                const container = document.getElementById('imagePreviewContainer');
+                container.innerHTML = '';
+                const files = event.target.files;
+
+                if (files.length > 0) {
+                    container.classList.remove('hidden');
+
+                    Array.from(files).forEach((file) => {
+                        const reader = new FileReader();
+                        reader.onload = function (e) {
+                            const card = document.createElement('div');
+                            card.className = "bg-white dark:bg-emerald-950 p-2 rounded-xl shadow-[2px_2px_0px_0px_#065f46] border-2 border-emerald-800 dark:border-emerald-300";
+                            card.innerHTML = `
+                                <div class="h-32 rounded-lg overflow-hidden bg-emerald-50 flex items-center justify-center">
+                                    <img src="${e.target.result}" class="h-full object-cover w-full">
+                                </div>
+                            `;
+                            container.appendChild(card);
+                        }
+                        reader.readAsDataURL(file);
+                    });
+                } else {
+                    container.classList.add('hidden');
+                }
+            }
+
+            // --- Add Dynamic Color Rows ---
+            let colorRowIndex = 1;
+            function addColorRow() {
+                const container = document.getElementById('colorVariantContainer');
+                const div = document.createElement('div');
+                div.className = 'color-row p-3 bg-emerald-50 dark:bg-emerald-950/60 rounded-xl border-2 border-emerald-800 dark:border-emerald-300 grid grid-cols-1 sm:grid-cols-3 gap-3 items-center relative shadow-[2px_2px_0px_0px_#065f46]';
+                div.innerHTML = `
+                    <div>
+                        <label class="block text-[10px] font-black uppercase text-emerald-800 dark:text-emerald-200">Color Name</label>
+                        <input type="text" name="variants[${colorRowIndex}][color_name]" placeholder="e.g. Blue" 
+                            class="w-full px-3 py-1.5 bg-white dark:bg-emerald-900 border-2 border-emerald-800 rounded-lg text-xs font-bold dark:text-white focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] font-black uppercase text-emerald-800 dark:text-emerald-200">Stock Quantity</label>
+                        <input type="number" name="variants[${colorRowIndex}][stock]" min="0" value="1" 
+                            class="w-full px-3 py-1.5 bg-white dark:bg-emerald-900 border-2 border-emerald-800 rounded-lg text-xs font-bold dark:text-white focus:outline-none">
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <div class="flex-1">
+                            <label class="block text-[10px] font-black uppercase text-emerald-800 dark:text-emerald-200">Color Image</label>
+                            <input type="file" name="variants[${colorRowIndex}][image]" accept="image/*" class="w-full text-xs text-emerald-950 dark:text-emerald-200">
+                        </div>
+                        <button type="button" onclick="this.closest('.color-row').remove()" class="mt-4 text-rose-500 font-black text-sm p-1">✕</button>
+                    </div>
+                `;
+                container.appendChild(div);
+                colorRowIndex++;
+            }
+        </script>
+    </body>
+
+    </html>
+</x-app-layout>
