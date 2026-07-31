@@ -21,15 +21,19 @@ class ProductController extends Controller
             ->take(6)
             ->pluck('product_id');
 
+        // 💡 relationships များကို with() ဖြင့် တွဲခေါ်ပါ
+        $relations = ['images', 'colorVariants', 'vendor'];
+
         if ($trendingProductIds->isEmpty()) {
-            $trendingProducts = Product::latest()->take(6)->get();
+            $trendingProducts = Product::with($relations)->latest()->take(6)->get();
         } else {
-            $trendingProducts = Product::whereIn('id', $trendingProductIds)
+            $trendingProducts = Product::with($relations)
+                ->whereIn('id', $trendingProductIds)
                 ->orderByRaw("FIELD(id, " . implode(',', $trendingProductIds->toArray()) . ")")
                 ->get();
         }
 
-        $moreProducts = Product::inRandomOrder()->get();
+        $moreProducts = Product::with($relations)->inRandomOrder()->get();
 
         $cart = json_decode(Cookie::get('shopping_cart', '[]'), true);
         $cartCount = array_reduce($cart, function ($sum, $item) {

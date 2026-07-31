@@ -147,6 +147,7 @@
                                         class="block text-xs text-amber-600 dark:text-amber-400 font-black uppercase mb-1.5">Color</label>
                                     <select id="color" name="color" onchange="changeProductImageByColor(this.value)"
                                         class="w-full px-3 py-2.5 bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600 rounded-xl text-sm focus:ring-2 focus:ring-amber-500 dark:text-white font-black shadow-[2px_3px_0px_0px_rgba(0,0,0,0.15)]">
+                                        <option>Choose Color</option>
                                         @foreach($product->colorVariants as $colorVar)
                                             <option value="{{ strtolower($colorVar->color_name) }}">
                                                 {{ ucfirst($colorVar->color_name) }}</option>
