@@ -10,6 +10,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Http;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
 // use App\Models\Wallet;
@@ -34,7 +35,6 @@ class RegisteredUserController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
 
-            // 💡 ဤနေရာတွင် email:rfc,dns ကို သုံးခြင်းဖြင့် Domain တကယ်ရှိမရှိ စစ်ဆေးမည်
             'email' => [
                 'required',
                 'string',
@@ -53,6 +53,17 @@ class RegisteredUserController extends Controller
                     ->symbols()
             ],
         ]);
+
+        $response = Http::get("https://emailvalidation.abstractapi.com/v1/", [
+            'api_key' => 'YOUR_ABSTRACT_API_KEY', // Abstract API website မှာ အခမဲ့ Acess Key ယူသုံးနိုင်သည်
+            'email' => $request->email
+        ]);
+
+        $result = $response->json();
+
+        if (!isset($result['deliverability']) || $result['deliverability'] !== 'DELIVERABLE') {
+            return back()->withErrors(['email' => 'The email address does not exist or cannot receive mail.'])->withInput();
+        }
 
         $user = User::create([
             'name' => $request->name,
