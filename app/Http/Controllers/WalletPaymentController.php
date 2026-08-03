@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\User;
 use App\Models\Wallet;
 use App\Models\Product;
+use App\Models\ProductColor; // 💡 ProductColor Model ကို import လုပ်ရန် လိုအပ်ပါက ထည့်ပါ
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Cookie;
@@ -39,18 +40,11 @@ class WalletPaymentController extends Controller
         $order = Order::with('items')->findOrFail($orderId);
         $user = auth()->user();
 
-        // 💡 User မှာ Wallet မရှိသေးရင် အလိုအလျောက် Create လုပ်ပေးပြီး Default Password 123456 ပေးမည်
-        $wallet = Wallet::firstOrCreate(
-            ['user_id' => $user->id],
-            [
-                'balance' => 2000000.00, // စမ်းသပ်ရန် Balance မူလ ပေးထားခြင်း
-                'wallet_password' => Hash::make('123456') // 💡 Default Password: 123456
-            ]
-        );
+        // User ရဲ့ Wallet ကို ရှိပြီးသားအတိုင်း ရှာမည်
+        $wallet = Wallet::where('user_id', $user->id)->first();
 
-        // Password မရှိသေးပါကလည်း Default 123456 သတ်မှတ်ပေးမည်
-        if (empty($wallet->wallet_password)) {
-            $wallet->update(['wallet_password' => Hash::make('123456')]);
+        if (!$wallet) {
+            return back()->with('error', 'Wallet not found.');
         }
 
         // Password စစ်ဆေးခြင်း
@@ -89,7 +83,19 @@ class WalletPaymentController extends Controller
                     $vendorWallet->increment('balance', $vendorAmount);
                 }
 
+                // 💡 Product Stock နှင့် Product Color Stock လျှော့ချခြင်း
                 if ($item->product_id) {
+                    // အကယ်၍ order item ထဲမှာ color ပါလာခဲ့လျှင် product_colors ထဲက stock ကို နှုတ်မည်
+                    if (!empty($item->color)) {
+                        ProductColor::where('product_id', $item->product_id)
+                            ->where(function ($query) use ($item) {
+                                $query->where('color', $item->color)
+                                    ->orWhere('color_name', $item->color);
+                            })
+                            ->decrement('stock', $item->quantity);
+                    }
+
+                    // မူလ Product table ထဲက general stock ကိုပါ တွဲလျော့လိုပါက ဤနေရာတွင် ထည့်နိုင်သည်
                     Product::where('id', $item->product_id)->decrement('stock', $item->quantity);
                 }
             }
@@ -97,7 +103,7 @@ class WalletPaymentController extends Controller
             // Order Status ကို Paid ပြောင်းမည်
             $order->update(['status' => 'paid']);
 
-            // Shopping Cart Cookie ကို ရှင်းထုတ်မည်
+            // Shopping Cart Cookie ကို ရှင်းထုတ်လိုပါက ဤနေရာတွင် ဖွင့်နိုင်သည်
             // Cookie::queue(Cookie::forget('shopping_cart'));
         });
 
