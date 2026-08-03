@@ -209,7 +209,7 @@
                                         {{ $item->product->name ?? 'Product Deleted' }}
                                     </h3>
                                     <p class="text-xs font-bold text-slate-600 mt-0.5">
-                                        Qty: <span class="text-[#ea580c] font-black">{{ $item->quantity }}</span> |
+                                        Quantity: <span class="text-[#ea580c] font-black">{{ $item->quantity }}</span> |
                                         Unit Price: <span
                                             class="text-[#104e35] font-black">{{ number_format($item->price) }} MMK</span>
                                         @if($item->color || $item->size)

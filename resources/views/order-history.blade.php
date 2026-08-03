@@ -105,7 +105,7 @@
 
                                         <!-- Quantity -->
                                         <td class="px-6 py-4 font-bold text-gray-800 dark:text-gray-200">
-                                            x {{ $item->quantity }}
+                                             {{ $item->quantity }}
                                         </td>
 
                                         <!-- Subtotal -->

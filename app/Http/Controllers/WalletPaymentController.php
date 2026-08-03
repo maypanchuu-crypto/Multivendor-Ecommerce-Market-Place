@@ -7,6 +7,7 @@ use App\Models\Order;
 use App\Models\User;
 use App\Models\Wallet;
 use App\Models\Product;
+use App\Models\ProductColor;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Cookie;
@@ -90,6 +91,15 @@ class WalletPaymentController extends Controller
                 }
 
                 if ($item->product_id) {
+                    if (!empty($item->color)) {
+                        ProductColor::where('product_id', $item->product_id)
+                            ->where(function ($query) use ($item) {
+                                $query->where('color', $item->color)
+                                    ->orWhere('color_name', $item->color);
+                            })
+                            ->decrement('stock', $item->quantity);
+                    }
+
                     Product::where('id', $item->product_id)->decrement('stock', $item->quantity);
                 }
             }
