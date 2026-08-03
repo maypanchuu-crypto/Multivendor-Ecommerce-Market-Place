@@ -41,9 +41,37 @@
                                         <td class="px-6 py-4 flex items-center gap-3">
                                             <div
                                                 class="w-12 h-12 rounded-xl bg-gray-100 dark:bg-gray-700 flex-shrink-0 overflow-hidden border border-gray-200 dark:border-gray-600">
-                                                @if(isset($item->product->image))
-                                                    <img src="{{ asset('storage/' . $item->product->image) }}"
-                                                        alt="{{ $item->product->name }}" class="w-full h-full object-cover">
+                                                @php
+                                                    $displayImage = null;
+
+                                                    // ၁။ Order တုန်းက အရောင် (color) ရွေးခဲ့ရင် သက်ဆိုင်ရာအရောင်ရဲ့ ပုံကို အရင်ရှာမည်
+                                                    if (!empty($item->color) && $item->product && method_exists($item->product, 'colorVariants')) {
+                                                        $colorVariant = $item->product->colorVariants->first(function ($variant) use ($item) {
+                                                            return strtolower(trim($variant->color_name ?? $variant->color ?? '')) === strtolower(trim($item->color));
+                                                        });
+                                                        if ($colorVariant && !empty($colorVariant->image_path)) {
+                                                            $displayImage = $colorVariant->image_path;
+                                                        }
+                                                    }
+
+                                                    // ၂။ အရောင်ပုံ မရှိရင် product_images ထဲက ပထမဆုံးပုံကို ယူမည်
+                                                    if (!$displayImage && $item->product && method_exists($item->product, 'images')) {
+                                                        $firstImage = $item->product->images->first();
+                                                        if ($firstImage && !empty($firstImage->image_path)) {
+                                                            $displayImage = $firstImage->image_path;
+                                                        }
+                                                    }
+
+                                                    // ၃။ အကယ်၍ အထက်ပါပုံတွေ မရှိမှသာ product table ထဲက image ကို fallback အနေနဲ့သုံးမည်
+                                                    if (!$displayImage && $item->product && !empty($item->product->image)) {
+                                                        $displayImage = $item->product->image;
+                                                    }
+                                                @endphp
+
+                                                @if($displayImage)
+                                                    <img src="{{ asset('storage/' . $displayImage) }}"
+                                                        alt="{{ $item->product->name ?? 'Product' }}"
+                                                        class="w-full h-full object-cover">
                                                 @else
                                                     <div class="w-full h-full flex items-center justify-center text-gray-400">
                                                         <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
