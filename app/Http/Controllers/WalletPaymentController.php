@@ -93,10 +93,7 @@ class WalletPaymentController extends Controller
                 if ($item->product_id) {
                     if (!empty($item->color)) {
                         ProductColor::where('product_id', $item->product_id)
-                            ->where(function ($query) use ($item) {
-                                $query->where('color', $item->color)
-                                    ->orWhere('color_name', $item->color);
-                            })
+                            ->where('color_name', $item->color)
                             ->decrement('stock', $item->quantity);
                     }
 
