@@ -30,9 +30,9 @@ class WalletController extends Controller
         $request->validate([
             'wallet_password' => 'required|string|min:6|confirmed',
         ], [
-            'wallet_password.required' => 'ကျေးဇူးပြု၍ Password ထည့်သွင်းပေးပါ။',
-            'wallet_password.min' => 'Password သည် အနည်းဆုံး ၆ လုံး ရှိရပါမည်။',
-            'wallet_password.confirmed' => 'Confirm Password မတူညီပါ။',
+            'wallet_password.required' => 'Please enter a password.',
+            'wallet_password.min' => 'Password must be at least 6 characters long.',
+            'wallet_password.confirmed' => 'The password confirmation does not match.',
         ]);
 
         // Wallet အသစ်ဆောက်ပေးပြီး Default Balance 2,000,000 ထည့်ပေးမည်

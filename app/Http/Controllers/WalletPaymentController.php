@@ -17,13 +17,16 @@ class WalletPaymentController extends Controller
     public function showPaymentPage($orderId)
     {
         $order = Order::with('items')->findOrFail($orderId);
+        $user = auth()->user();
+
+        $wallet = Wallet::where('user_id', $user->id)->first();
 
         // အော်ဒါက Paid ဖြစ်ပြီးသားဆိုလျှင် ပြန်ပေးမကြည့်ပါ
         if ($order->status === 'paid') {
             return response('<div style="text-align:center; padding:50px;"><h2>⚠️ This order has already been paid.</h2></div>');
         }
 
-        return view('wallet.pay', compact('order'));
+        return view('wallet.pay', compact('order', 'wallet'));
     }
 
     // ၂။ Password စစ်ဆေးပြီး Admin (2%) + Vendor (98%) ငွေခွဲပေးမည့် Logic

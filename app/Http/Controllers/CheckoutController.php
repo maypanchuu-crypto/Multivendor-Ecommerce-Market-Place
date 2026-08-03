@@ -44,7 +44,7 @@ class CheckoutController extends Controller
         if (empty($cart)) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Cart ထဲတွင် ပစ္စည်းများ မရှိပါ။'
+                'message' => 'Please add items to the cart before placing an order.'
             ], 400);
         }
 

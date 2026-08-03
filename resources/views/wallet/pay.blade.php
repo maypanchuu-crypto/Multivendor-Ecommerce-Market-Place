@@ -18,7 +18,9 @@
             <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 mb-6 text-left space-y-2">
                 <div class="flex justify-between text-xs text-slate-500 font-bold">
                     <span>Total Balance:</span>
-                    <span class="text-slate-800">#{{ $order->id }}</span>
+                    <span class="text-slate-800 font-black">
+                        {{ isset($wallet) ? number_format($wallet->balance) . ' MMK' : 'Wallet not found' }}
+                    </span>
                 </div>
                 <div class="flex justify-between text-xs text-slate-500 font-bold">
                     <span>Total Amount:</span>
@@ -40,7 +42,7 @@
                 @csrf
                 <div>
                     <label class="block text-xs font-bold text-slate-600 mb-2 uppercase tracking-wider text-left">
-                       Wallet Password *
+                        Wallet Password *
                     </label>
                     <input type="password" name="wallet_password" maxlength="6" pattern="[0-9]*" inputmode="numeric"
                         required

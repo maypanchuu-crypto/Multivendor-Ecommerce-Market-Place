@@ -9,7 +9,7 @@ use App\Http\Controllers\VendorDashboardController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\Admin\AdminFinanceController;
 use App\Http\Controllers\Vendor\VendorWalletController;
-use App\Http\Controllers\CheckoutController;
+// use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\UserManagementController;
 use App\Http\Controllers\OrderController;
@@ -146,6 +146,8 @@ Route::middleware('auth')->group(function () {
     //order payment via wallet
     Route::get('/wallet/pay/{orderId}', [WalletPaymentController::class, 'showPaymentPage'])->name('wallet.pay');
     Route::post('/wallet/pay/{orderId}', [WalletPaymentController::class, 'processPayment'])->name('wallet.pay.process');
+
+    Route::get('/my-orders', [OrderController::class, 'history'])->name('customer.orders.history');
 });
 
 // Route::get('/wallet/pay/{orderId}', function ($orderId) {

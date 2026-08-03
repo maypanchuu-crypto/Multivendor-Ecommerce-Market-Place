@@ -9,6 +9,7 @@ use App\Models\Product;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class OrderController extends Controller
 {
@@ -30,7 +31,7 @@ class OrderController extends Controller
         if (empty($cart)) {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Cart ထဲတွင် ပစ္စည်းများ မရှိပါ။'
+                'message' => 'Please add items to the cart before placing an order.'
             ], 400);
         }
 
@@ -103,7 +104,7 @@ class OrderController extends Controller
         $order = Order::find($orderId);
 
         if (!$order) {
-            return response('<h3>Order မတွေ့ရှိပါ!</h3>', 404);
+            return response('<h3>Order not found!</h3>', 404);
         }
 
         if ($order->status !== 'paid') {
@@ -113,9 +114,22 @@ class OrderController extends Controller
 
         return response('
         <div style="text-align: center; padding: 50px; font-family: sans-serif;">
-            <h2 style="color: green;">🎉 ငွေပေးချေမှု အောင်မြင်ပါသည်။</h2>
-            <p>Order #' . $orderId . ' အတွက် ပေးချေမှု ပြီးစီးပါပြီ။</p>
+            <h2 style="color: green;">🎉 Payment successful.</h2>
+            <p>Order has been paid successfully.</p>
         </div>
         ');
+    }
+
+    public function history()
+    {
+        // လက်ရှိ Login ဝင်ထားသော customer ၏ order များကို အသစ်ဆုံးမှ အဟောင်းသို့ စီ၍ ယူမည်
+        $orderItems = OrderItem::whereHas('order', function ($query) {
+            $query->where('user_id', Auth::id());
+        })
+            ->with(['order', 'product']) // Order နှင့် Product အချက်အလက်များပါ တွဲယူရန်
+            ->latest()
+            ->paginate(10);
+
+        return view('order-history', compact('orderItems'));
     }
 }

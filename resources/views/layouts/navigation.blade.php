@@ -106,7 +106,7 @@
                     @auth
                         <x-dropdown-link :href="route('profile.edit')"
                             class="!text-amber-500 dark:!text-amber-400 hover:!text-amber-600 dark:hover:!text-amber-300">{{ __('Profile') }}</x-dropdown-link>
-                        @if(!isset($hideRoleMenu) || !$hideRoleMenu)
+                        <!-- @if(!isset($hideRoleMenu) || !$hideRoleMenu)
                             @if(Auth::check() && Auth::user()->role === 'vendor')
                                 <x-dropdown-link :href="route('vendor.dashboard')"
                                     class="!text-amber-500 dark:!text-amber-400 hover:!text-amber-600 dark:hover:!text-amber-300">
@@ -123,14 +123,14 @@
                                     {{ __('Vendor Registration') }}
                                 </x-dropdown-link>
                             @endif
-                        @endif
+                        @endif -->
 
-                        @if(Auth::check() && Auth::user()->role === 'customer')
+                        <!-- @if(Auth::check() && Auth::user()->role === 'customer')
                             <x-dropdown-link :href="route('wallet.index')"
                                 class="!text-amber-500 dark:!text-amber-400 hover:!text-amber-600 dark:hover:!text-amber-300">
                                 {{ __('Wallet') }}
                             </x-dropdown-link>
-                        @endif
+                        @endif -->
                         
 
                         <!-- @if(!isset($hideDarkMode) || !$hideDarkMode)
