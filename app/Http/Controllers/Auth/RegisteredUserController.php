@@ -34,25 +34,23 @@ class RegisteredUserController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
 
-            // ၁။ 📬 Email ကို ပိုမိုတိကျစေရန် regex (Regular Expression) ဖြင့် စစ်ဆေးခြင်း
+            // 💡 ဤနေရာတွင် email:rfc,dns ကို သုံးခြင်းဖြင့် Domain တကယ်ရှိမရှိ စစ်ဆေးမည်
             'email' => [
                 'required',
                 'string',
+                'email:rfc,dns',
                 'lowercase',
                 'max:255',
                 'unique:' . User::class,
-                // regex က name@domain.com / .net / .org ပုံစံမျိုး မှန်ကန်မှသာ လက်ခံပါမည်
-                'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/'
             ],
 
-            
             'password' => [
                 'required',
                 'confirmed',
-                Rules\Password::min(8) 
-                    ->letters()       
-                    ->numbers()        
-                    ->symbols()        
+                Rules\Password::min(8)
+                    ->letters()
+                    ->numbers()
+                    ->symbols()
             ],
         ]);
 
