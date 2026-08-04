@@ -198,7 +198,18 @@
                             class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Contact
                             Phone Number</label>
                         <input type="text" id="shop_phone" name="shop_phone"
-                            value="{{ old('shop_phone', $user->shop_phone) }}"
+                            value="{{ old('shop_phone', $user->shop_phone ?? '09') }}" maxlength="11" oninput="
+
+                                        let val = this.value.replace(/[^0-9]/g, '');
+
+                                        if (!val.startsWith('09')) {
+                                            val = '09' + val.replace(/^0+/, '');
+                                        }
+                                        if (val.length > 11) {
+                                            val = val.slice(0, 11);
+                                        }
+                                        this.value = val;
+                                    "
                             class="input-3d w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-2xl text-sm font-bold focus:outline-none dark:text-white @error('shop_phone') border-rose-500 @enderror"
                             placeholder="e.g. 09123456789">
                         @error('shop_phone')
