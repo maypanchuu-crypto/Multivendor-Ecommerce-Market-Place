@@ -193,7 +193,7 @@
                         </a>
 
                         <!-- Dark Mode Toggle Row -->
-                        <div id="darkModeRow"
+                        <!-- <div id="darkModeRow"
                             class="flex items-center justify-between px-3.5 py-3 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-500 text-gray-900 font-extrabold text-sm border-b-4 border-r-2 border-amber-700 shadow-[0_6px_0_0_rgba(0,0,0,0.2)] hover:translate-y-1 hover:shadow-[0_2px_0_0_rgba(0,0,0,0.2)] active:translate-y-1.5 active:shadow-none transition-all cursor-pointer select-none">
                             <span class="flex items-center gap-3">
                                 <svg class="w-5 h-5 text-gray-900" fill="none" stroke="currentColor" stroke-width="2"
@@ -210,7 +210,7 @@
                                     class="absolute inset-0 bg-black/20 rounded-full transition-colors peer-checked:bg-black/60 after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-4">
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
                 </div>
 

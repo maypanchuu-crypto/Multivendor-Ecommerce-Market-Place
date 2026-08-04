@@ -55,7 +55,7 @@
                     Customer Marketplace
                 </a>
 
-                <a href="#"
+                <a href="{{ route('wallet.index') }}"
                     class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white dark:bg-emerald-950 border-2 border-[#065f46] dark:border-emerald-300 text-[#065f46] dark:text-emerald-100 font-black text-sm shadow-[2px_3px_0px_0px_#065f46] dark:shadow-[2px_3px_0px_0px_#a7f3d0] hover:translate-y-[-2px] active:translate-y-[2px] transition-all">
                     <svg class="w-5 h-5 text-[#065f46] dark:text-emerald-300 stroke-[2.5]" fill="none"
                         stroke="currentColor" viewBox="0 0 24 24">
@@ -65,7 +65,7 @@
                     Wallet
                 </a>
 
-                <a href="#"
+                <!-- <a href="#"
                     class="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white dark:bg-emerald-950 border-2 border-[#065f46] dark:border-emerald-300 text-[#065f46] dark:text-emerald-100 font-black text-sm shadow-[2px_3px_0px_0px_#065f46] dark:shadow-[2px_3px_0px_0px_#a7f3d0] hover:translate-y-[-2px] active:translate-y-[2px] transition-all">
                     <svg class="w-5 h-5 text-[#065f46] dark:text-emerald-300 stroke-[2.5]" fill="none"
                         stroke="currentColor" viewBox="0 0 24 24">
@@ -74,7 +74,7 @@
                         </path>
                     </svg>
                     Messages
-                </a>
+                </a> -->
 
                 <!-- Dark Mode Toggle Button -->
                 <div id="darkModeRow"

@@ -196,29 +196,16 @@
                     <div>
                         <label for="shop_phone"
                             class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Contact
-                            Phone Number *</label>
-
-                        <!-- 💡 3D Phone Input Box with Alpine.js -->
-                        <div class="relative flex items-center"
-                            x-data="{ phoneSuffix: '{{ old('shop_phone') ? substr(old('shop_phone'), 2) : (isset($user->shop_phone) ? substr($user->shop_phone, 2) : '') }}' }">
-                            <span
-                                class="absolute left-3 bg-orange-100 dark:bg-orange-950/60 border border-orange-200 dark:border-orange-800 text-orange-800 dark:text-orange-400 text-xs font-black px-2.5 py-1.5 rounded-xl select-none shadow-sm">
-                                09
-                            </span>
-
-                            <!-- 💡 style="display: none;" အစား type="hidden" ကို သုံးမှသာ Controller သို့ တန်ဖိုးပါသွားမည် -->
-                            <input type="hidden" id="shop_phone" name="shop_phone" :value="'09' + phoneSuffix">
-
-                            <input type="text" maxlength="9" x-model="phoneSuffix"
-                                @input="phoneSuffix = $event.target.value.replace(/[^0-9]/g, '')"
-                                class="input-3d w-full border border-gray-200 dark:border-gray-600 p-3 pl-16 rounded-2xl text-sm font-bold text-gray-900 dark:text-white outline-none @error('shop_phone') border-rose-500 @enderror"
-                                placeholder="xxxxxxxxx">
-                        </div>
-
+                            Phone Number</label>
+                        <input type="text" id="shop_phone" name="shop_phone"
+                            value="{{ old('shop_phone', $user->shop_phone) }}"
+                            class="input-3d w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-2xl text-sm font-bold focus:outline-none dark:text-white @error('shop_phone') border-rose-500 @enderror"
+                            placeholder="e.g. 09123456789">
                         @error('shop_phone')
-                        <p class="text-rose-500 text-[11px] mt-1 font-bold">{{ $message }}</p> @enderror
+                            <p class="text-rose-500 text-[11px] mt-1 font-bold">{{ $message }}</p>
+                        @enderror
                     </div>
-            
+
                     <div>
                         <label for="shop_description"
                             class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Shop
