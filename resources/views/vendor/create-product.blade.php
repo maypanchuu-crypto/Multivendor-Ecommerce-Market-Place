@@ -95,7 +95,7 @@
 
     <body class="text-gray-900 dark:text-gray-100 min-h-screen pb-24 relative overflow-x-hidden">
 
-        <main class="max-w-2xl mx-auto px-4 py-8">            
+        <main class="max-w-2xl mx-auto px-4 py-8">
 
             <!-- 💡 Main 3D Card Container -->
             <div
@@ -129,6 +129,20 @@
                             class="block text-xs font-black text-emerald-950 dark:text-emerald-100 uppercase mb-2">Product
                             Name</label>
                         <input type="text" id="name" name="name" value="{{ old('name') }}" required
+                            pattern="([A-Z][a-z]*\s*)+"
+                            title="Each word must start with an uppercase letter followed by lowercase letters (Letters only)."
+                            oninput="
+                            
+                                let val = this.value.replace(/[^a-zA-Z\s]/g, '');
+                                
+                                let words = val.split(' ');
+                                let formattedWords = words.map(word => {
+                                    if (word.length === 0) return '';
+                                    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+                                });
+                                
+                                this.value = formattedWords.join(' ');
+                            "
                             class="w-full px-4 py-2.5 bg-emerald-50 dark:bg-emerald-950 border-2 border-emerald-800 dark:border-emerald-300 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-orange-500 dark:text-white shadow-[2px_3px_0px_0px_#065f46] dark:shadow-[2px_3px_0px_0px_#a7f3d0]"
                             placeholder="e.g. Close Up Toothpaste">
                     </div>
@@ -138,7 +152,17 @@
                         <label for="price"
                             class="block text-xs font-black text-emerald-950 dark:text-emerald-100 uppercase mb-2">Price
                             (MMK)</label>
-                        <input type="number" id="price" name="price" value="{{ old('price') }}" min="0" required
+                        <input type="number" id="price" name="price" value="{{ old('price') }}" min="100" max="2000000"
+                            required oninput="
+                                if(this.value !== '') {
+                                    let val = parseInt(this.value);
+                                    if(val > 2000000) this.value = 2000000;
+                                }
+                            " onblur="
+                                if(this.value !== '' && parseInt(this.value) < 100) {
+                                    this.value = 100;
+                                }
+                            "
                             class="w-full px-4 py-2.5 bg-emerald-50 dark:bg-emerald-950 border-2 border-emerald-800 dark:border-emerald-300 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-orange-500 dark:text-white shadow-[2px_3px_0px_0px_#065f46] dark:shadow-[2px_3px_0px_0px_#a7f3d0]"
                             placeholder="e.g. 70000">
                     </div>

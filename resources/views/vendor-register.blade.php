@@ -187,6 +187,20 @@
                             class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Shop
                             Name</label>
                         <input type="text" id="shop_name" name="shop_name" value="{{ old('shop_name', $user->shop_name) }}"
+                            pattern="([A-Z][a-z&'\s]*)+"
+                            title="Each word must start with an uppercase letter followed by lowercase letters. Special characters '&' and ''' are allowed."
+                            oninput="
+                                            
+                                            let val = this.value.replace(/[^a-zA-Z\s&'()]/g, '');
+                                            
+                                            let words = val.split(' ');
+                                            let formattedWords = words.map(word => {
+                                                if (word.length === 0) return '';
+                                                return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+                                            });
+                                            
+                                            this.value = formattedWords.join(' ');
+                                        "
                             class="input-3d w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-2xl text-sm font-bold focus:outline-none dark:text-white @error('shop_name') border-rose-500 @enderror"
                             placeholder="Enter your shop name">
                         @error('shop_name')
@@ -198,20 +212,29 @@
                             class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Contact
                             Phone Number</label>
                         <input type="text" id="shop_phone" name="shop_phone"
-                            value="{{ old('shop_phone', $user->shop_phone ?? '09') }}" maxlength="11" oninput="
+                            value="{{ old('shop_phone', $user->shop_phone ?? '09') }}" maxlength="11" minlength="8"
+                            pattern="09[0-9]{6,9}"
+                            title="Phone number must start with 09 and contain 8 to 11 digits in total." oninput="
+                            
+                                    let val = this.value.replace(/[^0-9]/g, '');
+                                    
+                                    if (!val.startsWith('09')) {
+                                        val = '09' + val.replace(/^0+/, '');
+                                    }
+                                        
+                                    if (val.length > 11) {
+                                        val = val.slice(0, 11);
+                                    }
 
-                                        let val = this.value.replace(/[^0-9]/g, '');
-
-                                        if (!val.startsWith('09')) {
-                                            val = '09' + val.replace(/^0+/, '');
-                                        }
-                                        if (val.length > 11) {
-                                            val = val.slice(0, 11);
-                                        }
-                                        this.value = val;
-                                    "
+                                    this.value = val;
+                                " onkeydown="
+                                
+                                    if ((event.key === 'Backspace' || event.key === 'Delete') && this.selectionStart <= 2) {
+                                        event.preventDefault();
+                                    }
+                                "
                             class="input-3d w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-2xl text-sm font-bold focus:outline-none dark:text-white @error('shop_phone') border-rose-500 @enderror"
-                            placeholder="e.g. 09123456789">
+                            placeholder="09*********">
                         @error('shop_phone')
                             <p class="text-rose-500 text-[11px] mt-1 font-bold">{{ $message }}</p>
                         @enderror

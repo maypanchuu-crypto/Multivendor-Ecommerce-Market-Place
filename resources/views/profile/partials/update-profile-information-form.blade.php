@@ -26,7 +26,19 @@
             <label for="name"
                 class="block text-xs font-bold uppercase tracking-wider text-orange-100 mb-1.5">Name</label>
             <input id="name" name="name" type="text" value="{{ old('name', $user->name) }}" required autofocus
-                autocomplete="name"
+                autocomplete="name" pattern="([A-Z][a-z]*\s*)+"
+                title="Each word must start with an uppercase letter followed by lowercase letters." oninput="
+                
+                    let val = this.value.replace(/[^a-zA-Z\s]/g, '');
+                    
+                    let words = val.split(' ');
+                    let formattedWords = words.map(word => {
+                        if (word.length === 0) return '';
+                        return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+                    });
+                    
+                    this.value = formattedWords.join(' ');
+                "
                 class="w-full px-4 py-3 rounded-xl bg-white text-slate-800 font-semibold text-sm focus:ring-2 focus:ring-amber-300 focus:outline-none shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)]">
             <x-input-error class="mt-1.5 text-xs text-yellow-200 font-bold" :messages="$errors->get('name')" />
         </div>

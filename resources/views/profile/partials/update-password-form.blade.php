@@ -32,7 +32,8 @@
             <label for="update_password_password"
                 class="block text-xs font-bold uppercase tracking-wider text-orange-100 mb-1.5">New Password</label>
             <input id="update_password_password" name="password" type="password" autocomplete="new-password"
-                placeholder="••••••••"
+                placeholder="••••••••" required minlength="8" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}"
+                title="Must contain at least one number, one uppercase and lowercase letter, one special character, and at least 8 or more characters"
                 class="w-full px-4 py-3 rounded-xl bg-white text-slate-800 font-semibold text-sm focus:ring-2 focus:ring-amber-300 focus:outline-none shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)]">
             <x-input-error :messages="$errors->updatePassword->get('password')"
                 class="mt-1.5 text-xs text-yellow-200 font-bold" />

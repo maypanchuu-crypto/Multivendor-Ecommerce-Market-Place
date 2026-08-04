@@ -203,7 +203,22 @@
                     <div class="input-group">
                         <label for="name" :value="__('Name')">Name</label>
                         <input type="text" id="name" name="name" :value="old('name')" required autofocus
-                            autocomplete="name" placeholder="Your Name">
+                            autocomplete="name" placeholder="Your Name" pattern="([A-Z][a-z]*\s*)+"
+                            title="Each word must start with an uppercase letter followed by lowercase letters."
+                            oninput="
+                                // အင်္ဂလိပ်စာလုံးနှင့် Space မှလွဲ၍ ကျန်သည်များကို ဖယ်ထုတ်မည်
+                                let val = this.value.replace(/[^a-zA-Z\s]/g, '');
+                                
+                                // စကားလုံးတစ်ခုချင်းစီကို ခွဲထုတ်ပြီး ပထမစာလုံး အကြီး၊ ကျန်စာလုံး အသေး ပြောင်းမည်
+                                let words = val.split(' ');
+                                let formattedWords = words.map(word => {
+                                    if (word.length === 0) return '';
+                                    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+                                });
+                                
+                                // Space ပါဝင်မှုကို ထိန်းသိမ်း၍ ပြန်ပေါင်းမည်
+                                this.value = formattedWords.join(' ');
+                            ">
                         <x-input-error :messages="$errors->get('name')" class="mt-2" />
                     </div>
 
@@ -217,9 +232,10 @@
                     <div class="input-group">
                         <label for="password" :value="__('Password')">Password</label>
                         <div class="password-container">
-                            <input type="password" id="password" name="password" placeholder="••••••••"
-                                pattern="(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*?&#()_-:;{}[]+=\<>./|])[A-Za-z\d@$!%*?&#()_-:;{}[]+=\<>./|]{8,}"
-                                class="password-input" required autocomplete="new-password">
+                            <input type="password" id="password" name="password" placeholder="••••••••" required
+                                minlength="8" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}"
+                                title="Must contain at least one number, one uppercase and lowercase letter, one special character, and at least 8 or more characters"
+                                class="password-input" autocomplete="new-password">
                             <i class="fas fa-eye-slash toggle-icon" onclick="togglePasswordVisibility(this)"></i>
                         </div>
                         <x-input-error :messages="$errors->get('password')" class="mt-2" />
@@ -229,7 +245,10 @@
                         <label for="password_confirmation" :value="__('Confirm Password')">Confirm Password</label>
                         <div class="password-container">
                             <input type="password" id="password_confirmation" name="password_confirmation"
-                                placeholder="••••••••" class="password-input" required autocomplete="new-password">
+                                placeholder="••••••••" required minlength="8"
+                                pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{8,}"
+                                title="Must contain at least one number, one uppercase and lowercase letter, one special character, and at least 8 or more characters"
+                                class="password-input" autocomplete="new-password">
                             <i class="fas fa-eye-slash toggle-icon" onclick="togglePasswordVisibility(this)"></i>
                         </div>
                         <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
