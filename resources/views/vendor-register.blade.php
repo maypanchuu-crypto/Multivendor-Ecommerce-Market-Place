@@ -189,19 +189,35 @@
                         <input type="text" id="shop_name" name="shop_name" value="{{ old('shop_name', $user->shop_name) }}"
                             class="input-3d w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-2xl text-sm font-bold focus:outline-none dark:text-white @error('shop_name') border-rose-500 @enderror"
                             placeholder="Enter your shop name">
-                        @error('shop_name') <p class="text-rose-500 text-[11px] mt-1 font-bold">{{ $message }}</p> @enderror
+                        @error('shop_name')
+                        <p class="text-rose-500 text-[11px] mt-1 font-bold">{{ $message }}</p> @enderror
                     </div>
 
                     <div>
                         <label for="shop_phone"
                             class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Contact
-                            Phone Number</label>
-                        <input type="text" id="shop_phone" name="shop_phone"
-                            value="{{ old('shop_phone', $user->shop_phone) }}"
-                            class="input-3d w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-2xl text-sm font-bold focus:outline-none dark:text-white @error('shop_phone') border-rose-500 @enderror"
-                            placeholder="e.g. 09123456789">
-                        @error('shop_phone') <p class="text-rose-500 text-[11px] mt-1 font-bold">{{ $message }}</p>
-                        @enderror
+                            Phone Number *</label>
+
+                        <!-- 💡 Checkout ပုံစံကဲ့သို့ 09 အသေပါသော 3D Phone Input Box -->
+                        <div class="relative flex items-center"
+                            x-data="{ phoneSuffix: '{{ old('shop_phone') ? substr(old('shop_phone'), 2) : '' }}' }">
+                            <span
+                                class="absolute left-3 bg-orange-100 dark:bg-orange-950/60 border border-orange-200 dark:border-orange-800 text-orange-800 dark:text-orange-400 text-xs font-black px-2.5 py-1.5 rounded-xl select-none shadow-sm">
+                                09
+                            </span>
+
+                            <input type="text" id="shop_phone" name="shop_phone" :value="'09' + phoneSuffix"
+                                style="display: none;">
+                            <!-- Backend သို့ ပို့ရန် 09 အပြည့်အစုံကို Hidden Form အနေဖြင့် သိမ်းမည် -->
+
+                            <input type="text" maxlength="9" x-model="phoneSuffix"
+                                @input="phoneSuffix = $event.target.value.replace(/[^0-9]/g, '')"
+                                class="input-3d w-full border border-gray-200 dark:border-gray-600 p-3 pl-16 rounded-2xl text-sm font-bold text-gray-900 dark:text-white outline-none @error('shop_phone') border-rose-500 @enderror"
+                                placeholder="xxxxxxxxx">
+                        </div>
+
+                        @error('shop_phone')
+                        <p class="text-rose-500 text-[11px] mt-1 font-bold">{{ $message }}</p> @enderror
                     </div>
 
                     <div>
@@ -211,7 +227,8 @@
                         <textarea id="shop_description" name="shop_description" rows="3"
                             class="input-3d w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-2xl text-sm font-bold focus:outline-none dark:text-white @error('shop_description') border-rose-500 @enderror"
                             placeholder="What are you selling?">{{ old('shop_description', $user->shop_description) }}</textarea>
-                        @error('shop_description') <p class="text-rose-500 text-[11px] mt-1 font-bold">{{ $message }}</p>
+                        @error('shop_description')
+                            <p class="text-rose-500 text-[11px] mt-1 font-bold">{{ $message }}</p>
                         @enderror
                     </div>
 

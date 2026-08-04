@@ -212,7 +212,7 @@
         </div>
     </div>
 
-    <!-- 💡 Alpine.js Logic (ကျန်ရှိမြဲ) -->
+    
     <script>
         function checkoutForm() {
             return {
