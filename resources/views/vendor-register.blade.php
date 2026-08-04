@@ -198,17 +198,16 @@
                             class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Contact
                             Phone Number *</label>
 
-                        <!-- 💡 Checkout ပုံစံကဲ့သို့ 09 အသေပါသော 3D Phone Input Box -->
+                        <!-- 💡 3D Phone Input Box with Alpine.js -->
                         <div class="relative flex items-center"
-                            x-data="{ phoneSuffix: '{{ old('shop_phone') ? substr(old('shop_phone'), 2) : '' }}' }">
+                            x-data="{ phoneSuffix: '{{ old('shop_phone') ? substr(old('shop_phone'), 2) : (isset($user->shop_phone) ? substr($user->shop_phone, 2) : '') }}' }">
                             <span
                                 class="absolute left-3 bg-orange-100 dark:bg-orange-950/60 border border-orange-200 dark:border-orange-800 text-orange-800 dark:text-orange-400 text-xs font-black px-2.5 py-1.5 rounded-xl select-none shadow-sm">
                                 09
                             </span>
 
-                            <input type="text" id="shop_phone" name="shop_phone" :value="'09' + phoneSuffix"
-                                style="display: none;">
-                            <!-- Backend သို့ ပို့ရန် 09 အပြည့်အစုံကို Hidden Form အနေဖြင့် သိမ်းမည် -->
+                            <!-- 💡 style="display: none;" အစား type="hidden" ကို သုံးမှသာ Controller သို့ တန်ဖိုးပါသွားမည် -->
+                            <input type="hidden" id="shop_phone" name="shop_phone" :value="'09' + phoneSuffix">
 
                             <input type="text" maxlength="9" x-model="phoneSuffix"
                                 @input="phoneSuffix = $event.target.value.replace(/[^0-9]/g, '')"
