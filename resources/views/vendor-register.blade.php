@@ -218,7 +218,7 @@
                         @error('shop_phone')
                         <p class="text-rose-500 text-[11px] mt-1 font-bold">{{ $message }}</p> @enderror
                     </div>
-
+            
                     <div>
                         <label for="shop_description"
                             class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Shop

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<x-app-layout :hideSearch="true" :cartIcon="true" :messageIcon="true" :hideRoleMenu="true" :hideDropdown="true">
+<x-app-layout :hideNav="true">
     <x-slot name="header">
         <div class="flex items-center gap-3">
             <h2 class="text-base font-black tracking-wide text-orange-500 dark:text-orange-400">
