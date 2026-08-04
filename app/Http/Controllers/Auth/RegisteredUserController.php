@@ -34,22 +34,25 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:' . User::class],
-            'password' => ['required', 'confirmed', Rules\Password::min(8)->letters()->numbers()->symbols()],
+            
+            'email' => [
+                'required',
+                'string',
+                'email:rfc,dns',
+                'lowercase',
+                'max:255',
+                'unique:' . User::class,
+            ],
+
+            'password' => [
+                'required',
+                'confirmed',
+                Rules\Password::min(8)
+                    ->letters()
+                    ->numbers()
+                    ->symbols()
+            ],
         ]);
-
-        // 💡 ၃။ အမှန်တကယ်သုံးနေသော Email ဟုတ်မဟုတ် API ဖြင့် စစ်ဆေးခြင်း
-        $response = Http::get("https://emailvalidation.abstractapi.com/v1/", [
-            'api_key' => 'YOUR_ABSTRACT_API_KEY', // Abstract API website မှာ အခမဲ့ Acess Key ယူသုံးနိုင်သည်
-            'email' => $request->email
-        ]);
-
-        $result = $response->json();
-
-        // deliverability က DELIVERABLE ဖြစ်မှသာ (တကယ်ရှိမှသာ) လက်ခံမည်
-        if (!isset($result['deliverability']) || $result['deliverability'] !== 'DELIVERABLE') {
-            return back()->withErrors(['email' => 'The email address does not exist or cannot receive mail.'])->withInput();
-        }
 
         $user = User::create([
             'name' => $request->name,
