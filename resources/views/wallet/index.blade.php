@@ -127,10 +127,10 @@
                             <div>
                                 <label for="wallet_password"
                                     class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Wallet
-                                    Password</label>
-                                <input type="password" name="wallet_password" id="wallet_password" required
-                                    placeholder="••••••••"
-                                    class="w-full px-4 py-3.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-sm placeholder-slate-400 focus:bg-white focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500 transition-all duration-200 focus:outline-none shadow-[inset_0_2px_4px_rgba(0,0,0,0.03)]">
+                                    Password (6-Digit PIN)</label>
+                                <input type="password" name="wallet_password" id="wallet_password" required maxlength="6"
+                                    pattern="[0-9]{6}" inputmode="numeric" placeholder="••••••"
+                                    class="w-full px-4 py-4 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-center text-lg tracking-[0.5em] placeholder-slate-400 focus:bg-white focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500 transition-all duration-200 focus:outline-none shadow-[inset_0_2px_4px_rgba(0,0,0,0.03)]">
                                 @error('wallet_password')
                                     <span class="text-xs text-rose-500 font-semibold mt-1.5 block">{{ $message }}</span>
                                 @enderror
@@ -141,8 +141,8 @@
                                     class="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">Confirm
                                     Password</label>
                                 <input type="password" name="wallet_password_confirmation" id="wallet_password_confirmation"
-                                    required placeholder="••••••••"
-                                    class="w-full px-4 py-3.5 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-sm placeholder-slate-400 focus:bg-white focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500 transition-all duration-200 focus:outline-none shadow-[inset_0_2px_4px_rgba(0,0,0,0.03)]">
+                                    required maxlength="6" pattern="[0-9]{6}" inputmode="numeric" placeholder="••••••"
+                                    class="w-full px-4 py-4 rounded-xl bg-slate-50 border border-slate-200 text-slate-800 text-center text-lg tracking-[0.5em] placeholder-slate-400 focus:bg-white focus:ring-2 focus:ring-amber-500/30 focus:border-amber-500 transition-all duration-200 focus:outline-none shadow-[inset_0_2px_4px_rgba(0,0,0,0.03)]">
                             </div>
 
                             <div class="pt-2">

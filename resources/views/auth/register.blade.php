@@ -209,7 +209,7 @@
 
                     <div class="input-group">
                         <label for="email" :value="__('Email')">Email</label>
-                        <input type="email" id="email" name="email" placeholder="you@example.com" :value="old('email')"
+                        <input type="email" id="email" name="email" placeholder="you@gmail.com" :value="old('email')"
                             required pattern="[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}" autocomplete="username">
                         <x-input-error :messages="$errors->get('email')" class="mt-2" />
                     </div>

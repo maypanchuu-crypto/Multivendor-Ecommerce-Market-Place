@@ -215,7 +215,7 @@
                     if (currentVal < maxVal) {
                         currentVal += 1;
                     } else {
-                        alert("ရွေးချယ်ထားသော အရောင်အတွက် Stock အရေအတွက် " + maxVal + " ခုပြည့်သွားပါပြီ။ ထပ်တိုး၍ မရပါ။");
+                        alert("Maximum stock capacity reached ({$availableStock} items.");
                         return;
                     }
                 } else if (this.classList.contains('minus-btn') && currentVal > 1) {

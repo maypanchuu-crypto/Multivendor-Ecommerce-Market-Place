@@ -199,7 +199,7 @@
                     @csrf
                     <div class="input-group">
                         <label for="email" :value="__('Email')">Email</label>
-                        <input type="email" id="email" name="email" placeholder="you@example.com" :value="old('email')"
+                        <input type="email" id="email" name="email" placeholder="you@gmail.com" :value="old('email')"
                             required autofocus autocomplete="username">
                         <x-input-error :messages="$errors->get('email')" class="mt-2" />
                     </div>
