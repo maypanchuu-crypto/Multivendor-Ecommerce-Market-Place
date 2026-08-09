@@ -129,22 +129,18 @@
                             class="block text-xs font-black text-emerald-950 dark:text-emerald-100 uppercase mb-2">Product
                             Name</label>
                         <input type="text" id="name" name="name" value="{{ old('name') }}" required
-                            pattern="([A-Z][a-z]*\s*)+"
-                            title="Each word must start with an uppercase letter followed by lowercase letters (Letters only)."
-                            oninput="
+                            title="Must start with at least one letter, and numbers can follow after." oninput="
+                            let val = this.value;
                             
-                                let val = this.value.replace(/[^a-zA-Z\s]/g, '');
-                                
-                                let words = val.split(' ');
-                                let formattedWords = words.map(word => {
-                                    if (word.length === 0) return '';
-                                    return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-                                });
-                                
-                                this.value = formattedWords.join(' ');
-                            "
-                            class="w-full px-4 py-2.5 bg-emerald-50 dark:bg-emerald-950 border-2 border-emerald-800 dark:border-emerald-300 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-orange-500 dark:text-white shadow-[2px_3px_0px_0px_#065f46] dark:shadow-[2px_3px_0px_0px_#a7f3d0]"
-                            placeholder="e.g. Close Up Toothpaste">
+                            if (val.length === 1) {
+                                this.value = val.replace(/[^a-zA-Z]/g, '');
+                            } else if (val.length > 1) {
+                                let firstChar = val.charAt(0).toUpperCase();
+                                let remaining = val.slice(1).replace(/[^a-zA-Z0-9\s]/g, '');
+                                this.value = firstChar + remaining;
+                            }
+                        " class="w-full px-4 py-2.5 bg-emerald-50 dark:bg-emerald-950 border-2 border-emerald-800 dark:border-emerald-300 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-orange-500 dark:text-white shadow-[2px_3px_0px_0px_#065f46] dark:shadow-[2px_3px_0px_0px_#a7f3d0]"
+                                            placeholder="e.g. A4">
                     </div>
 
                     <!-- Price -->
@@ -174,7 +170,7 @@
                             Description</label>
                         <textarea id="description" name="description" rows="3"
                             class="w-full px-4 py-2.5 bg-emerald-50 dark:bg-emerald-950 border-2 border-emerald-800 dark:border-emerald-300 rounded-xl text-sm font-bold focus:outline-none focus:ring-2 focus:ring-orange-500 dark:text-white shadow-[2px_3px_0px_0px_#065f46] dark:shadow-[2px_3px_0px_0px_#a7f3d0]"
-                            placeholder="Toothpaste description...">{{ old('description') }}</textarea>
+                            placeholder="Product description...">{{ old('description') }}</textarea>
                     </div>
 
                     <!-- 🔘 Color Checkbox Switch -->

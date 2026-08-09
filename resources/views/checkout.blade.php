@@ -102,7 +102,9 @@
                                 Name *</label>
                             <input type="text"
                                 class="input-3d w-full border border-slate-200 p-3 rounded-2xl text-sm font-bold text-slate-700 outline-none"
-                                x-model="customer_name" placeholder="Enter recipient name...">
+                                x-model="customer_name"
+                                @input="customer_name = customer_name.replace(/[^a-zA-Z\s]/g, '').toLowerCase().replace(/\b\w/g, c => c.toUpperCase())"
+                                placeholder="Enter recipient name...">
                         </div>
 
                         <!-- 💡 PHONE INPUT BOX WITH 3D BADGE -->
@@ -212,7 +214,7 @@
         </div>
     </div>
 
-    
+
     <script>
         function checkoutForm() {
             return {

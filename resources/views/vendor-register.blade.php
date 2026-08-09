@@ -179,115 +179,112 @@
             @endif
 
             @if($user->vendor_status !== 'pending')
-                <form action="{{ route('vendor.register.submit') }}" method="POST" class="space-y-6">
-                    @csrf
+                    <form action="{{ route('vendor.register.submit') }}" method="POST" class="space-y-6">
+                        @csrf
 
-                    <div>
-                        <label for="shop_name"
-                            class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Shop
-                            Name</label>
-                        <input type="text" id="shop_name" name="shop_name" value="{{ old('shop_name', $user->shop_name) }}"
-                            pattern="([A-Z][a-z&'\s]*)+"
-                            title="Each word must start with an uppercase letter followed by lowercase letters. Special characters '&' and ''' are allowed."
-                            oninput="
-                                            
-                                            let val = this.value.replace(/[^a-zA-Z\s&'()]/g, '');
-                                            
-                                            let words = val.split(' ');
-                                            let formattedWords = words.map(word => {
-                                                if (word.length === 0) return '';
-                                                return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-                                            });
-                                            
-                                            this.value = formattedWords.join(' ');
-                                        "
-                            class="input-3d w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-2xl text-sm font-bold focus:outline-none dark:text-white @error('shop_name') border-rose-500 @enderror"
-                            placeholder="Enter your shop name">
-                        @error('shop_name')
-                        <p class="text-rose-500 text-[11px] mt-1 font-bold">{{ $message }}</p> @enderror
-                    </div>
-
-                    <div>
-                        <label for="shop_phone"
-                            class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Contact
-                            Phone Number</label>
-                        <input type="text" id="shop_phone" name="shop_phone"
-                            value="{{ old('shop_phone', $user->shop_phone ?? '09') }}" maxlength="11" minlength="8"
-                            pattern="09[0-9]{6,9}"
-                            title="Phone number must start with 09 and contain 8 to 11 digits in total." oninput="
-                            
-                                    let val = this.value.replace(/[^0-9]/g, '');
-                                    
-                                    if (!val.startsWith('09')) {
-                                        val = '09' + val.replace(/^0+/, '');
-                                    }
-                                        
-                                    if (val.length > 11) {
-                                        val = val.slice(0, 11);
-                                    }
-
-                                    this.value = val;
-                                " onkeydown="
+                        <div>
+                            <label for="shop_name"
+                                class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Shop
+                                Name</label>
+                            <input type="text" id="shop_name" name="shop_name" value="{{ old('shop_name', $user->shop_name) }}"
+                                pattern="([A-Z][a-zA-Z0-9&'\s()]*)+"
+                                title="Each word must start with an uppercase letter, followed by lowercase letters, numbers, or special characters '&', ''', '(', ')'."
+                                oninput="
+                                let val = this.value;
                                 
-                                    if ((event.key === 'Backspace' || event.key === 'Delete') && this.selectionStart <= 2) {
-                                        event.preventDefault();
-                                    }
-                                "
-                            class="input-3d w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-2xl text-sm font-bold focus:outline-none dark:text-white @error('shop_phone') border-rose-500 @enderror"
-                            placeholder="09*********">
-                        @error('shop_phone')
-                            <p class="text-rose-500 text-[11px] mt-1 font-bold">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <div>
-                        <label for="shop_description"
-                            class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Shop
-                            Description</label>
-                        <textarea id="shop_description" name="shop_description" rows="3"
-                            class="input-3d w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-2xl text-sm font-bold focus:outline-none dark:text-white @error('shop_description') border-rose-500 @enderror"
-                            placeholder="What are you selling?">{{ old('shop_description', $user->shop_description) }}</textarea>
-                        @error('shop_description')
-                            <p class="text-rose-500 text-[11px] mt-1 font-bold">{{ $message }}</p>
-                        @enderror
-                    </div>
-
-                    <!-- 💡 SINGLE CONTAINER: NOTE (YELLOW & LARGER SIZE) + CHECKBOX BELOW -->
-                    <div
-                        class="bg-amber-500/10 dark:bg-amber-500/15 border-2 border-amber-400/80 dark:border-amber-500/50 rounded-2xl p-4.5 shadow-sm space-y-4">
-
-                        <!-- 1. Yellow Note Text (Larger Size) -->
-                        <div class="flex items-start gap-2.5">
-                            <span class="text-amber-500 text-lg font-black leading-none mt-0.5">⚠️</span>
-                            <p class="text-sm font-black text-amber-600 dark:text-amber-400 leading-relaxed">
-                                Vendor ဘက်မှ ရောင်းထွက်သွားသည့် ကုန်ပစ္စည်း ၁ ခုချင်းစီ၏ ဈေးနှုန်းမှ ၂ ရာခိုင်နှုန်း ကို
-                                ကော်မရှင်အဖြစ် ကောက်ခံသွားပါမည်။
-                            </p>
+                                    this.value = val.replace(/[^a-zA-Z]/g, '');
+                                } else if (val.length > 1) {
+                                    let firstChar = val.charAt(0).toUpperCase();
+                                    let remaining = val.slice(1).replace(/[^a-zA-Z0-9\s&'()]/g, '');
+                                    this.value = firstChar + remaining;
+                                }
+                            " class="input-3d w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-2xl text-sm font-bold focus:outline-none dark:text-white @error('shop_name') border-rose-500 @enderror"
+                                            placeholder="Enter your shop name">
+                            @error('shop_name')
+                            <p class="text-rose-500 text-[11px] mt-1 font-bold">{{ $message }}</p> @enderror
                         </div>
 
-                        <!-- Divider Line for separation -->
-                        <div class="border-t border-amber-200 dark:border-amber-800/40"></div>
+                        <div>
+                            <label for="shop_phone"
+                                class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Contact
+                                Phone Number</label>
+                            <input type="text" id="shop_phone" name="shop_phone"
+                                value="{{ old('shop_phone', $user->shop_phone ?? '09') }}" maxlength="11" minlength="8"
+                                pattern="09[0-9]{6,9}"
+                                title="Phone number must start with 09 and contain 8 to 11 digits in total." oninput="
 
-                        <!-- 2. Checkbox & Acceptance Text (Smaller Size) -->
-                        <div class="flex items-center gap-3 pt-0.5">
-                            <input type="checkbox" id="accept_terms" onchange="toggleSubmitButton()"
-                                class="w-5 h-5 rounded-lg text-orange-600 border-2 border-amber-400 focus:ring-orange-500 cursor-pointer flex-shrink-0">
+                                            let val = this.value.replace(/[^0-9]/g, '');
 
-                            <label for="accept_terms"
-                                class="text-xs font-extrabold text-gray-700 dark:text-gray-300 cursor-pointer select-none">
-                                အထက်ပါ စည်းကမ်းချက်ကို လက်ခံပါသည်။
-                            </label>
+                                            if (!val.startsWith('09')) {
+                                                val = '09' + val.replace(/^0+/, '');
+                                            }
+
+                                            if (val.length > 11) {
+                                                val = val.slice(0, 11);
+                                            }
+
+                                            this.value = val;
+                                        " onkeydown="
+
+                                            if ((event.key === 'Backspace' || event.key === 'Delete') && this.selectionStart <= 2) {
+                                                event.preventDefault();
+                                            }
+                                        "
+                                class="input-3d w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-2xl text-sm font-bold focus:outline-none dark:text-white @error('shop_phone') border-rose-500 @enderror"
+                                placeholder="09*********">
+                            @error('shop_phone')
+                                <p class="text-rose-500 text-[11px] mt-1 font-bold">{{ $message }}</p>
+                            @enderror
                         </div>
-                    </div>
 
-                    <!-- 💡 SUBMIT BUTTON (Initially Disabled) -->
-                    <div>
-                        <button type="submit" id="submitBtn" disabled
-                            class="btn-3d-orange w-full text-white font-black text-sm py-4 rounded-2xl transition-all tracking-wider uppercase">
-                            Submit Registration Request
-                        </button>
-                    </div>
-                </form>
+                        <div>
+                            <label for="shop_description"
+                                class="block text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-2">Shop
+                                Description</label>
+                            <textarea id="shop_description" name="shop_description" rows="3"
+                                class="input-3d w-full px-4 py-3 border border-gray-200 dark:border-gray-600 rounded-2xl text-sm font-bold focus:outline-none dark:text-white @error('shop_description') border-rose-500 @enderror"
+                                placeholder="What are you selling?">{{ old('shop_description', $user->shop_description) }}</textarea>
+                            @error('shop_description')
+                                <p class="text-rose-500 text-[11px] mt-1 font-bold">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- 💡 SINGLE CONTAINER: NOTE (YELLOW & LARGER SIZE) + CHECKBOX BELOW -->
+                        <div
+                            class="bg-amber-500/10 dark:bg-amber-500/15 border-2 border-amber-400/80 dark:border-amber-500/50 rounded-2xl p-4.5 shadow-sm space-y-4">
+
+                            <!-- 1. Yellow Note Text (Larger Size) -->
+                            <div class="flex items-start gap-2.5">
+                                <span class="text-amber-500 text-lg font-black leading-none mt-0.5">⚠️</span>
+                                <p class="text-sm font-black text-amber-600 dark:text-amber-400 leading-relaxed">
+                                    Vendor ဘက်မှ ရောင်းထွက်သွားသည့် ကုန်ပစ္စည်း ၁ ခုချင်းစီ၏ ဈေးနှုန်းမှ ၂ ရာခိုင်နှုန်း ကို
+                                    ကော်မရှင်အဖြစ် ကောက်ခံသွားပါမည်။
+                                </p>
+                            </div>
+
+                            <!-- Divider Line for separation -->
+                            <div class="border-t border-amber-200 dark:border-amber-800/40"></div>
+
+                            <!-- 2. Checkbox & Acceptance Text (Smaller Size) -->
+                            <div class="flex items-center gap-3 pt-0.5">
+                                <input type="checkbox" id="accept_terms" onchange="toggleSubmitButton()"
+                                    class="w-5 h-5 rounded-lg text-orange-600 border-2 border-amber-400 focus:ring-orange-500 cursor-pointer flex-shrink-0">
+
+                                <label for="accept_terms"
+                                    class="text-xs font-extrabold text-gray-700 dark:text-gray-300 cursor-pointer select-none">
+                                    အထက်ပါ စည်းကမ်းချက်ကို လက်ခံပါသည်။
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- 💡 SUBMIT BUTTON (Initially Disabled) -->
+                        <div>
+                            <button type="submit" id="submitBtn" disabled
+                                class="btn-3d-orange w-full text-white font-black text-sm py-4 rounded-2xl transition-all tracking-wider uppercase">
+                                Submit Registration Request
+                            </button>
+                        </div>
+                    </form>
             @endif
 
         </div>
